@@ -49,8 +49,8 @@ export const LiveShow: FunctionComponent<{
   return (
     <TouchableOpacity
       onPress={() => {
-        db?.fetchEpisodeInfo(show.url).then((info) => {
-          navigation.navigate('Show', {show, info});
+        db?.fetchEpisodeMeta(show.url).then((meta) => {
+          navigation.navigate('Show', {show, meta});
         });
       }}>
       <ShowView>

@@ -32,7 +32,7 @@ export const ShowScreen: FunctionComponent<{
   route: RouteProp<'Show'>;
   navigation: NavigationProp<'Show'>;
 }> = ({route}) => {
-  let {show, info} = route.params;
+  let {show, meta} = route.params;
 
   const {loading, error, data, fetchMore} = useQuery(EPISODES_QUERY, {
     variables: {showName: show.name, nextToken: null},
@@ -82,7 +82,7 @@ export const ShowScreen: FunctionComponent<{
         <EpisodeList
           show={show}
           episodes={episodes as Episode[]}
-          episodeInfo={info}
+          episodeMetas={meta}
           onEndReached={onEndReached}
         />
       </SafeAreaView>

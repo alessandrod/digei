@@ -7,7 +7,7 @@ import {systemWeights as w} from 'react-native-typography';
 import {ListSeparator} from 'components';
 import {Show, Episode} from 'state';
 import {ShowHero} from 'components/shows/hero';
-import {EpisodeInfo} from 'db';
+import {EpisodeMeta} from 'db';
 import {EpisodeComponent} from 'components/show/episode';
 
 const MonthHeader = styled.Text`
@@ -25,9 +25,9 @@ interface Section extends SectionListData<Episode> {
 export const EpisodeList: FunctionComponent<{
   show: Show;
   episodes: Episode[];
-  episodeInfo: Map<string, EpisodeInfo>;
+  episodeMetas: Map<string, EpisodeMeta>;
   onEndReached?: () => void;
-}> = React.memo(({show, episodes, episodeInfo, onEndReached}) => {
+}> = React.memo(({show, episodes, episodeMetas, onEndReached}) => {
   console.log('rendering episode list');
   const sections = useMemo(() => {
     const months: Section[] = [{data: [] as Episode[]}];
@@ -74,18 +74,18 @@ export const EpisodeList: FunctionComponent<{
         );
       }}
       renderItem={({item}) => {
-        let info = episodeInfo.get(item.url);
-        if (info === undefined) {
-          info = {
+        let meta = episodeMetas.get(item.url);
+        if (meta === undefined) {
+          meta = {
             url: item.url,
             showUrl: show.url,
             favourite: 0,
             playPosition: 0,
           };
-          episodeInfo.set(item.url, info);
+          episodeMetas.set(item.url, meta);
         }
         return (
-          <EpisodeComponent show={show} episode={item} episodeInfo={info} />
+          <EpisodeComponent show={show} episode={item} episodeMeta={meta} />
         );
       }}
       ItemSeparatorComponent={ListSeparator}

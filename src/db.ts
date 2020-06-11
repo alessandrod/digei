@@ -1,7 +1,7 @@
 import * as SQLite from 'expo-sqlite';
 import {createContext} from 'react';
 
-export type EpisodeInfo = {
+export type EpisodeMeta = {
   url: string;
   showUrl: string;
   favourite: number;
@@ -51,18 +51,18 @@ export class Database {
     await this.tx('INSERT INTO Meta (version) VALUES (1);');
 
     await this.tx(
-      'CREATE TABLE EpisodeInfo (url TEXT PRIMARY KEY, showUrl TEXT, favourite INT DEFAULT FALSE, localFile TEXT, playPosition INT DEFAULT 0, playDate TEXT)',
+      'CREATE TABLE EpisodeMeta (url TEXT PRIMARY KEY, showUrl TEXT, favourite INT DEFAULT FALSE, localFile TEXT, playPosition INT DEFAULT 0, playDate TEXT)',
     );
   }
 
-  async fetchEpisodeInfo(showUrl: string): Promise<Map<string, EpisodeInfo>> {
-    const res = await this.tx('SELECT * FROM EpisodeInfo WHERE showUrl = ?;', [
+  async fetchEpisodeMeta(showUrl: string): Promise<Map<string, EpisodeMeta>> {
+    const res = await this.tx('SELECT * FROM EpisodeMeta WHERE showUrl = ?;', [
       showUrl,
     ]);
     const info = new Map();
     for (let i = 0; i < res.rows.length; i++) {
       const item = res.rows.item(i);
-      info.set(item.url, item as EpisodeInfo);
+      info.set(item.url, item as EpisodeMeta);
     }
 
     return info;
@@ -75,7 +75,7 @@ export class Database {
   ): Promise<void> {
     await this.tx(
       `
-      INSERT INTO EpisodeInfo (url, showUrl, playPosition)
+      INSERT INTO EpisodeMeta (url, showUrl, playPosition)
         VALUES (?, ?, ?)
         ON CONFLICT(url) DO UPDATE SET playPosition=?;
       `,
@@ -90,7 +90,7 @@ export class Database {
   ): Promise<void> {
     await this.tx(
       `
-        INSERT INTO EpisodeInfo (url, showUrl, playDate)
+        INSERT INTO EpisodeMeta (url, showUrl, playDate)
           VALUES (?, ?, ?)
           ON CONFLICT(url) DO UPDATE SET playDate=?;
         `,

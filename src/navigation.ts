@@ -1,13 +1,13 @@
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp as RNRouteProp} from '@react-navigation/native';
 
-import {EpisodeInfo} from 'db';
+import {EpisodeMeta} from 'db';
 
 import {Show} from 'state';
 
 export type MainStackParamList = {
   Shows: undefined;
-  Show: {show: Show; info: Map<string, EpisodeInfo>};
+  Show: {show: Show; meta: Map<string, EpisodeMeta>};
 };
 
 export type NavigationProp<

@@ -36,6 +36,7 @@
     "react-native-screens": "^2.7.0",
     "react-native-typography": "^1.4.1",
     "react-native-unimodules": "^0.9.1",
+    "react-native-url-polyfill": "^1.1.2",
     "react-native-vector-icons": "git+https://github.com/estatesales-org/react-native-vector-icons.git#ionicons-5",
     "styled-components": "^5.1.0",
     "tslint": "^6.1.2"
