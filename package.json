@@ -22,6 +22,7 @@
     "apollo-boost": "^0.4.9",
     "date-fns": "^2.14.0",
     "expo-av": "^8.1.0",
+    "expo-file-system": "^8.1.0",
     "expo-sqlite": "^8.1.0",
     "graphql": "^15.0.0",
     "moment": "^2.25.3",

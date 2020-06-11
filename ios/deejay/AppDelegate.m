@@ -3,6 +3,7 @@
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <React/RCTLinkingManager.h>
 
 // https://gist.github.com/brentvatne/1ece8c32a3c5c9d0ac3a470460c65603
 #import <UMCore/UMModuleRegistry.h>
@@ -30,6 +31,8 @@ static void InitializeFlipper(UIApplication *application) {
 
 @implementation AppDelegate
 
+@synthesize window = _window;
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 #if DEBUG
@@ -51,6 +54,9 @@ static void InitializeFlipper(UIApplication *application) {
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+
+  [super application:application didFinishLaunchingWithOptions:launchOptions];
+
   return YES;
 }
 
@@ -71,5 +77,11 @@ static void InitializeFlipper(UIApplication *application) {
   // https://facebook.github.io/react-native/docs/native-modules-ios.html#dependency-injection
   return extraModules;
 }
+
+#if RCT_DEV
+- (BOOL)bridge:(RCTBridge *)bridge didNotFindModule:(NSString *)moduleName {
+  return YES;
+}
+#endif
 
 @end
