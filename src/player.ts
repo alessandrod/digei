@@ -2,7 +2,7 @@ import {Audio} from 'expo-av';
 import {INTERRUPTION_MODE_IOS_DO_NOT_MIX} from 'expo-av/build/Audio';
 import {Dispatch} from 'react';
 
-import {Action, UpdatePlayerStatus, PlayerReady} from 'actions';
+import {Action, UpdatePlayerStatus, PlayerReady, PlayerFinished} from 'actions';
 
 export class Player {
   private player?: Audio.Sound;
@@ -34,11 +34,16 @@ export class Player {
             console.error('error playing media', status.error);
           }
         } else if (!this.disableUpdates) {
-          const {positionMillis, durationMillis} = status;
-          const loading = status.shouldPlay && status.isBuffering;
-          this.dispatch(
-            new UpdatePlayerStatus(loading, positionMillis, durationMillis),
-          );
+          if (status.didJustFinish) {
+            this.dispatch(new PlayerFinished());
+            this.disableUpdates = true;
+          } else {
+            const {positionMillis, durationMillis} = status;
+            const loading = status.shouldPlay && status.isBuffering;
+            this.dispatch(
+              new UpdatePlayerStatus(loading, positionMillis, durationMillis),
+            );
+          }
         }
       });
 

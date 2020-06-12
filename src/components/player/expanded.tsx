@@ -14,6 +14,7 @@ import {formatTimeMillis} from 'utils';
 import {episodeTitle} from 'components';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {DatabaseContext} from 'db';
+import {setPlayDate} from 'components/show/episode';
 
 const ExpandedPlayerView = styled(Animated.View).attrs(() => ({
   colors: Colors,
@@ -155,7 +156,7 @@ export const ExpandedPlayer: FunctionComponent<{
   const db = useContext(DatabaseContext);
   let {state, dispatch} = useContext(StateContext);
   const {state: playState, duration, show, episode, loading} = state.player;
-  const {position} = useContext(PlaybackStateContext);
+  const {position, episodeMeta} = useContext(PlaybackStateContext);
 
   let [seekPosition, setSeekPosition] = useState<number | null>(null);
   const pos = seekPosition != null ? seekPosition : position;
@@ -175,6 +176,16 @@ export const ExpandedPlayer: FunctionComponent<{
 
   if (db && show && episode && position && position % 10000 < 100) {
     db.updateEpisodePlayPosition(episode.url, show.url, position / 1000);
+  }
+
+  if (db && episodeMeta && pos !== undefined && pos > 0 && duration) {
+    if (pos >= duration - 10000) {
+      if (!episodeMeta.playDate) {
+        setPlayDate(db, episodeMeta, '1/1/2021');
+      }
+    } else if (episodeMeta.playDate) {
+      setPlayDate(db, episodeMeta, undefined);
+    }
   }
 
   return (
@@ -220,6 +231,7 @@ export const ExpandedPlayer: FunctionComponent<{
               {pos !== undefined && (
                 <SeekPosition>{formatTimeMillis(pos)}</SeekPosition>
               )}
+
               {duration !== undefined && pos !== undefined && (
                 <SeekDuration>
                   {'-' + formatTimeMillis(duration - pos)}

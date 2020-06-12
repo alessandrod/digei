@@ -186,7 +186,7 @@ const PlayingEpisodeComponent: FunctionComponent<{
   episode: Episode;
   episodeMeta: EpisodeMeta;
 }> = ({show, episode, episodeMeta}) => {
-  let {position} = useContext(PlaybackStateContext);
+  let {position, duration} = useContext(PlaybackStateContext);
 
   if (position !== undefined) {
     position = position / 1000;
@@ -201,6 +201,7 @@ const PlayingEpisodeComponent: FunctionComponent<{
       episode={episode}
       episodeMeta={episodeMeta}
       playPosition={position}
+      duration={duration && duration / 1000}
     />
   );
 };
@@ -217,8 +218,9 @@ interface MenuAction extends ContextMenuAction {
   type: MenuActionType;
 }
 
-const setPlayDate = (db: Database, meta: EpisodeMeta, date?: string) => {
+export const setPlayDate = (db: Database, meta: EpisodeMeta, date?: string) => {
   const {url, showUrl} = meta;
+  console.log('setting play date', meta.url, date);
   meta.playDate = date;
   meta.playPosition = 0;
   db.updateEpisodePlayDate(url, showUrl, meta.playDate);
@@ -230,10 +232,14 @@ const EpisodeComponentImpl: FunctionComponent<{
   episode: Episode;
   episodeMeta: EpisodeMeta;
   playPosition?: number;
-}> = ({show, episode, episodeMeta, playPosition}) => {
+  duration?: number;
+}> = ({show, episode, episodeMeta, playPosition, duration}) => {
   const db = useContext(DatabaseContext);
   const {dispatch} = useContext(StateContext);
-  const {media, duration} = episode;
+  const {media} = episode;
+  if (duration === undefined) {
+    duration = episode.duration;
+  }
 
   const [, rerender] = useState(0);
   const [
@@ -255,17 +261,22 @@ const EpisodeComponentImpl: FunctionComponent<{
 
   const titleText = episodeTitle(episode);
 
+  const isPlaying = playPosition !== undefined;
   if (playPosition === undefined && episodeMeta.playPosition > 10) {
     playPosition = episodeMeta.playPosition;
   }
 
   let details = [<DetailsButton>Dettagli</DetailsButton>];
   details = [];
-  if (episodeMeta.playDate) {
+
+  if (
+    episodeMeta.playDate &&
+    (!isPlaying || playPosition === 0 || playPosition >= duration - 1)
+  ) {
     details.push(<Played date={formatDateInWords(episodeMeta.playDate)} />);
   } else if (duration) {
     let durText;
-    if (playPosition !== undefined) {
+    if (playPosition !== undefined && playPosition > 0) {
       details.push(<Progress value={playPosition / duration} />);
       durText = formatTimeInWords(duration - playPosition) + ' rimanenti';
     } else {
@@ -365,7 +376,7 @@ const EpisodeComponentImpl: FunctionComponent<{
           } else {
             m = media[0];
           }
-          dispatch(new PlayMedia(m, playPosition, show, episode));
+          dispatch(new PlayMedia(m, playPosition, show, episode, episodeMeta));
         }}>
         <EpisodeView>
           <LeftView>

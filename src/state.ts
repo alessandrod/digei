@@ -13,8 +13,10 @@ import {
   PlaybackAction,
   PlayerReady,
   SetPlayState,
+  PlayerFinished,
 } from 'actions';
 import {Player} from 'player';
+import {EpisodeMeta} from 'db';
 
 export const LIVE_URL =
   'https://radiodeejay-lh.akamaihd.net/i/RadioDeejay_Live_1@189857/index_96_a-p.m3u8';
@@ -159,6 +161,19 @@ const updatePlayerStatus = (
   };
 };
 
+const playerFinished = (state: State, action: PlayerFinished): State => {
+  const {player, playbackDispatch} = state;
+
+  console.log('playback finished');
+
+  playbackDispatch(action);
+
+  return {
+    ...state,
+    player: {...player, state: PlayState.STOPPED, position: 0},
+  };
+};
+
 const updateLiveShow = (state: State, name: String): State => {
   name = name.toLowerCase();
   if (state.live_show !== undefined) {
@@ -197,6 +212,8 @@ export function stateReducer(state: State, action: Action) {
     state = playMedia(state, action);
   } else if (action instanceof UpdatePlayerStatus) {
     state = updatePlayerStatus(state, action);
+  } else if (action instanceof PlayerFinished) {
+    state = playerFinished(state, action);
   } else if (action instanceof UpdateLiveShow) {
     state = updateLiveShow(state, action.name);
   } else if (action instanceof SetShows) {
@@ -207,13 +224,16 @@ export function stateReducer(state: State, action: Action) {
 }
 
 export type PlaybackState = {
+  replay: boolean;
   player?: Player;
   show?: Show;
   episode?: Episode;
+  episodeMeta?: EpisodeMeta;
   position?: number;
+  duration?: number;
 };
 
-export const INITIAL_PLAYBACK_STATE = {};
+export const INITIAL_PLAYBACK_STATE = {replay: false};
 
 export const PlaybackStateContext = createContext<PlaybackState>(
   INITIAL_PLAYBACK_STATE,
@@ -223,46 +243,60 @@ const setPlayer = (state: PlaybackState, action: PlayerReady) => {
   return {...state, player: action.player};
 };
 
-const updatePlaybackPlayMedia = (
+const playbackPlayMedia = (
   state: PlaybackState,
   action: PlayMedia,
 ): PlaybackState => {
-  let {player} = state;
-  const {media, show, episode, position} = action;
+  let {player, replay} = state;
+  const {media, show, episode, episodeMeta, position} = action;
 
-  player?.playUrl(media.url, position && position * 1000);
+  player?.playUrl(media.url, position && position * 1000, replay);
 
-  return {...state, show, episode, position: position && position * 1000};
+  return {
+    ...state,
+    show,
+    episode,
+    episodeMeta,
+    position: position && position * 1000,
+    replay: false,
+  };
 };
 
 const updatePlaybackInfo = (
   state: PlaybackState,
   action: UpdatePlaybackInfo,
 ): PlaybackState => {
-  const {position} = action;
+  const {position, duration} = action;
 
-  if (position === state.position) {
+  if (position === state.position && duration === state.duration) {
     return state;
   }
 
-  return {...state, position};
+  return {...state, position, duration};
 };
 
 const setPlayState = (
   state: PlaybackState,
   action: SetPlayState,
 ): PlaybackState => {
-  const {player} = state;
+  const {player, replay} = state;
   const {url, state: playState} = action;
   if (playState === PlayState.PLAYING) {
-    player?.playUrl(url);
+    player?.playUrl(url, undefined, replay);
   } else if (url === LIVE_URL) {
     player?.stop();
   } else {
     player?.pause();
   }
 
-  return state;
+  return {...state, replay: false};
+};
+
+const playbackPlayerFinished = (
+  state: PlaybackState,
+  _action: PlayerFinished,
+): PlaybackState => {
+  return {...state, position: undefined, replay: true};
 };
 
 export function playbackStateReducer(
@@ -272,11 +306,13 @@ export function playbackStateReducer(
   if (action instanceof PlayerReady) {
     state = setPlayer(state, action);
   } else if (action instanceof PlayMedia) {
-    state = updatePlaybackPlayMedia(state, action);
+    state = playbackPlayMedia(state, action);
   } else if (action instanceof SetPlayState) {
     state = setPlayState(state, action);
   } else if (action instanceof UpdatePlaybackInfo) {
     state = updatePlaybackInfo(state, action);
+  } else if (action instanceof PlayerFinished) {
+    state = playbackPlayerFinished(state, action);
   }
 
   return state;

@@ -1,4 +1,5 @@
 import {Show, Media, Episode, PlayState} from 'state';
+import {EpisodeMeta} from 'db';
 import {Player} from 'player';
 
 export class PlayerReady {
@@ -15,6 +16,7 @@ export class PlayMedia {
     public readonly position?: number,
     public readonly show?: Show,
     public readonly episode?: Episode,
+    public readonly episodeMeta?: EpisodeMeta,
   ) {}
 }
 
@@ -24,6 +26,10 @@ export class UpdatePlayerStatus {
     public readonly position: number,
     public readonly duration?: number,
   ) {}
+}
+
+export class PlayerFinished {
+  constructor() {}
 }
 
 export class UpdateLiveShow {
@@ -40,6 +46,7 @@ export type Action =
   | TogglePlayPause
   | ToggleLive
   | UpdatePlayerStatus
+  | PlayerFinished
   | UpdateLiveShow
   | SetShows;
 
@@ -60,4 +67,5 @@ export type PlaybackAction =
   | PlayerReady
   | SetPlayState
   | UpdatePlaybackInfo
+  | PlayerFinished
   | PlayMedia;
