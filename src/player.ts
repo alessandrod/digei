@@ -87,7 +87,7 @@ export class Player {
     }
   }
 
-  playUrl(url: string, position?: number) {
+  playUrl(url: string, position?: number, replay?: boolean) {
     this.queueOperation(() => {
       this.disableUpdates = true;
       return this.player
@@ -97,6 +97,7 @@ export class Player {
           if ((this.isLoading || status.isLoaded) && this.url !== url) {
             console.log('unloading player', this.url);
             this.isLoading = false;
+            replay = false;
             return this.player?.unloadAsync().then((res) => {
               console.log('unloaded', this.url);
               return res;
@@ -128,6 +129,8 @@ export class Player {
           console.log('playing');
           if (position !== undefined) {
             return this.player?.playFromPositionAsync(position);
+          } else if (replay) {
+            return this.player?.replayAsync();
           } else {
             return this.player?.playAsync();
           }
