@@ -1,9 +1,15 @@
 import {Audio} from 'expo-av';
 import {INTERRUPTION_MODE_IOS_DO_NOT_MIX} from 'expo-av/build/Audio';
-import {Dispatch} from 'react';
 
-import {Action, UpdatePlayerStatus, PlayerReady, PlayerFinished} from 'actions';
+export interface PlayerOptions {
+  onStatusUpdate(status: {
+    loading: boolean;
+    position: number;
+    duration?: number;
+  }): void;
 
+  onPlaybackEnded(): void;
+}
 export class Player {
   private player?: Audio.Sound;
   private cookie: number;
@@ -13,42 +19,44 @@ export class Player {
   private currentOperation?: Promise<any>;
   private disableUpdates: boolean;
 
-  constructor(private dispatch: Dispatch<Action>) {
+  constructor(private options?: PlayerOptions) {
     this.cookie = 0;
     this.isLoading = false;
     this.operations = [];
     this.disableUpdates = false;
   }
 
-  init(): Promise<unknown> {
-    return Audio.setAudioModeAsync({
+  async init(): Promise<void> {
+    await Audio.setAudioModeAsync({
       staysActiveInBackground: true,
       playsInSilentModeIOS: true,
       interruptionModeIOS: INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-    }).then(() => {
-      this.player = new Audio.Sound();
-
-      this.player.setOnPlaybackStatusUpdate((status) => {
-        if (!status.isLoaded) {
-          if (status.error) {
-            console.error('error playing media', status.error);
+    });
+    this.player = new Audio.Sound();
+    this.player.setOnPlaybackStatusUpdate((status) => {
+      if (!status.isLoaded) {
+        if (status.error) {
+          console.error('error playing media', status.error);
+        }
+      } else if (!this.disableUpdates) {
+        if (status.didJustFinish) {
+          if (this.options) {
+            this.options.onPlaybackEnded();
           }
-        } else if (!this.disableUpdates) {
-          if (status.didJustFinish) {
-            this.dispatch(new PlayerFinished());
-            this.disableUpdates = true;
-          } else {
-            const {positionMillis, durationMillis} = status;
-            const loading = status.shouldPlay && status.isBuffering;
-            this.dispatch(
-              new UpdatePlayerStatus(loading, positionMillis, durationMillis),
-            );
+          this.disableUpdates = true;
+        } else {
+          const {positionMillis: position, durationMillis: duration} = status;
+          const loading = status.shouldPlay && status.isBuffering;
+          if (this.options) {
+            this.options.onStatusUpdate({loading, position, duration});
           }
         }
-      });
-
-      this.dispatch(new PlayerReady(this));
+      }
     });
+  }
+
+  setOptions(opts: PlayerOptions): void {
+    this.options = opts;
   }
 
   maybeCancel<T>(): (res: T) => T {

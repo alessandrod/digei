@@ -11,7 +11,6 @@ import {
   SetShows,
   UpdatePlaybackInfo,
   PlaybackAction,
-  PlayerReady,
   SetPlayState,
   PlayerFinished,
 } from 'actions';
@@ -196,15 +195,8 @@ const setShows = (state: State, shows: Show[]): State => {
   return {...state, shows};
 };
 
-const playerReady = (state: State, action: PlayerReady): State => {
-  state.playbackDispatch(action);
-  return state;
-};
-
 export function stateReducer(state: State, action: Action) {
-  if (action instanceof PlayerReady) {
-    state = playerReady(state, action);
-  } else if (action instanceof TogglePlayPause) {
+  if (action instanceof TogglePlayPause) {
     state = togglePlayPause(state);
   } else if (action instanceof ToggleLive) {
     state = toggleLive(state);
@@ -225,7 +217,7 @@ export function stateReducer(state: State, action: Action) {
 
 export type PlaybackState = {
   replay: boolean;
-  player?: Player;
+  player: Player;
   show?: Show;
   episode?: Episode;
   episodeMeta?: EpisodeMeta;
@@ -233,15 +225,11 @@ export type PlaybackState = {
   duration?: number;
 };
 
-export const INITIAL_PLAYBACK_STATE = {replay: false};
+export const INITIAL_PLAYBACK_STATE = {replay: false, player: new Player()};
 
 export const PlaybackStateContext = createContext<PlaybackState>(
   INITIAL_PLAYBACK_STATE,
 );
-
-const setPlayer = (state: PlaybackState, action: PlayerReady) => {
-  return {...state, player: action.player};
-};
 
 const playbackPlayMedia = (
   state: PlaybackState,
@@ -303,9 +291,7 @@ export function playbackStateReducer(
   state: PlaybackState,
   action: PlaybackAction,
 ) {
-  if (action instanceof PlayerReady) {
-    state = setPlayer(state, action);
-  } else if (action instanceof PlayMedia) {
+  if (action instanceof PlayMedia) {
     state = playbackPlayMedia(state, action);
   } else if (action instanceof SetPlayState) {
     state = setPlayState(state, action);

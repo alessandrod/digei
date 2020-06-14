@@ -324,42 +324,40 @@ const EpisodeComponentImpl: FunctionComponent<{
       onPress={(e) => {
         const {index} = e.nativeEvent;
         const action = actions[index];
-        if (db) {
-          if (action.type === MenuActionType.MARK_AS_PLAYED) {
-            setPlayDate(db, episodeMeta, '1/1/2021');
-            rerender((i) => i + 1);
-          } else if (action.type === MenuActionType.MARK_AS_UNPLAYED) {
-            setPlayDate(db, episodeMeta, undefined);
-            rerender((i) => i + 1);
-          } else if (action.type === MenuActionType.DOWNLOAD) {
-            setDownload((d) => ({...d, progress: 0}));
-            makeDirectoryAsync(downloadUrl.directory, {
-              intermediates: true,
-            }).then(() => {
-              const handle = createDownloadResumable(
-                downloadMediaUrl,
-                downloadUrl.url,
-                {},
-                (download) => {
-                  const progress =
-                    download.totalBytesWritten /
-                    download.totalBytesExpectedToWrite;
-                  setDownload((d) => ({...d, progress: progress * 100}));
-                },
-              );
-              setDownload((d) => ({...d, handle}));
-              handle.downloadAsync().then((res) => {
-                if (res) {
-                  episodeMeta.localFile = downloadUrl.url;
-                  setDownload({progress: undefined, handle: undefined});
-                }
-              });
+        if (action.type === MenuActionType.MARK_AS_PLAYED) {
+          setPlayDate(db, episodeMeta, '1/1/2021');
+          rerender((i) => i + 1);
+        } else if (action.type === MenuActionType.MARK_AS_UNPLAYED) {
+          setPlayDate(db, episodeMeta, undefined);
+          rerender((i) => i + 1);
+        } else if (action.type === MenuActionType.DOWNLOAD) {
+          setDownload((d) => ({...d, progress: 0}));
+          makeDirectoryAsync(downloadUrl.directory, {
+            intermediates: true,
+          }).then(() => {
+            const handle = createDownloadResumable(
+              downloadMediaUrl,
+              downloadUrl.url,
+              {},
+              (download) => {
+                const progress =
+                  download.totalBytesWritten /
+                  download.totalBytesExpectedToWrite;
+                setDownload((d) => ({...d, progress: progress * 100}));
+              },
+            );
+            setDownload((d) => ({...d, handle}));
+            handle.downloadAsync().then((res) => {
+              if (res) {
+                episodeMeta.localFile = downloadUrl.url;
+                setDownload({progress: undefined, handle: undefined});
+              }
             });
-          } else if (action.type === MenuActionType.REMOVE_DOWNLOAD) {
-            episodeMeta.localFile = undefined;
-            deleteAsync(downloadUrl.url);
-            setDownload({progress: undefined, handle: undefined});
-          }
+          });
+        } else if (action.type === MenuActionType.REMOVE_DOWNLOAD) {
+          episodeMeta.localFile = undefined;
+          deleteAsync(downloadUrl.url);
+          setDownload({progress: undefined, handle: undefined});
         }
       }}>
       <TouchableOpacity
@@ -367,9 +365,7 @@ const EpisodeComponentImpl: FunctionComponent<{
           if (downloadProgress !== undefined) {
             return;
           }
-          if (db) {
-            setPlayDate(db, episodeMeta, undefined);
-          }
+          setPlayDate(db, episodeMeta, undefined);
           let m;
           if (episodeMeta.localFile) {
             m = {url: episodeMeta.localFile};

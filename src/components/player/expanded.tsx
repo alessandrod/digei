@@ -174,11 +174,11 @@ export const ExpandedPlayer: FunctionComponent<{
   }
   subtitle = show?.hosts;
 
-  if (db && show && episode && position && position % 10000 < 100) {
+  if (show && episode && position && position % 10000 < 100) {
     db.updateEpisodePlayPosition(episode.url, show.url, position / 1000);
   }
 
-  if (db && episodeMeta && pos !== undefined && pos > 0 && duration) {
+  if (episodeMeta && pos !== undefined && pos > 0 && duration) {
     if (pos >= duration - 10000) {
       if (!episodeMeta.playDate) {
         setPlayDate(db, episodeMeta, '1/1/2021');
@@ -213,7 +213,7 @@ export const ExpandedPlayer: FunctionComponent<{
                 setSeekPosition(Math.floor(value));
               }}
               onSlidingComplete={(value: number) => {
-                if (db && show && episode && pos !== undefined) {
+                if (show && episode && pos !== undefined) {
                   console.log('updating position', pos / 1000);
                   db.updateEpisodePlayPosition(
                     episode.url,

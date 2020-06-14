@@ -99,4 +99,4 @@ export class Database {
   }
 }
 
-export const DatabaseContext = createContext<Database | null>(null);
+export const DatabaseContext = createContext<Database>({} as Database);

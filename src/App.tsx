@@ -3,9 +3,11 @@ import React, {
   useReducer,
   useRef,
   useEffect,
-  MutableRefObject,
   useMemo,
   useCallback,
+  useState,
+  FunctionComponent,
+  Dispatch,
 } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -26,9 +28,10 @@ import {
   playbackStateReducer,
   INITIAL_PLAYBACK_STATE,
   PlaybackStateContext,
+  PlaybackState,
 } from 'state';
-import {Player} from 'player';
 import {DatabaseContext, Database} from 'db';
+import {PlaybackAction, UpdatePlayerStatus, PlayerFinished} from 'actions';
 
 Icon.loadFont();
 
@@ -59,40 +62,33 @@ function MainStackScreen() {
   );
 }
 
-export default function App() {
-  const [playbackState, playbackDispatch] = useReducer(
-    playbackStateReducer,
-    INITIAL_PLAYBACK_STATE,
-  );
+const AppInner: FunctionComponent<{
+  db: Database;
+  playbackState: PlaybackState;
+  playbackDispatch: Dispatch<PlaybackAction>;
+}> = ({db, playbackState, playbackDispatch}) => {
   const [state, dispatch] = useReducer(stateReducer, {
     ...INITIAL_STATE,
     playbackDispatch,
   });
 
-  const playerRef: MutableRefObject<Player | null> = useRef(null);
+  const {player} = playbackState;
   useEffect(() => {
-    const player = new Player(dispatch);
-    player.init().then(() => {
-      playerRef.current = player;
+    player.setOptions({
+      onStatusUpdate: ({loading, position, duration}) => {
+        dispatch(new UpdatePlayerStatus(loading, position, duration));
+      },
+      onPlaybackEnded: () => {
+        dispatch(new PlayerFinished());
+      },
     });
-    return () => {
-      if (playerRef.current !== null) {
-        playerRef.current.stop();
-        playerRef.current = null;
-      }
-    };
-  }, []);
-
-  const onSeek = useCallback((pos: number) => {
-    if (playerRef.current) {
-      playerRef.current.seek(pos);
-    }
-  }, []);
-
-  const db = useRef<Database | null>(null);
-  useEffect(() => {
-    Database.open().then((d) => (db.current = d));
-  }, []);
+  }, [player]);
+  const onSeek = useCallback(
+    (pos) => {
+      player.seek(pos);
+    },
+    [player],
+  );
 
   const client = useRef(
     new ApolloClient({
@@ -104,24 +100,63 @@ export default function App() {
     }),
   );
 
+  return useMemo(() => {
+    console.log('state changed, re-rendering app');
+
+    return (
+      <DatabaseContext.Provider value={db}>
+        <StateContext.Provider value={{state, dispatch}}>
+          <ApolloProvider client={client.current}>
+            <NavigationContainer>
+              <MainStackScreen />
+            </NavigationContainer>
+            {state.player.visible && <PlayerComponent onSeek={onSeek} />}
+          </ApolloProvider>
+        </StateContext.Provider>
+      </DatabaseContext.Provider>
+    );
+  }, [db, state, dispatch, onSeek]);
+};
+
+export default function App() {
+  const [db, setDatabase] = useState<Database | undefined>(undefined);
+  useEffect(() => {
+    Database.open().then((d) => setDatabase(d));
+  }, []);
+
+  const [playbackState, playbackDispatch] = useReducer(
+    playbackStateReducer,
+    INITIAL_PLAYBACK_STATE,
+  );
+
+  const player = playbackState.player;
+  const [playerReady, setPlayerReady] = useState<boolean>(false);
+  useEffect(() => {
+    player.init().then(() => {
+      setPlayerReady(true);
+    });
+    return () => {
+      if (player) {
+        player.stop();
+      }
+    };
+  }, [player, setPlayerReady]);
+
+  if (!playerReady) {
+    return null;
+  }
+
+  if (db === undefined) {
+    return null;
+  }
+
   return (
     <PlaybackStateContext.Provider value={playbackState}>
-      {useMemo(() => {
-        console.log('state changed, re-rendering app');
-
-        return (
-          <ApolloProvider client={client.current}>
-            <DatabaseContext.Provider value={db.current}>
-              <StateContext.Provider value={{state, dispatch}}>
-                <NavigationContainer>
-                  <MainStackScreen />
-                </NavigationContainer>
-                {state.player.visible && <PlayerComponent onSeek={onSeek} />}
-              </StateContext.Provider>
-            </DatabaseContext.Provider>
-          </ApolloProvider>
-        );
-      }, [state, dispatch, onSeek])}
+      <AppInner
+        db={db}
+        playbackState={playbackState}
+        playbackDispatch={playbackDispatch}
+      />
     </PlaybackStateContext.Provider>
   );
 }

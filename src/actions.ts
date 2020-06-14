@@ -1,10 +1,5 @@
 import {Show, Media, Episode, PlayState} from 'state';
 import {EpisodeMeta} from 'db';
-import {Player} from 'player';
-
-export class PlayerReady {
-  constructor(public readonly player: Player) {}
-}
 
 export class TogglePlayPause {}
 
@@ -41,7 +36,6 @@ export class SetShows {
 }
 
 export type Action =
-  | PlayerReady
   | PlayMedia
   | TogglePlayPause
   | ToggleLive
@@ -64,7 +58,6 @@ export class UpdatePlaybackInfo {
 }
 
 export type PlaybackAction =
-  | PlayerReady
   | SetPlayState
   | UpdatePlaybackInfo
   | PlayerFinished
