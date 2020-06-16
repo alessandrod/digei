@@ -97,6 +97,21 @@ export class Database {
       [url, showUrl, date, date],
     );
   }
+
+  async updateEpisodeLocalFile(
+    url: string,
+    showUrl: string,
+    localFile?: string,
+  ): Promise<void> {
+    await this.tx(
+      `
+        INSERT INTO EpisodeMeta (url, showUrl, localFile)
+          VALUES (?, ?, ?)
+          ON CONFLICT(url) DO UPDATE SET localFile=?;
+        `,
+      [url, showUrl, localFile, localFile],
+    );
+  }
 }
 
 export const DatabaseContext = createContext<Database>({} as Database);

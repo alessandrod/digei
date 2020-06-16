@@ -28,7 +28,7 @@ export const EpisodeList: FunctionComponent<{
   episodeMetas: Map<string, EpisodeMeta>;
   onEndReached?: () => void;
 }> = React.memo(({show, episodes, episodeMetas, onEndReached}) => {
-  console.log('rendering episode list');
+
   const sections = useMemo(() => {
     const months: Section[] = [{data: [] as Episode[]}];
     let monthEpisodes = [];
@@ -51,6 +51,7 @@ export const EpisodeList: FunctionComponent<{
     return months;
   }, [episodes]);
 
+  const currentYear = new Date().getFullYear();
   return (
     <SectionList
       renderSectionHeader={({section: {month}}) => {
@@ -59,7 +60,7 @@ export const EpisodeList: FunctionComponent<{
         }
 
         let year: number | string = parseInt(month.substring(2), 10);
-        if (year === new Date().getFullYear()) {
+        if (year === currentYear) {
           year = '';
         }
 

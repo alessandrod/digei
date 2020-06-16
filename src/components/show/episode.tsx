@@ -6,10 +6,9 @@ import {human} from 'react-native-typography';
 import AnimatedProgressWheel from 'react-native-progress-wheel';
 import {
   documentDirectory,
-  createDownloadResumable,
-  DownloadResumable,
   makeDirectoryAsync,
   deleteAsync,
+  DownloadResult,
 } from 'expo-file-system';
 import {URL} from 'react-native-url-polyfill';
 
@@ -20,6 +19,7 @@ import {Show, StateContext, Episode, PlaybackStateContext} from 'state';
 import {PlayMedia} from 'actions';
 import {formatTimeInWords, formatDateInWords} from 'utils';
 import {EpisodeMeta, DatabaseContext, Database} from 'db';
+import {useDownload} from 'download';
 
 const EpisodeView = styled(BaseView)`
   flex: 1 0;
@@ -241,22 +241,28 @@ const EpisodeComponentImpl: FunctionComponent<{
     duration = episode.duration;
   }
 
-  const [, rerender] = useState(0);
-  const [
-    {progress: downloadProgress, handle: downloadHandle},
-    setDownload,
-  ] = useState<{
-    progress?: number;
-    handle?: DownloadResumable;
-  }>({
-    progress: undefined,
-    handle: undefined,
-  });
+  const [, doRerender] = useState(0);
+  const rerender = () => doRerender((i) => i + 1);
+
   const downloadMediaUrl = media[0].url;
   const downloadUrl = downloadUrlForEpisode(
     episode.url,
     show.url,
     downloadMediaUrl,
+  );
+
+  const {download, startDownload, stopDownload} = useDownload(
+    downloadMediaUrl,
+    downloadUrl.url,
+    (res?: DownloadResult) => {
+      if (res) {
+        episodeMeta.localFile = downloadUrl.url;
+        db.updateEpisodeLocalFile(episode.url, show.url, downloadUrl.url);
+      } else {
+        episodeMeta.localFile = undefined;
+      }
+      rerender();
+    },
   );
 
   const titleText = episodeTitle(episode);
@@ -299,13 +305,13 @@ const EpisodeComponentImpl: FunctionComponent<{
       systemIcon: 'checkmark.square',
     });
   }
-  if (downloadProgress === undefined && !episodeMeta.localFile) {
+  if (download === undefined && !episodeMeta.localFile) {
     actions.push({
       type: MenuActionType.DOWNLOAD,
       title: 'Download',
       systemIcon: 'square.and.arrow.down',
     });
-  } else if (downloadProgress === undefined) {
+  } else if (download === undefined) {
     actions.push({
       type: MenuActionType.REMOVE_DOWNLOAD,
       title: 'Rimuovi download',
@@ -326,43 +332,26 @@ const EpisodeComponentImpl: FunctionComponent<{
         const action = actions[index];
         if (action.type === MenuActionType.MARK_AS_PLAYED) {
           setPlayDate(db, episodeMeta, '1/1/2021');
-          rerender((i) => i + 1);
+          rerender();
         } else if (action.type === MenuActionType.MARK_AS_UNPLAYED) {
           setPlayDate(db, episodeMeta, undefined);
-          rerender((i) => i + 1);
+          rerender();
         } else if (action.type === MenuActionType.DOWNLOAD) {
-          setDownload((d) => ({...d, progress: 0}));
           makeDirectoryAsync(downloadUrl.directory, {
             intermediates: true,
           }).then(() => {
-            const handle = createDownloadResumable(
-              downloadMediaUrl,
-              downloadUrl.url,
-              {},
-              (download) => {
-                const progress =
-                  download.totalBytesWritten /
-                  download.totalBytesExpectedToWrite;
-                setDownload((d) => ({...d, progress: progress * 100}));
-              },
-            );
-            setDownload((d) => ({...d, handle}));
-            handle.downloadAsync().then((res) => {
-              if (res) {
-                episodeMeta.localFile = downloadUrl.url;
-                setDownload({progress: undefined, handle: undefined});
-              }
-            });
+            startDownload && startDownload();
           });
         } else if (action.type === MenuActionType.REMOVE_DOWNLOAD) {
           episodeMeta.localFile = undefined;
+          db.updateEpisodeLocalFile(episode.url, show.url, undefined);
           deleteAsync(downloadUrl.url);
-          setDownload({progress: undefined, handle: undefined});
+          rerender();
         }
       }}>
       <TouchableOpacity
         onPress={() => {
-          if (downloadProgress !== undefined) {
+          if (download !== undefined) {
             return;
           }
           setPlayDate(db, episodeMeta, undefined);
@@ -379,21 +368,17 @@ const EpisodeComponentImpl: FunctionComponent<{
             <Title>{titleText}</Title>
             <Details>{details}</Details>
           </LeftView>
-          {downloadProgress !== undefined && (
+          {download !== undefined && (
             <DownloadProgress
-              value={downloadProgress}
+              value={download.progress * 100}
               onPress={() => {
-                if (downloadHandle !== undefined) {
-                  downloadHandle.pauseAsync().then(() => {
-                    episodeMeta.localFile = undefined;
-                    deleteAsync(downloadUrl.url);
-                    setDownload({progress: undefined, handle: undefined});
-                  });
-                }
+                stopDownload && stopDownload();
               }}
             />
           )}
-          {episodeMeta.localFile && <DownloadIcon name="download-outline" />}
+          {episodeMeta.localFile && download === undefined && (
+            <DownloadIcon name="download-outline" />
+          )}
         </EpisodeView>
       </TouchableOpacity>
     </ContextMenu>

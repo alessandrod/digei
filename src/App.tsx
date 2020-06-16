@@ -32,6 +32,11 @@ import {
 } from 'state';
 import {DatabaseContext, Database} from 'db';
 import {PlaybackAction, UpdatePlayerStatus, PlayerFinished} from 'actions';
+import {
+  DownloadContext,
+  downloadStateReducer,
+  INITIAL_DOWNLOAD_STATE,
+} from 'download';
 
 Icon.loadFont();
 
@@ -129,6 +134,11 @@ export default function App() {
     INITIAL_PLAYBACK_STATE,
   );
 
+  const [downloadState, downloadDispatch] = useReducer(
+    downloadStateReducer,
+    INITIAL_DOWNLOAD_STATE,
+  );
+
   const player = playbackState.player;
   const [playerReady, setPlayerReady] = useState<boolean>(false);
   useEffect(() => {
@@ -151,12 +161,15 @@ export default function App() {
   }
 
   return (
-    <PlaybackStateContext.Provider value={playbackState}>
-      <AppInner
-        db={db}
-        playbackState={playbackState}
-        playbackDispatch={playbackDispatch}
-      />
-    </PlaybackStateContext.Provider>
+    <DownloadContext.Provider
+      value={{state: downloadState, dispatch: downloadDispatch}}>
+      <PlaybackStateContext.Provider value={playbackState}>
+        <AppInner
+          db={db}
+          playbackState={playbackState}
+          playbackDispatch={playbackDispatch}
+        />
+      </PlaybackStateContext.Provider>
+    </DownloadContext.Provider>
   );
 }
