@@ -37,7 +37,7 @@ const Title = styled.Text`
   line-height: 30px;
 `;
 
-const Details = styled.View`
+const DetailsView = styled.View`
   flex: 1 0;
   flex-direction: row;
   align-items: center;
@@ -206,6 +206,34 @@ const PlayingEpisodeComponent: FunctionComponent<{
   );
 };
 
+const Details: FunctionComponent<{
+  isPlaying: boolean;
+  duration?: number;
+  playPosition?: number;
+  playDate?: string;
+}> = ({isPlaying, playPosition, duration, playDate}) => {
+  let details = [<DetailsButton>Dettagli</DetailsButton>];
+  details = [];
+
+  if (
+    playDate &&
+    (!isPlaying || playPosition === 0 || playPosition >= duration - 1)
+  ) {
+    details.push(<Played date={formatDateInWords(playDate)} />);
+  } else if (duration) {
+    let durText;
+    if (playPosition !== undefined && playPosition > 0) {
+      details.push(<Progress value={playPosition / duration} />);
+      durText = formatTimeInWords(duration - playPosition) + ' rimanenti';
+    } else {
+      durText = formatTimeInWords(duration);
+    }
+    details.push(<DurationView>{durText}</DurationView>);
+  }
+
+  return <DetailsView>{details}</DetailsView>;
+};
+
 enum MenuActionType {
   MARK_AS_PLAYED,
   MARK_AS_UNPLAYED,
@@ -265,30 +293,9 @@ const EpisodeComponentImpl: FunctionComponent<{
     },
   );
 
-  const titleText = episodeTitle(episode);
-
   const isPlaying = playPosition !== undefined;
   if (playPosition === undefined && episodeMeta.playPosition > 10) {
     playPosition = episodeMeta.playPosition;
-  }
-
-  let details = [<DetailsButton>Dettagli</DetailsButton>];
-  details = [];
-
-  if (
-    episodeMeta.playDate &&
-    (!isPlaying || playPosition === 0 || playPosition >= duration - 1)
-  ) {
-    details.push(<Played date={formatDateInWords(episodeMeta.playDate)} />);
-  } else if (duration) {
-    let durText;
-    if (playPosition !== undefined && playPosition > 0) {
-      details.push(<Progress value={playPosition / duration} />);
-      durText = formatTimeInWords(duration - playPosition) + ' rimanenti';
-    } else {
-      durText = formatTimeInWords(duration);
-    }
-    details.push(<DurationView>{durText}</DurationView>);
   }
 
   const actions: MenuAction[] = [];
@@ -365,8 +372,13 @@ const EpisodeComponentImpl: FunctionComponent<{
         }}>
         <EpisodeView>
           <LeftView>
-            <Title>{titleText}</Title>
-            <Details>{details}</Details>
+            <Title>{episodeTitle(episode)}</Title>
+            <Details
+              isPlaying={isPlaying}
+              playPosition={playPosition}
+              duration={duration}
+              playDate={episodeMeta.playDate}
+            />
           </LeftView>
           {download !== undefined && (
             <DownloadProgress
