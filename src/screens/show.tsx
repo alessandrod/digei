@@ -78,14 +78,12 @@ export const ShowScreen: FunctionComponent<{
   return (
     <>
       <StatusBar barStyle="light-content" />
-      <SafeAreaView>
-        <EpisodeList
-          show={show}
-          episodes={episodes as Episode[]}
-          episodeMetas={meta}
-          onEndReached={onEndReached}
-        />
-      </SafeAreaView>
+      <EpisodeList
+        show={show}
+        episodes={episodes as Episode[]}
+        episodeMetas={meta}
+        onEndReached={onEndReached}
+      />
     </>
   );
 };

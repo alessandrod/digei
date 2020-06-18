@@ -21,11 +21,10 @@ import {EpisodeMeta, DatabaseContext, Database} from 'db';
 import {useDownload} from 'download';
 import {EpisodeContextMenu} from 'components/show/episode-context-menu';
 
-const EpisodeView = styled(BaseView)`
+const EpisodeView = styled.View`
   flex: 1 0;
   flex-direction: row;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px 15px;
 `;
 
 const LeftView = styled.View`

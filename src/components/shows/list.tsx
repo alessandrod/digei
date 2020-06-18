@@ -91,6 +91,11 @@ export function group<T>(n: number, items: T[]): T[][] {
   );
 }
 
+const List = styled(SectionList)`
+  padding: 0 15px;
+  background: white;
+`;
+
 export const ShowList: FunctionComponent<{
   liveShow?: Show;
   shows: Show[];
@@ -118,7 +123,7 @@ export const ShowList: FunctionComponent<{
     return secs;
   }, [liveShow, shows]);
   return (
-    <SectionList
+    <List
       renderSectionHeader={({section}) => (
         <section.ListHeaderComponent {...section} />
       )}

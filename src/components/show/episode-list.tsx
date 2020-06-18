@@ -22,13 +22,16 @@ interface Section extends SectionListData<Episode> {
   month?: String;
 }
 
+const List = styled(SectionList)`
+  background: white;
+`;
+
 export const EpisodeList: FunctionComponent<{
   show: Show;
   episodes: Episode[];
   episodeMetas: Map<string, EpisodeMeta>;
   onEndReached?: () => void;
 }> = React.memo(({show, episodes, episodeMetas, onEndReached}) => {
-
   const sections = useMemo(() => {
     const months: Section[] = [{data: [] as Episode[]}];
     let monthEpisodes = [];
@@ -53,7 +56,7 @@ export const EpisodeList: FunctionComponent<{
 
   const currentYear = new Date().getFullYear();
   return (
-    <SectionList
+    <List
       renderSectionHeader={({section: {month}}) => {
         if (month === undefined) {
           return <ShowHero show={show} />;

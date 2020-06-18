@@ -5,6 +5,7 @@ import {human} from 'react-native-typography';
 import {Show} from 'state';
 import {NavigationProp} from 'navigation';
 import {DatabaseContext} from 'db';
+import {ViewStyle} from 'react-native';
 
 const CoverWrapper = styled.View`
   shadow-color: #000;
@@ -36,11 +37,13 @@ const CoverView = styled.TouchableOpacity`
 export const ShowCover: FunctionComponent<{
   show: Show;
   navigation: NavigationProp<'Show'>;
-}> = ({show, navigation}) => {
+  style?: ViewStyle;
+}> = ({show, navigation, style}) => {
   let {name, cover} = show;
   const db = useContext(DatabaseContext);
   return (
     <CoverView
+      style={style}
       onPress={() => {
         db?.fetchEpisodeMeta(show.url).then((meta) => {
           navigation.navigate('Show', {show, meta});

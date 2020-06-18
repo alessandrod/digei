@@ -166,7 +166,7 @@ class PlayerSwipeMethods implements SwipeMethods {
 
     let anim = Animated.spring(this.pan.current, {
       toValue: target,
-      useNativeDriver: false,
+      useNativeDriver: true,
     });
     anim.start();
   }
@@ -191,7 +191,7 @@ export const PlayerComponent: FunctionComponent<{
   onSeek: (pos: number) => void;
 }> = ({onSeek}) => {
   const height = useWindowDimensions().height;
-  const miniOffset = -75;
+  const miniOffset = -95;
   const swipe = useRef(new PlayerSwipeMethods(miniOffset, height)).current;
   const pan = swipe.pan.current;
   let miniOpacity = pan.interpolate({
@@ -233,7 +233,10 @@ export const PlayerComponent: FunctionComponent<{
           <ExpandedPlayer
             onMinimize={() => swipe.doSwipe(Direction.Down)}
             onSeek={onSeek}
-            style={{opacity: expOpacity, marginTop: expMarginTop}}
+            style={{
+              opacity: expOpacity,
+              transform: [{translateY: expMarginTop}],
+            }}
           />
         </PlayerSwipe>
       </PlayerViewContainer>

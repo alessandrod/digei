@@ -72,15 +72,11 @@ export const ShowsScreen: FunctionComponent<{
   return (
     <>
       <StatusBar barStyle="light-content" />
-      <SafeAreaView>
-        <BaseView>
-          <ShowList
-            shows={shows}
-            liveShow={state.live_show}
-            navigation={navigation}
-          />
-        </BaseView>
-      </SafeAreaView>
+      <ShowList
+        shows={shows}
+        liveShow={state.live_show}
+        navigation={navigation}
+      />
     </>
   );
 };
