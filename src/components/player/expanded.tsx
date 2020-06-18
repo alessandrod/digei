@@ -20,7 +20,7 @@ const ExpandedPlayerView = styled(Animated.View).attrs(() => ({
   colors: Colors,
 }))`
   flex: 1 0;
-  padding: 40px 0px;
+  padding: 50px 0px;
 `;
 
 const Header = styled.View`
