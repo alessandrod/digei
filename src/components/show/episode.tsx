@@ -13,13 +13,13 @@ import {
 import {URL} from 'react-native-url-polyfill';
 
 import {BaseView, episodeTitle} from 'components';
-import {ContextMenu, ContextMenuAction} from 'components/context-menu';
 import {Colors} from 'theme';
 import {Show, StateContext, Episode, PlaybackStateContext} from 'state';
 import {PlayMedia} from 'actions';
 import {formatTimeInWords, formatDateInWords} from 'utils';
 import {EpisodeMeta, DatabaseContext, Database} from 'db';
 import {useDownload} from 'download';
+import {EpisodeContextMenu} from 'components/show/episode-context-menu';
 
 const EpisodeView = styled(BaseView)`
   flex: 1 0;
@@ -234,18 +234,6 @@ const Details: FunctionComponent<{
   return <DetailsView>{details}</DetailsView>;
 };
 
-enum MenuActionType {
-  MARK_AS_PLAYED,
-  MARK_AS_UNPLAYED,
-  DOWNLOAD,
-  REMOVE_DOWNLOAD,
-  COPY_LINK,
-}
-
-interface MenuAction extends ContextMenuAction {
-  type: MenuActionType;
-}
-
 export const setPlayDate = (db: Database, meta: EpisodeMeta, date?: string) => {
   const {url, showUrl} = meta;
   console.log('setting play date', meta.url, date);
@@ -298,63 +286,27 @@ const EpisodeComponentImpl: FunctionComponent<{
     playPosition = episodeMeta.playPosition;
   }
 
-  const actions: MenuAction[] = [];
-  if (episodeMeta.playDate) {
-    actions.push({
-      type: MenuActionType.MARK_AS_UNPLAYED,
-      title: 'Segna da ascoltare',
-      systemIcon: 'checkmark.square',
-    });
-  } else {
-    actions.push({
-      type: MenuActionType.MARK_AS_PLAYED,
-      title: 'Segna come ascoltato',
-      systemIcon: 'checkmark.square',
-    });
-  }
-  if (download === undefined && !episodeMeta.localFile) {
-    actions.push({
-      type: MenuActionType.DOWNLOAD,
-      title: 'Download',
-      systemIcon: 'square.and.arrow.down',
-    });
-  } else if (download === undefined) {
-    actions.push({
-      type: MenuActionType.REMOVE_DOWNLOAD,
-      title: 'Rimuovi download',
-      systemIcon: 'square.and.arrow.down',
-    });
-  }
-  actions.push({
-    type: MenuActionType.COPY_LINK,
-    title: 'Copia il link',
-    systemIcon: 'link',
-  });
-
   return (
-    <ContextMenu
-      actions={actions}
-      onPress={(e) => {
-        const {index} = e.nativeEvent;
-        const action = actions[index];
-        if (action.type === MenuActionType.MARK_AS_PLAYED) {
-          setPlayDate(db, episodeMeta, '1/1/2021');
-          rerender();
-        } else if (action.type === MenuActionType.MARK_AS_UNPLAYED) {
-          setPlayDate(db, episodeMeta, undefined);
-          rerender();
-        } else if (action.type === MenuActionType.DOWNLOAD) {
-          makeDirectoryAsync(downloadUrl.directory, {
-            intermediates: true,
-          }).then(() => {
-            startDownload && startDownload();
-          });
-        } else if (action.type === MenuActionType.REMOVE_DOWNLOAD) {
-          episodeMeta.localFile = undefined;
-          db.updateEpisodeLocalFile(episode.url, show.url, undefined);
-          deleteAsync(downloadUrl.url);
-          rerender();
-        }
+    <EpisodeContextMenu
+      played={episodeMeta.playDate !== undefined}
+      downloading={download !== undefined}
+      downloaded={!!(download === undefined && episodeMeta.localFile)}
+      onMarkAsPlayed={(played) => {
+        setPlayDate(db, episodeMeta, played ? '1/1/2021' : undefined);
+        rerender();
+      }}
+      onDownload={() => {
+        makeDirectoryAsync(downloadUrl.directory, {
+          intermediates: true,
+        }).then(() => {
+          startDownload && startDownload();
+        });
+      }}
+      onRemoveDownload={() => {
+        episodeMeta.localFile = undefined;
+        db.updateEpisodeLocalFile(episode.url, show.url, undefined);
+        deleteAsync(downloadUrl.url);
+        rerender();
       }}>
       <TouchableOpacity
         onPress={() => {
@@ -393,7 +345,7 @@ const EpisodeComponentImpl: FunctionComponent<{
           )}
         </EpisodeView>
       </TouchableOpacity>
-    </ContextMenu>
+    </EpisodeContextMenu>
   );
 };
 
