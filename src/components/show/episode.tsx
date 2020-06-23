@@ -287,7 +287,7 @@ const EpisodeComponentImpl: FunctionComponent<{
 
   return (
     <EpisodeContextMenu
-      played={episodeMeta.playDate !== undefined}
+      played={!!episodeMeta.playDate}
       downloading={download !== undefined}
       downloaded={!!(download === undefined && episodeMeta.localFile)}
       onMarkAsPlayed={(played) => {
