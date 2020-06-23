@@ -60,3 +60,7 @@ export const formatDateInWords = (date: string): string => {
 
   return text;
 };
+
+export const formatDate = (date: number): string => {
+  return format(date, 'dd/MM/yyyy');
+};
