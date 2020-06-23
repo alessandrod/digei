@@ -69,17 +69,23 @@ function updatePlayState(
   state: PlayState,
   loading: boolean,
   position?: number,
+  duration?: number,
 ) {
   const enable = !loading;
   MusicControl.enableControl('play', enable);
   MusicControl.enableControl('pause', enable);
-  MusicControl.updatePlayback({
+  let info: any = {
     state:
       state === PlayState.PLAYING && !loading
         ? MusicControl.STATE_PLAYING
         : MusicControl.STATE_PAUSED,
     elapsedTime: position !== undefined ? Math.round(position / 1000) : 0,
-  });
+  };
+  if (duration !== undefined) {
+    info.duration = duration / 1000;
+  }
+  console.log('control position', info.elapsedTime, position);
+  MusicControl.updatePlayback(info);
 }
 
 export function nowPlayingLive(_show: Show) {}
@@ -87,7 +93,7 @@ export function nowPlayingLive(_show: Show) {}
 export const MusicControls: FunctionComponent = () => {
   const {state, dispatch} = useContext(StateContext);
   const {position, seekCookie} = useContext(PlaybackStateContext);
-  const {show, episode, state: playState, loading} = state.player;
+  const {show, episode, state: playState, loading, duration} = state.player;
   const [localState, setLocalState] = useState<{
     loading: boolean;
     seekCookie: number;
@@ -118,19 +124,32 @@ export const MusicControls: FunctionComponent = () => {
   }
 
   if (
+    // update when the show or episode change
     force ||
+    // update when the playback state changes
     localState.state !== playState ||
+    // enable the controls when buffering ends
     (localState.loading === true && !loading) ||
-    localState.seekCookie !== seekCookie
+    // update the position after a seek
+    localState.seekCookie !== seekCookie ||
+    // update the position once playback ends
+    (localState.position !== undefined && position === undefined)
   ) {
-    setLocalState((s) => ({...s, state: playState, loading, seekCookie}));
+    setLocalState((s) => ({
+      ...s,
+      state: playState,
+      loading,
+      seekCookie,
+      position,
+      duration,
+    }));
     if (episode !== undefined && !loading) {
       enableSeeking(true);
     } else {
       enableSeeking(false);
     }
 
-    updatePlayState(playState, loading, position);
+    updatePlayState(playState, loading, position, duration);
   }
 
   return null;

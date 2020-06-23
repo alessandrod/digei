@@ -148,7 +148,7 @@ const updatePlayerStatus = (
 ): State => {
   const {player, playbackDispatch} = state;
   const {show, episode} = player;
-  const {loading, position, duration} = action;
+  const {loading, position, duration: duration} = action;
 
   playbackDispatch(new UpdatePlaybackInfo(position, duration, show, episode));
 
@@ -171,8 +171,6 @@ const seek = (state: State, action: Seek): State => {
 
 const playerFinished = (state: State, action: PlayerFinished): State => {
   const {player, playbackDispatch} = state;
-
-  console.log('playback finished');
 
   playbackDispatch(action);
 
@@ -311,7 +309,6 @@ const playbackPlayerFinished = (
 const playbackSeek = (state: PlaybackState, action: Seek): PlaybackState => {
   const {player, position} = state;
   const {position: seekPosition, relative} = action;
-
 
   let target = seekPosition * 1000;
   if (relative) {
