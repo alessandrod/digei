@@ -40,6 +40,7 @@ export type Action =
   | TogglePlayPause
   | ToggleLive
   | UpdatePlayerStatus
+  | Seek
   | PlayerFinished
   | UpdateLiveShow
   | SetShows;
@@ -56,9 +57,16 @@ export class UpdatePlaybackInfo {
     public readonly episode?: Episode,
   ) {}
 }
+export class Seek {
+  constructor(
+    public readonly position: number,
+    public readonly relative = false,
+  ) {}
+}
 
 export type PlaybackAction =
   | SetPlayState
   | UpdatePlaybackInfo
   | PlayerFinished
-  | PlayMedia;
+  | PlayMedia
+  | Seek;

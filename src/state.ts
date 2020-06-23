@@ -13,6 +13,7 @@ import {
   PlaybackAction,
   SetPlayState,
   PlayerFinished,
+  Seek,
 } from 'actions';
 import {Player} from 'player';
 import {EpisodeMeta} from 'db';
@@ -161,6 +162,14 @@ const updatePlayerStatus = (
   };
 };
 
+const seekRelative = (state: State, action: Seek): State => {
+  const {playbackDispatch} = state;
+
+  console.log('seek relative outer');
+  playbackDispatch(action);
+  return state;
+};
+
 const playerFinished = (state: State, action: PlayerFinished): State => {
   const {player, playbackDispatch} = state;
 
@@ -205,6 +214,8 @@ export function stateReducer(state: State, action: Action) {
     state = playMedia(state, action);
   } else if (action instanceof UpdatePlayerStatus) {
     state = updatePlayerStatus(state, action);
+  } else if (action instanceof Seek) {
+    state = seekRelative(state, action);
   } else if (action instanceof PlayerFinished) {
     state = playerFinished(state, action);
   } else if (action instanceof UpdateLiveShow) {
@@ -219,6 +230,7 @@ export function stateReducer(state: State, action: Action) {
 export type PlaybackState = {
   replay: boolean;
   player: Player;
+  seekCookie: number;
   show?: Show;
   episode?: Episode;
   episodeMeta?: EpisodeMeta;
@@ -226,7 +238,11 @@ export type PlaybackState = {
   duration?: number;
 };
 
-export const INITIAL_PLAYBACK_STATE = {replay: false, player: new Player()};
+export const INITIAL_PLAYBACK_STATE = {
+  replay: false,
+  player: new Player(),
+  seekCookie: 0,
+};
 
 export const PlaybackStateContext = createContext<PlaybackState>(
   INITIAL_PLAYBACK_STATE,
@@ -288,6 +304,23 @@ const playbackPlayerFinished = (
   return {...state, position: undefined, replay: true};
 };
 
+const playbackSeek = (state: PlaybackState, action: Seek): PlaybackState => {
+  const {player, position} = state;
+  const {position: seekPosition, relative} = action;
+
+  console.log('doing relative seek');
+
+  let target = seekPosition * 1000;
+  if (relative) {
+    if (position === undefined) {
+      return state;
+    }
+    target += position;
+  }
+  player.seek(target);
+  return {...state, position: target, seekCookie: state.seekCookie + 1};
+};
+
 export function playbackStateReducer(
   state: PlaybackState,
   action: PlaybackAction,
@@ -300,6 +333,8 @@ export function playbackStateReducer(
     state = updatePlaybackInfo(state, action);
   } else if (action instanceof PlayerFinished) {
     state = playbackPlayerFinished(state, action);
+  } else if (action instanceof Seek) {
+    state = playbackSeek(state, action);
   }
 
   return state;
