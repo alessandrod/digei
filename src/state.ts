@@ -162,10 +162,9 @@ const updatePlayerStatus = (
   };
 };
 
-const seekRelative = (state: State, action: Seek): State => {
+const seek = (state: State, action: Seek): State => {
   const {playbackDispatch} = state;
 
-  console.log('seek relative outer');
   playbackDispatch(action);
   return state;
 };
@@ -220,7 +219,7 @@ export function stateReducer(state: State, action: Action) {
   } else if (action instanceof UpdatePlayerStatus) {
     state = updatePlayerStatus(state, action);
   } else if (action instanceof Seek) {
-    state = seekRelative(state, action);
+    state = seek(state, action);
   } else if (action instanceof PlayerFinished) {
     state = playerFinished(state, action);
   } else if (action instanceof UpdateLiveShow) {
@@ -313,7 +312,6 @@ const playbackSeek = (state: PlaybackState, action: Seek): PlaybackState => {
   const {player, position} = state;
   const {position: seekPosition, relative} = action;
 
-  console.log('doing relative seek');
 
   let target = seekPosition * 1000;
   if (relative) {

@@ -45,11 +45,11 @@ export const LiveShow: FunctionComponent<{
   navigation: NavigationProp<'Show'>;
 }> = ({show, navigation}) => {
   let {name, cover, description} = show;
-  const db = useContext(DatabaseContext);
+  const {db} = useContext(DatabaseContext);
   return (
     <TouchableOpacity
       onPress={() => {
-        db?.fetchEpisodeMeta(show.url).then((meta) => {
+        db.fetchEpisodeMeta(show.url).then((meta) => {
           navigation.navigate('Show', {show, meta});
         });
       }}>

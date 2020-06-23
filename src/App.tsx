@@ -67,10 +67,10 @@ function MainStackScreen() {
 }
 
 const AppInner: FunctionComponent<{
-  db: Database;
+  database: Database;
   playbackState: PlaybackState;
   playbackDispatch: Dispatch<PlaybackAction>;
-}> = ({db, playbackState, playbackDispatch}) => {
+}> = ({database, playbackState, playbackDispatch}) => {
   const [state, dispatch] = useReducer(stateReducer, {
     ...INITIAL_STATE,
     playbackDispatch,
@@ -87,12 +87,6 @@ const AppInner: FunctionComponent<{
       },
     });
   }, [player]);
-  const onSeek = useCallback(
-    (pos) => {
-      player.seek(pos);
-    },
-    [player],
-  );
 
   const client = useRef(
     new ApolloClient({
@@ -104,22 +98,29 @@ const AppInner: FunctionComponent<{
     }),
   );
 
+  const [downloadState, downloadDispatch] = useReducer(
+    downloadStateReducer,
+    INITIAL_DOWNLOAD_STATE,
+  );
   return useMemo(() => {
     console.log('state changed, re-rendering app');
 
     return (
-      <DatabaseContext.Provider value={db}>
-        <StateContext.Provider value={{state, dispatch}}>
-          <ApolloProvider client={client.current}>
-            <NavigationContainer>
-              <MainStackScreen />
-            </NavigationContainer>
-            {state.player.visible && <PlayerComponent onSeek={onSeek} />}
-          </ApolloProvider>
-        </StateContext.Provider>
-      </DatabaseContext.Provider>
+      <DownloadContext.Provider
+        value={{state: downloadState, dispatch: downloadDispatch}}>
+        <DatabaseContext.Provider value={{db: database}}>
+          <StateContext.Provider value={{state, dispatch}}>
+            <ApolloProvider client={client.current}>
+              <NavigationContainer>
+                <MainStackScreen />
+              </NavigationContainer>
+              {state.player.visible && <PlayerComponent />}
+            </ApolloProvider>
+          </StateContext.Provider>
+        </DatabaseContext.Provider>
+      </DownloadContext.Provider>
     );
-  }, [db, state, dispatch, onSeek]);
+  }, [database, downloadState, downloadDispatch, state, dispatch]);
 };
 
 export default function App() {
@@ -140,17 +141,13 @@ export default function App() {
     [playbackDispatch],
   );
 
-  const [downloadState, downloadDispatch] = useReducer(
-    downloadStateReducer,
-    INITIAL_DOWNLOAD_STATE,
-  );
-
   const player = playbackState.player;
   const [playerReady, setPlayerReady] = useState<boolean>(false);
   useEffect(() => {
     player.init().then(() => {
       setPlayerReady(true);
     });
+
     return () => {
       if (player) {
         player.stop();
@@ -167,15 +164,12 @@ export default function App() {
   }
 
   return (
-    <DownloadContext.Provider
-      value={{state: downloadState, dispatch: downloadDispatch}}>
-      <PlaybackStateContext.Provider value={playbackState}>
-        <AppInner
-          db={db}
-          playbackState={playbackState}
-          playbackDispatch={playDispatch}
-        />
-      </PlaybackStateContext.Provider>
-    </DownloadContext.Provider>
+    <PlaybackStateContext.Provider value={playbackState}>
+      <AppInner
+        database={db}
+        playbackState={playbackState}
+        playbackDispatch={playDispatch}
+      />
+    </PlaybackStateContext.Provider>
   );
 }

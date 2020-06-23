@@ -188,9 +188,7 @@ class PlayerSwipeMethods implements SwipeMethods {
   }
 }
 
-export const PlayerComponent: FunctionComponent<{
-  onSeek: (pos: number) => void;
-}> = ({onSeek}) => {
+export const PlayerComponent: FunctionComponent = () => {
   const height = useWindowDimensions().height;
   const miniOffset = -95;
   const swipe = useRef(new PlayerSwipeMethods(miniOffset, height)).current;
@@ -228,12 +226,10 @@ export const PlayerComponent: FunctionComponent<{
         <PlayerSwipe {...methods}>
           <MiniPlayer
             style={{opacity: miniOpacity}}
-            onSeek={onSeek}
             onMaximize={() => swipe.doSwipe(Direction.Up)}
           />
           <ExpandedPlayer
             onMinimize={() => swipe.doSwipe(Direction.Down)}
-            onSeek={onSeek}
             style={{
               opacity: expOpacity,
               transform: [{translateY: expMarginTop}],

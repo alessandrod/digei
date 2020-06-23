@@ -3,12 +3,11 @@ import styled from 'styled-components/native';
 import {Animated, ActivityIndicator} from 'react-native';
 import {human} from 'react-native-typography';
 import {systemWeights as w} from 'react-native-typography';
-import {iOSColors as clr} from 'react-native-typography';
 
 import {Colors} from 'theme';
 import {PlayPause, SkipButton} from 'components/player/controls';
-import {StateContext, PlaybackStateContext} from 'state';
-import {TogglePlayPause} from 'actions';
+import {StateContext} from 'state';
+import {TogglePlayPause, Seek} from 'actions';
 import {episodeTitle} from 'components';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
@@ -77,10 +76,8 @@ const SkipBackText = styled.Text`
 export const MiniPlayer: FunctionComponent<{
   style?: any;
   onMaximize: () => void;
-  onSeek: (pos: number) => void;
-}> = ({style, onMaximize, onSeek}) => {
+}> = ({style, onMaximize}) => {
   const {state, dispatch} = useContext(StateContext);
-  const {position} = useContext(PlaybackStateContext);
   let {show, episode, state: playState, loading} = state.player;
 
   const isLive = episode === undefined;
@@ -111,11 +108,7 @@ export const MiniPlayer: FunctionComponent<{
         <SkipBack
           disabled={isLive || loading}
           icon="reload-outline"
-          onPress={() => {
-            if (position !== undefined) {
-              onSeek(position - 15 * 1000);
-            }
-          }}>
+          onPress={() => dispatch(new Seek(-15, true))}>
           <SkipBackText>15</SkipBackText>
         </SkipBack>
       </MiniPlayerView>

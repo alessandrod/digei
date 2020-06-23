@@ -1,11 +1,10 @@
 import React, {useContext, FunctionComponent, useEffect, Dispatch} from 'react';
-import {StatusBar, SafeAreaView} from 'react-native';
+import {StatusBar} from 'react-native';
 import {gql} from 'apollo-boost';
 import {useQuery} from '@apollo/react-hooks';
 import {Text} from 'react-native';
 
 import {ShowList} from 'components/shows/list';
-import {BaseView} from 'components';
 import {StateContext, Show} from 'state';
 import {RouteProp, NavigationProp} from 'navigation';
 import {UpdateLiveShow, SetShows, Action} from 'actions';

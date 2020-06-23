@@ -40,7 +40,7 @@ export const ShowCover: FunctionComponent<{
   style?: ViewStyle;
 }> = ({show, navigation, style}) => {
   let {name, cover} = show;
-  const db = useContext(DatabaseContext);
+  const {db} = useContext(DatabaseContext);
   return (
     <CoverView
       style={style}

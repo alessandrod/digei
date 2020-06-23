@@ -9,7 +9,7 @@ import {systemWeights as w} from 'react-native-typography';
 import {Colors} from 'theme';
 import {PlayPause, SkipButton} from 'components/player/controls';
 import {StateContext, PlaybackStateContext} from 'state';
-import {TogglePlayPause, UpdatePlayerStatus} from 'actions';
+import {TogglePlayPause, UpdatePlayerStatus, Seek} from 'actions';
 import {formatTimeMillis, formatDate} from 'utils';
 import {episodeTitle} from 'components';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -151,9 +151,8 @@ const SeekDuration = SeekPosition;
 export const ExpandedPlayer: FunctionComponent<{
   style?: any;
   onMinimize: () => void;
-  onSeek: (pos: number) => void;
-}> = ({style, onMinimize, onSeek}) => {
-  const db = useContext(DatabaseContext);
+}> = ({style, onMinimize}) => {
+  const {db} = useContext(DatabaseContext);
   let {state, dispatch} = useContext(StateContext);
   const {state: playState, duration, show, episode, loading} = state.player;
   const {position, episodeMeta} = useContext(PlaybackStateContext);
@@ -214,7 +213,6 @@ export const ExpandedPlayer: FunctionComponent<{
               }}
               onSlidingComplete={(value: number) => {
                 if (show && episode && pos !== undefined) {
-                  console.log('updating position', pos / 1000);
                   db.updateEpisodePlayPosition(
                     episode.url,
                     show.url,
@@ -223,7 +221,7 @@ export const ExpandedPlayer: FunctionComponent<{
                 }
                 setSeekPosition(null);
                 dispatch(new UpdatePlayerStatus(false, value, duration));
-                onSeek(value);
+                dispatch(new Seek(value / 1000));
               }}
               thumbImage={require('../../../img/circle.png')}
             />
@@ -244,11 +242,7 @@ export const ExpandedPlayer: FunctionComponent<{
           <SkipBack
             disabled={isLive || loading}
             icon="reload-outline"
-            onPress={() => {
-              if (pos !== undefined) {
-                onSeek(pos - 15 * 1000);
-              }
-            }}>
+            onPress={() => dispatch(new Seek(-15, true))}>
             <SkipBackText>15</SkipBackText>
           </SkipBack>
           {loading && <ExpandedLoading />}
@@ -261,11 +255,7 @@ export const ExpandedPlayer: FunctionComponent<{
           <SkipForward
             disabled={isLive || loading}
             icon="reload-outline"
-            onPress={() => {
-              if (pos !== undefined) {
-                onSeek(pos + 30 * 1000);
-              }
-            }}>
+            onPress={() => dispatch(new Seek(30, true))}>
             <SkipForwardText>30</SkipForwardText>
           </SkipForward>
         </Buttons>

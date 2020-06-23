@@ -235,7 +235,6 @@ const Details: FunctionComponent<{
 
 export const setPlayDate = (db: Database, meta: EpisodeMeta, date?: string) => {
   const {url, showUrl} = meta;
-  console.log('setting play date', meta.url, date);
   meta.playDate = date;
   meta.playPosition = 0;
   db.updateEpisodePlayDate(url, showUrl, meta.playDate);
@@ -249,7 +248,7 @@ const EpisodeComponentImpl: FunctionComponent<{
   playPosition?: number;
   duration?: number;
 }> = ({show, episode, episodeMeta, playPosition, duration}) => {
-  const db = useContext(DatabaseContext);
+  const {db} = useContext(DatabaseContext);
   const {dispatch} = useContext(StateContext);
   const {media} = episode;
   if (duration === undefined) {

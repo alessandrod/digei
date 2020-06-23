@@ -114,4 +114,6 @@ export class Database {
   }
 }
 
-export const DatabaseContext = createContext<Database>({} as Database);
+export const DatabaseContext = createContext<{db: Database}>({
+  db: (undefined as unknown) as Database,
+});
