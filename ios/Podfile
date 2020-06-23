@@ -82,6 +82,8 @@ target 'deejay' do
 
   pod 'RNGestureHandler', :podspec => '../node_modules/react-native-gesture-handler/RNGestureHandler.podspec'
 
+  pod 'UMReactNativeAdapter', path: '../node_modules/@unimodules/react-native-adapter/ios', inhibit_warnings: true
+
   target 'deejayTests' do
     inherit! :complete
     # Pods for testing
