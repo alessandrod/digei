@@ -173,8 +173,13 @@ export const ExpandedPlayer: FunctionComponent<{
   }
   subtitle = show?.hosts;
 
-  if (show && episode && position && position % 10000 < 100) {
-    db.updateEpisodePlayPosition(episode.url, show.url, position / 1000);
+  if (show && episode && (position === undefined || position % 10000 < 100)) {
+    // position is undefined when playback ends, so we reset the play position
+    db.updateEpisodePlayPosition(
+      episode.url,
+      show.url,
+      position !== undefined ? position / 1000 : 0,
+    );
   }
 
   if (episodeMeta && pos !== undefined && pos > 0 && duration) {
