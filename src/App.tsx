@@ -134,6 +134,13 @@ export default function App() {
     INITIAL_PLAYBACK_STATE,
   );
 
+  const playDispatch = useCallback(
+    (action) => {
+      return setTimeout(() => playbackDispatch(action), 0);
+    },
+    [playbackDispatch],
+  );
+
   const [downloadState, downloadDispatch] = useReducer(
     downloadStateReducer,
     INITIAL_DOWNLOAD_STATE,
@@ -167,7 +174,7 @@ export default function App() {
         <AppInner
           db={db}
           playbackState={playbackState}
-          playbackDispatch={playbackDispatch}
+          playbackDispatch={playDispatch}
         />
       </PlaybackStateContext.Provider>
     </DownloadContext.Provider>
