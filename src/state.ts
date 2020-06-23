@@ -184,6 +184,8 @@ const playerFinished = (state: State, action: PlayerFinished): State => {
 };
 
 const updateLiveShow = (state: State, name: String): State => {
+  const {media} = state.player;
+
   name = name.toLowerCase();
   if (state.live_show !== undefined) {
     if (state.live_show.name.toLowerCase() === name) {
@@ -193,6 +195,9 @@ const updateLiveShow = (state: State, name: String): State => {
 
   for (let show of state.shows) {
     if (show.name.toLowerCase() === name) {
+      if (media?.url === LIVE_URL) {
+        state = playMedia(state, new PlayMedia(media, undefined, show));
+      }
       return {...state, live_show: show};
     }
   }
