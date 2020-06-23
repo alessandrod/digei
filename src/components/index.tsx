@@ -20,7 +20,7 @@ export const ListSeparator = styled.View.attrs(() => ({colors: Colors}))`
 export const episodeTitle = (episode: Episode): String => {
   const {date, title} = episode;
   let titleText;
-  if (date !== undefined) {
+  if (date) {
     titleText = formatDateInWords(date);
   } else {
     titleText = title;

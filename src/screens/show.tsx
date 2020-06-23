@@ -70,7 +70,7 @@ export const ShowScreen: FunctionComponent<{
   }
 
   if (data === undefined) {
-    return <Text>Loading</Text>;
+    return null;
   }
 
   const {episodes} = data.episodes;
