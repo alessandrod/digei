@@ -34,6 +34,7 @@ const QUERY_SHOWS = gql`
       }
       description
       hosts
+      sortNum
     }
   }
 `;
@@ -61,10 +62,11 @@ export const ShowsScreen: FunctionComponent<{
     return <Text>Error {error}</Text>;
   }
   if (loading) {
-    return <Text>loading...</Text>;
+    return null;
   }
 
   const shows = data.shows as Show[];
+  shows.sort((s1, s2) => s1.sortNum - s2.sortNum);
   if (shows !== state.shows) {
     dispatch(new SetShows(shows));
   }

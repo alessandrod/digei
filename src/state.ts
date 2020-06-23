@@ -55,6 +55,7 @@ export type Show = {
   cover: ImageSourcePropType;
   hosts: String;
   description: string[];
+  sortNum: number;
   episodes: Episode[];
 };
 
