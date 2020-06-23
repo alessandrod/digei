@@ -12,11 +12,11 @@ import {
 } from 'expo-file-system';
 import {URL} from 'react-native-url-polyfill';
 
-import {BaseView, episodeTitle} from 'components';
+import {episodeTitle} from 'components';
 import {Colors} from 'theme';
 import {Show, StateContext, Episode, PlaybackStateContext} from 'state';
 import {PlayMedia} from 'actions';
-import {formatTimeInWords, formatDateInWords} from 'utils';
+import {formatTimeInWords, formatDateInWords, formatDate} from 'utils';
 import {EpisodeMeta, DatabaseContext, Database} from 'db';
 import {useDownload} from 'download';
 import {EpisodeContextMenu} from 'components/show/episode-context-menu';
@@ -291,7 +291,11 @@ const EpisodeComponentImpl: FunctionComponent<{
       downloading={download !== undefined}
       downloaded={!!(download === undefined && episodeMeta.localFile)}
       onMarkAsPlayed={(played) => {
-        setPlayDate(db, episodeMeta, played ? '1/1/2021' : undefined);
+        setPlayDate(
+          db,
+          episodeMeta,
+          played ? formatDate(Date.now()) : undefined,
+        );
         rerender();
       }}
       onDownload={() => {

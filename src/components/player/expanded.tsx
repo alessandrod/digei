@@ -10,7 +10,7 @@ import {Colors} from 'theme';
 import {PlayPause, SkipButton} from 'components/player/controls';
 import {StateContext, PlaybackStateContext} from 'state';
 import {TogglePlayPause, UpdatePlayerStatus} from 'actions';
-import {formatTimeMillis} from 'utils';
+import {formatTimeMillis, formatDate} from 'utils';
 import {episodeTitle} from 'components';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {DatabaseContext} from 'db';
@@ -181,7 +181,7 @@ export const ExpandedPlayer: FunctionComponent<{
   if (episodeMeta && pos !== undefined && pos > 0 && duration) {
     if (pos >= duration - 10000) {
       if (!episodeMeta.playDate) {
-        setPlayDate(db, episodeMeta, '1/1/2021');
+        setPlayDate(db, episodeMeta, formatDate(Date.now()));
       }
     } else if (episodeMeta.playDate) {
       setPlayDate(db, episodeMeta, undefined);
