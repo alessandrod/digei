@@ -154,8 +154,10 @@ export const ExpandedPlayer: FunctionComponent<{
 }> = ({style, onMinimize}) => {
   const {db} = useContext(DatabaseContext);
   let {state, dispatch} = useContext(StateContext);
-  const {state: playState, duration, show, episode, loading} = state.player;
-  const {position, episodeMeta} = useContext(PlaybackStateContext);
+  const {state: playState, duration, loading} = state.player;
+  const {show, episode, episodeMeta, position} = useContext(
+    PlaybackStateContext,
+  );
 
   let [seekPosition, setSeekPosition] = useState<number | null>(null);
   const pos = seekPosition != null ? seekPosition : position;
@@ -177,14 +179,18 @@ export const ExpandedPlayer: FunctionComponent<{
     show &&
     episode &&
     episodeMeta !== undefined &&
-    (position === undefined || position % 10000 < 100)
+    (position === undefined || (position > 0 && position % 10000 < 100))
   ) {
-    // position is undefined when playback ends, so we reset the play position
-    const p = position !== undefined ? position / 1000 : 0;
-    episodeMeta.playPosition = p;
-    db.updateEpisodePlayPosition(episode.url, show.url, p);
-    if (!loading && position === undefined) {
-      setPlayDate(db, episodeMeta, formatDate(Date.now()));
+    if (position !== undefined) {
+      episodeMeta.playPosition = position / 1000;
+      db.updateEpisodePlayPosition(
+        episode.url,
+        show.url,
+        episodeMeta.playPosition,
+      );
+    } else if (!loading) {
+      // position is undefined when playback ends, so we reset the play position
+      setPlayDate(db, episodeMeta, formatDate(Date.now()), true);
     }
   }
 
@@ -213,11 +219,13 @@ export const ExpandedPlayer: FunctionComponent<{
                 setSeekPosition(Math.floor(value));
               }}
               onSlidingComplete={(value: number) => {
-                if (show && episode && pos !== undefined) {
+                if (show && episode && episodeMeta) {
+                  const old = episodeMeta.playPosition;
+                  episodeMeta.playPosition = value / 1000;
                   db.updateEpisodePlayPosition(
                     episode.url,
                     show.url,
-                    pos / 1000,
+                    value / 1000,
                   );
                 }
                 setSeekPosition(null);

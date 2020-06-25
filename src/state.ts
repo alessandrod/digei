@@ -266,6 +266,7 @@ const playbackPlayMedia = (
     episode,
     episodeMeta,
     position: position && position * 1000,
+    duration: undefined,
     replay: false,
   };
 };

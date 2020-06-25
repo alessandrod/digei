@@ -84,7 +84,6 @@ function updatePlayState(
   if (duration !== undefined) {
     info.duration = duration / 1000;
   }
-  console.log('control position', info.elapsedTime, position);
   MusicControl.updatePlayback(info);
 }
 

@@ -185,18 +185,17 @@ const PlayingEpisodeComponent: FunctionComponent<{
   episode: Episode;
   episodeMeta: EpisodeMeta;
 }> = ({show, episode, episodeMeta}) => {
-  const {db} = useContext(DatabaseContext);
   const {loading} = useContext(StateContext).state.player;
   let {position, duration} = useContext(PlaybackStateContext);
 
-  // FIXME: this is duplicated with the expanded player
-  if (!loading && position === undefined) {
-    setPlayDate(db, episodeMeta, formatDate(Date.now()));
-  }
-
   if (position !== undefined) {
     position = position / 1000;
-    episodeMeta.playPosition = position;
+  } else if (!loading) {
+    // we were playing and now the position is undefined. This means the track ended.
+    position = 0;
+    // we let the player do the actual db update. We set this so the current
+    // render cycle renders the episode as played.
+    episodeMeta.playDate = formatDate(Date.now());
   } else {
     position = episodeMeta.playPosition;
   }
@@ -240,10 +239,20 @@ const Details: FunctionComponent<{
   return <DetailsView>{details}</DetailsView>;
 };
 
-export const setPlayDate = (db: Database, meta: EpisodeMeta, date?: string) => {
+export const setPlayDate = (
+  db: Database,
+  meta: EpisodeMeta,
+  date?: string,
+  resetPlayPosition = false,
+) => {
   const {url, showUrl} = meta;
+  console.log('setting play date', url, date, resetPlayPosition);
   meta.playDate = date;
   db.updateEpisodePlayDate(url, showUrl, meta.playDate);
+  if (resetPlayPosition) {
+    meta.playPosition = 0;
+    db.updateEpisodePlayPosition(url, showUrl, 0);
+  }
 };
 
 const EpisodeComponentImpl: FunctionComponent<{
@@ -252,7 +261,8 @@ const EpisodeComponentImpl: FunctionComponent<{
   episodeMeta: EpisodeMeta;
   playPosition?: number;
   duration?: number;
-}> = ({show, episode, episodeMeta, playPosition, duration}) => {
+  style?: ViewStyle;
+}> = ({show, episode, episodeMeta, playPosition, duration, style}) => {
   const {db} = useContext(DatabaseContext);
   const {dispatch} = useContext(StateContext);
   const {media} = episode;
@@ -299,6 +309,7 @@ const EpisodeComponentImpl: FunctionComponent<{
           db,
           episodeMeta,
           played ? formatDate(Date.now()) : undefined,
+          true,
         );
         if (playing) {
           dispatch(new StopPlayer(true));
@@ -324,7 +335,9 @@ const EpisodeComponentImpl: FunctionComponent<{
           if (download !== undefined) {
             return;
           }
-          setPlayDate(db, episodeMeta, undefined);
+          if (episodeMeta.playDate) {
+            setPlayDate(db, episodeMeta, undefined, true);
+          }
           let m;
           if (episodeMeta.localFile) {
             m = {url: episodeMeta.localFile};
@@ -341,7 +354,7 @@ const EpisodeComponentImpl: FunctionComponent<{
             ),
           );
         }}>
-        <EpisodeView>
+        <EpisodeView style={style}>
           <LeftView>
             <Title>{episodeTitle(episode)}</Title>
             <Details
