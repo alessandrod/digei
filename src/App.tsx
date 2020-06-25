@@ -30,7 +30,7 @@ import {
   PlaybackState,
 } from 'state';
 import {DatabaseContext, Database} from 'db';
-import {PlaybackAction, UpdatePlayerStatus, PlayerFinished} from 'actions';
+import {PlaybackAction, UpdatePlayerStatus, StopPlayer} from 'actions';
 import {
   DownloadContext,
   downloadStateReducer,
@@ -83,7 +83,7 @@ const AppInner: FunctionComponent<{
         dispatch(new UpdatePlayerStatus(loading, position, duration));
       },
       onPlaybackEnded: () => {
-        dispatch(new PlayerFinished());
+        dispatch(new StopPlayer(false));
       },
     });
   }, [player]);

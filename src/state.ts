@@ -12,7 +12,7 @@ import {
   UpdatePlaybackInfo,
   PlaybackAction,
   SetPlayState,
-  PlayerFinished,
+  StopPlayer,
   Seek,
 } from 'actions';
 import {Player} from 'player';
@@ -169,14 +169,15 @@ const seek = (state: State, action: Seek): State => {
   return state;
 };
 
-const playerFinished = (state: State, action: PlayerFinished): State => {
+const stopPlayer = (state: State, action: StopPlayer): State => {
   const {player, playbackDispatch} = state;
+  const {hide} = action;
 
   playbackDispatch(action);
 
   return {
     ...state,
-    player: {...player, state: PlayState.STOPPED, position: 0},
+    player: {...player, state: PlayState.STOPPED, position: 0, visible: !hide},
   };
 };
 
@@ -218,8 +219,8 @@ export function stateReducer(state: State, action: Action) {
     state = updatePlayerStatus(state, action);
   } else if (action instanceof Seek) {
     state = seek(state, action);
-  } else if (action instanceof PlayerFinished) {
-    state = playerFinished(state, action);
+  } else if (action instanceof StopPlayer) {
+    state = stopPlayer(state, action);
   } else if (action instanceof UpdateLiveShow) {
     state = updateLiveShow(state, action.name);
   } else if (action instanceof SetShows) {
@@ -299,11 +300,14 @@ const setPlayState = (
   return {...state, replay: false};
 };
 
-const playbackPlayerFinished = (
+const playbackStopPlayer = (
   state: PlaybackState,
-  _action: PlayerFinished,
+  action: StopPlayer,
 ): PlaybackState => {
-  return {...state, position: undefined, replay: true};
+  const {hide} = action;
+  const {player} = state;
+  player.stop();
+  return {...state, position: undefined, replay: !hide};
 };
 
 const playbackSeek = (state: PlaybackState, action: Seek): PlaybackState => {
@@ -331,8 +335,8 @@ export function playbackStateReducer(
     state = setPlayState(state, action);
   } else if (action instanceof UpdatePlaybackInfo) {
     state = updatePlaybackInfo(state, action);
-  } else if (action instanceof PlayerFinished) {
-    state = playbackPlayerFinished(state, action);
+  } else if (action instanceof StopPlayer) {
+    state = playbackStopPlayer(state, action);
   } else if (action instanceof Seek) {
     state = playbackSeek(state, action);
   }

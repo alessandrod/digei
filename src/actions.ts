@@ -23,8 +23,8 @@ export class UpdatePlayerStatus {
   ) {}
 }
 
-export class PlayerFinished {
-  constructor() {}
+export class StopPlayer {
+  constructor(public readonly hide: boolean) {}
 }
 
 export class UpdateLiveShow {
@@ -41,7 +41,7 @@ export type Action =
   | ToggleLive
   | UpdatePlayerStatus
   | Seek
-  | PlayerFinished
+  | StopPlayer
   | UpdateLiveShow
   | SetShows;
 
@@ -67,6 +67,6 @@ export class Seek {
 export type PlaybackAction =
   | SetPlayState
   | UpdatePlaybackInfo
-  | PlayerFinished
+  | StopPlayer
   | PlayMedia
   | Seek;

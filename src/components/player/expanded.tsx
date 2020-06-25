@@ -173,22 +173,18 @@ export const ExpandedPlayer: FunctionComponent<{
   }
   subtitle = show?.hosts;
 
-  if (show && episode && (position === undefined || position % 10000 < 100)) {
+  if (
+    show &&
+    episode &&
+    episodeMeta !== undefined &&
+    (position === undefined || position % 10000 < 100)
+  ) {
     // position is undefined when playback ends, so we reset the play position
-    db.updateEpisodePlayPosition(
-      episode.url,
-      show.url,
-      position !== undefined ? position / 1000 : 0,
-    );
-  }
-
-  if (episodeMeta && pos !== undefined && pos > 0 && duration) {
-    if (pos >= duration - 10000) {
-      if (!episodeMeta.playDate) {
-        setPlayDate(db, episodeMeta, formatDate(Date.now()));
-      }
-    } else if (episodeMeta.playDate) {
-      setPlayDate(db, episodeMeta, undefined);
+    const p = position !== undefined ? position / 1000 : 0;
+    episodeMeta.playPosition = p;
+    db.updateEpisodePlayPosition(episode.url, show.url, p);
+    if (!loading && position === undefined) {
+      setPlayDate(db, episodeMeta, formatDate(Date.now()));
     }
   }
 

@@ -15,7 +15,7 @@ import {URL} from 'react-native-url-polyfill';
 import {episodeTitle} from 'components';
 import {Colors} from 'theme';
 import {Show, StateContext, Episode, PlaybackStateContext} from 'state';
-import {PlayMedia} from 'actions';
+import {PlayMedia, StopPlayer} from 'actions';
 import {formatTimeInWords, formatDateInWords, formatDate} from 'utils';
 import {EpisodeMeta, DatabaseContext, Database} from 'db';
 import {useDownload} from 'download';
@@ -185,7 +185,14 @@ const PlayingEpisodeComponent: FunctionComponent<{
   episode: Episode;
   episodeMeta: EpisodeMeta;
 }> = ({show, episode, episodeMeta}) => {
+  const {db} = useContext(DatabaseContext);
+  const {loading} = useContext(StateContext).state.player;
   let {position, duration} = useContext(PlaybackStateContext);
+
+  // FIXME: this is duplicated with the expanded player
+  if (!loading && position === undefined) {
+    setPlayDate(db, episodeMeta, formatDate(Date.now()));
+  }
 
   if (position !== undefined) {
     position = position / 1000;
@@ -236,9 +243,7 @@ const Details: FunctionComponent<{
 export const setPlayDate = (db: Database, meta: EpisodeMeta, date?: string) => {
   const {url, showUrl} = meta;
   meta.playDate = date;
-  meta.playPosition = 0;
   db.updateEpisodePlayDate(url, showUrl, meta.playDate);
-  db.updateEpisodePlayPosition(url, showUrl, meta.playPosition);
 };
 
 const EpisodeComponentImpl: FunctionComponent<{
@@ -279,7 +284,7 @@ const EpisodeComponentImpl: FunctionComponent<{
     },
   );
 
-  const isPlaying = playPosition !== undefined;
+  const playing = playPosition !== undefined;
   if (playPosition === undefined && episodeMeta.playPosition > 10) {
     playPosition = episodeMeta.playPosition;
   }
@@ -295,7 +300,11 @@ const EpisodeComponentImpl: FunctionComponent<{
           episodeMeta,
           played ? formatDate(Date.now()) : undefined,
         );
-        rerender();
+        if (playing) {
+          dispatch(new StopPlayer(true));
+        } else {
+          rerender();
+        }
       }}
       onDownload={() => {
         makeDirectoryAsync(downloadUrl.directory, {
@@ -322,13 +331,21 @@ const EpisodeComponentImpl: FunctionComponent<{
           } else {
             m = media[0];
           }
-          dispatch(new PlayMedia(m, playPosition, show, episode, episodeMeta));
+          dispatch(
+            new PlayMedia(
+              m,
+              episodeMeta.playPosition,
+              show,
+              episode,
+              episodeMeta,
+            ),
+          );
         }}>
         <EpisodeView>
           <LeftView>
             <Title>{episodeTitle(episode)}</Title>
             <Details
-              isPlaying={isPlaying}
+              isPlaying={playing}
               playPosition={playPosition}
               duration={duration}
               playDate={episodeMeta.playDate}
