@@ -21,6 +21,7 @@ export const EpisodeContextMenu: FunctionComponent<PropsWithChildren<{
   onMarkAsPlayed: (played: boolean) => void;
   onDownload: () => void;
   onRemoveDownload: () => void;
+  onCopyLink: () => void;
 }>> = ({
   played,
   downloading,
@@ -28,6 +29,7 @@ export const EpisodeContextMenu: FunctionComponent<PropsWithChildren<{
   onMarkAsPlayed,
   onDownload,
   onRemoveDownload,
+  onCopyLink,
   children,
 }) => {
   const actions: MenuAction[] = [];
@@ -80,6 +82,8 @@ export const EpisodeContextMenu: FunctionComponent<PropsWithChildren<{
           onDownload();
         } else if (action.type === MenuActionType.REMOVE_DOWNLOAD) {
           onRemoveDownload();
+        } else if (action.type === MenuActionType.COPY_LINK) {
+          onCopyLink();
         }
       }}>
       {children}

@@ -11,6 +11,7 @@ import {
   DownloadResult,
 } from 'expo-file-system';
 import {URL} from 'react-native-url-polyfill';
+import Clipboard from '@react-native-community/clipboard';
 
 import {episodeTitle} from 'components';
 import {Colors} from 'theme';
@@ -329,6 +330,9 @@ const EpisodeComponentImpl: FunctionComponent<{
         db.updateEpisodeLocalFile(episode.url, show.url, undefined);
         deleteAsync(downloadUrl.url);
         rerender();
+      }}
+      onCopyLink={() => {
+        Clipboard.setString(episode.url);
       }}>
       <TouchableOpacity
         onPress={() => {
