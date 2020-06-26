@@ -45,7 +45,7 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* deejayTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = deejayTests.m; sourceTree = "<group>"; };
 		0EAFAF1EB1F5E6FC673FE8C0 /* libPods-deejay-deejayTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-deejay-deejayTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07F961A680F5B00A75B9A /* Radio Deejay*.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Radio Deejay*.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* Radio Deejay _.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Radio Deejay _.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = deejay/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = deejay/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -174,7 +174,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* Radio Deejay*.app */,
+				13B07F961A680F5B00A75B9A /* Radio Deejay _.app */,
 				00E356EE1AD99517003FC87E /* deejayTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* deejay-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* deejay-tvOSTests.xctest */,
@@ -238,7 +238,7 @@
 			);
 			name = deejay;
 			productName = deejay;
-			productReference = 13B07F961A680F5B00A75B9A /* Radio Deejay*.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* Radio Deejay _.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2D02E47A1E0B4A5D006451C7 /* deejay-tvOS */ = {
@@ -738,13 +738,14 @@
 				);
 				INFOPLIST_FILE = deejay/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.deejay-unofficial";
-				PRODUCT_NAME = "Radio Deejay*";
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.alessandrod.deejay;
+				PRODUCT_NAME = "Radio Deejay _";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -761,13 +762,14 @@
 				DEVELOPMENT_TEAM = QQ954SNT2M;
 				INFOPLIST_FILE = deejay/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.deejay-unofficial";
-				PRODUCT_NAME = "Radio Deejay*";
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.alessandrod.deejay;
+				PRODUCT_NAME = "Radio Deejay _";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
