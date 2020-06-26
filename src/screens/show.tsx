@@ -1,7 +1,7 @@
 import React, {FunctionComponent, useCallback} from 'react';
 import {StatusBar, SafeAreaView, Text} from 'react-native';
 import {useQuery} from '@apollo/react-hooks';
-import {gql} from 'apollo-boost';
+import {gql, NetworkStatus} from 'apollo-boost';
 
 import {RouteProp, NavigationProp} from 'navigation';
 import {Episode} from 'state';
@@ -34,10 +34,17 @@ export const ShowScreen: FunctionComponent<{
 }> = ({route}) => {
   let {show, meta} = route.params;
 
-  const {loading, error, data, fetchMore} = useQuery(EPISODES_QUERY, {
-    variables: {showName: show.name, nextToken: null},
-    notifyOnNetworkStatusChange: true,
-  });
+  const {loading, error, networkStatus, data, fetchMore, refetch} = useQuery(
+    EPISODES_QUERY,
+    {
+      variables: {showName: show.name, nextToken: null},
+      notifyOnNetworkStatusChange: true,
+    },
+  );
+
+  const onRefresh = useCallback(() => {
+    refetch({showName: show.name, nextToken: null});
+  }, [refetch, show]);
 
   const onEndReached = useCallback(() => {
     const nextToken = data?.episodes?.nextToken;
@@ -82,6 +89,8 @@ export const ShowScreen: FunctionComponent<{
         show={show}
         episodes={episodes as Episode[]}
         episodeMetas={meta}
+        refreshing={networkStatus === NetworkStatus.refetch}
+        onRefresh={onRefresh}
         onEndReached={onEndReached}
       />
     </>
