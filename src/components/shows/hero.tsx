@@ -61,7 +61,7 @@ let ShowDescription: FunctionComponent<{text: string}> = ({text}) => {
   }
 
   return (
-    <DescriptionText numberOfLines={7} ellipsizeMode="tail">
+    <DescriptionText numberOfLines={8} ellipsizeMode="tail">
       {pre}
       {link}
       {suff}
