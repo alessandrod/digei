@@ -1,11 +1,12 @@
 import React, {FunctionComponent} from 'react';
+import {Text, Linking} from 'react-native';
 import styled from 'styled-components/native';
 import {human} from 'react-native-typography';
 import {systemWeights as w} from 'react-native-typography';
 
-import {Colors} from 'theme';
 import {BlurView} from '@react-native-community/blur';
 import {Show} from 'state';
+import {tokenizeDescription} from 'utils';
 
 const ShowView = styled.View`
   flex: 1 0;
@@ -29,26 +30,55 @@ const ShowTitle = styled.Text`
   color: white;
 `;
 
-const ShowDescription = styled.Text.attrs(() => ({colors: Colors}))`
+const DescriptionText = styled.Text`
   margin-top: 5px;
   ${human.subheadObject as any}
   ${w.light as any};
   color: white;
 `;
 
+const Link = styled(DescriptionText)`
+  color: rgb(245, 26, 0);
+  text-decoration-line: underline;
+`;
+
+let ShowDescription: FunctionComponent<{text: string}> = ({text}) => {
+  const [pre, num, suff] = tokenizeDescription(text);
+  let link = null;
+  if (num.length > 0) {
+    const [prefix, number] = num.split('/', 2);
+    if (prefix && number) {
+      link = (
+        <Link
+          onPress={() =>
+            Linking.openURL('https://wa.me/+39' + prefix + number)
+          }>
+          {prefix + ' '}
+          {number}
+        </Link>
+      );
+    }
+  }
+
+  return (
+    <DescriptionText numberOfLines={7} ellipsizeMode="tail">
+      {pre}
+      {link}
+      {suff}
+    </DescriptionText>
+  );
+};
+
 export const ShowHero: FunctionComponent<{show: Show}> = ({show}) => {
-  let {name, cover, description} = show;
-  let desc = description.join('\n\n');
+  const {name, cover, description} = show;
   return (
     <ShowView>
       <ShowImage source={cover}>
         <BlurView blurType="dark">
           <ShowTextView>
             <ShowTitle>{name}</ShowTitle>
-            {desc !== '' && (
-              <ShowDescription numberOfLines={7} ellipsizeMode="tail">
-                {desc}
-              </ShowDescription>
+            {description.length > 0 && (
+              <ShowDescription text={description.join('\n\n')} />
             )}
           </ShowTextView>
         </BlurView>

@@ -64,3 +64,17 @@ export const formatDateInWords = (date: string): string => {
 export const formatDate = (date: number): string => {
   return format(date, 'dd/MM/yyyy');
 };
+
+export const tokenizeDescription = (str: string): string[] => {
+  const pos = str.search(/\d{3}\/\d{7}/);
+  if (pos === -1) {
+    return [str, '', ''];
+  }
+
+  const ret = [];
+  ret.push(str.substring(0, pos));
+  ret.push(str.substring(pos, pos + 11));
+  ret.push(str.substring(pos + 11));
+
+  return ret;
+};

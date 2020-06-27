@@ -1,5 +1,5 @@
 import React, {FunctionComponent, useCallback} from 'react';
-import {StatusBar, SafeAreaView, Text} from 'react-native';
+import {StatusBar, Text} from 'react-native';
 import {useQuery} from '@apollo/react-hooks';
 import {gql, NetworkStatus} from 'apollo-boost';
 
