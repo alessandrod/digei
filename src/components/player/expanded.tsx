@@ -9,7 +9,7 @@ import {systemWeights as w} from 'react-native-typography';
 import {Colors} from 'theme';
 import {PlayPause, SkipButton} from 'components/player/controls';
 import {StateContext, PlaybackStateContext} from 'state';
-import {TogglePlayPause, UpdatePlayerStatus, Seek} from 'actions';
+import {TogglePlayPause, Seek} from 'actions';
 import {formatTimeMillis, formatDate} from 'utils';
 import {episodeTitle} from 'components';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -155,11 +155,16 @@ export const ExpandedPlayer: FunctionComponent<{
   const {db} = useContext(DatabaseContext);
   let {state, dispatch} = useContext(StateContext);
   const {state: playState, duration, loading} = state.player;
-  const {show, episode, episodeMeta, position} = useContext(
+  const {show, episode, episodeMeta, position, seekCookie} = useContext(
     PlaybackStateContext,
   );
 
   let [seekPosition, setSeekPosition] = useState<number | null>(null);
+  const [lastSeekCookie, setLastSeekCookie] = useState(seekCookie);
+  if (seekCookie !== lastSeekCookie) {
+    setLastSeekCookie(seekCookie);
+    setSeekPosition(null);
+  }
   const pos = seekPosition != null ? seekPosition : position;
 
   let title1;
@@ -220,7 +225,6 @@ export const ExpandedPlayer: FunctionComponent<{
               }}
               onSlidingComplete={(value: number) => {
                 if (show && episode && episodeMeta) {
-                  const old = episodeMeta.playPosition;
                   episodeMeta.playPosition = value / 1000;
                   db.updateEpisodePlayPosition(
                     episode.url,
@@ -228,8 +232,6 @@ export const ExpandedPlayer: FunctionComponent<{
                     value / 1000,
                   );
                 }
-                setSeekPosition(null);
-                dispatch(new UpdatePlayerStatus(false, value, duration));
                 dispatch(new Seek(value / 1000));
               }}
               thumbImage={require('../../../img/circle.png')}

@@ -14,6 +14,7 @@ import {
   SetPlayState,
   StopPlayer,
   Seek,
+  SeekDone,
 } from 'actions';
 import {Player} from 'player';
 import {EpisodeMeta} from 'db';
@@ -169,6 +170,13 @@ const seek = (state: State, action: Seek): State => {
   return state;
 };
 
+const seekDone = (state: State, action: SeekDone): State => {
+  const {playbackDispatch} = state;
+
+  playbackDispatch(action);
+  return state;
+};
+
 const stopPlayer = (state: State, action: StopPlayer): State => {
   const {player, playbackDispatch} = state;
   const {hide} = action;
@@ -219,6 +227,8 @@ export function stateReducer(state: State, action: Action) {
     state = updatePlayerStatus(state, action);
   } else if (action instanceof Seek) {
     state = seek(state, action);
+  } else if (action instanceof SeekDone) {
+    state = seekDone(state, action);
   } else if (action instanceof StopPlayer) {
     state = stopPlayer(state, action);
   } else if (action instanceof UpdateLiveShow) {
@@ -323,7 +333,14 @@ const playbackSeek = (state: PlaybackState, action: Seek): PlaybackState => {
     target += position;
   }
   player.seek(target);
-  return {...state, position: target, seekCookie: state.seekCookie + 1};
+  return state;
+};
+
+const playbackSeekDone = (
+  state: PlaybackState,
+  _action: SeekDone,
+): PlaybackState => {
+  return {...state, seekCookie: state.seekCookie + 1};
 };
 
 export function playbackStateReducer(
@@ -340,6 +357,8 @@ export function playbackStateReducer(
     state = playbackStopPlayer(state, action);
   } else if (action instanceof Seek) {
     state = playbackSeek(state, action);
+  } else if (action instanceof SeekDone) {
+    state = playbackSeekDone(state, action);
   }
 
   return state;

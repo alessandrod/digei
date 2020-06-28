@@ -23,6 +23,17 @@ export class UpdatePlayerStatus {
   ) {}
 }
 
+export class Seek {
+  constructor(
+    public readonly position: number,
+    public readonly relative = false,
+  ) {}
+}
+
+export class SeekDone {
+  constructor() {}
+}
+
 export class StopPlayer {
   constructor(public readonly hide: boolean) {}
 }
@@ -41,6 +52,7 @@ export type Action =
   | ToggleLive
   | UpdatePlayerStatus
   | Seek
+  | SeekDone
   | StopPlayer
   | UpdateLiveShow
   | SetShows;
@@ -57,16 +69,11 @@ export class UpdatePlaybackInfo {
     public readonly episode?: Episode,
   ) {}
 }
-export class Seek {
-  constructor(
-    public readonly position: number,
-    public readonly relative = false,
-  ) {}
-}
 
 export type PlaybackAction =
   | SetPlayState
   | UpdatePlaybackInfo
   | StopPlayer
   | PlayMedia
-  | Seek;
+  | Seek
+  | SeekDone;

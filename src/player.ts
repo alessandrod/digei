@@ -8,6 +8,8 @@ export interface PlayerOptions {
     duration?: number;
   }): void;
 
+  onSeekDone(): void;
+
   onPlaybackEnded(): void;
 }
 export class Player {
@@ -182,6 +184,12 @@ export class Player {
   }
 
   seek(position: number) {
-    this.player?.setPositionAsync(position);
+    console.log('doing seek');
+    this.player?.setPositionAsync(position).then(() => {
+      if (this.options !== undefined) {
+        console.log('seek done');
+        this.options.onSeekDone();
+      }
+    });
   }
 }
