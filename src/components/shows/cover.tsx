@@ -1,6 +1,7 @@
 import React, {FunctionComponent, useContext} from 'react';
 import styled from 'styled-components/native';
 import {human} from 'react-native-typography';
+import {systemWeights as w} from 'react-native-typography';
 
 import {Show} from 'state';
 import {NavigationProp} from 'navigation';
@@ -26,6 +27,7 @@ const Cover = styled.Image`
 
 const Title = styled.Text`
   ${human.calloutObject as any};
+  ${w.semibold as any};
   padding-top: 5px;
 `;
 
