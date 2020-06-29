@@ -7,6 +7,7 @@ import {
   View,
   GestureResponderEvent,
   PanResponderGestureState,
+  ViewStyle,
 } from 'react-native';
 import {BlurView} from '@react-native-community/blur';
 
@@ -34,7 +35,7 @@ enum Direction {
   Right,
 }
 
-interface SwipeMethods {
+interface SwipeConfig {
   onMoveStart: (
     evt: GestureResponderEvent,
     gs: PanResponderGestureState,
@@ -50,16 +51,10 @@ interface SwipeMethods {
     gs: PanResponderGestureState,
     direction: Direction,
   ) => void;
+  horizontal?: boolean;
 }
 
-interface SwipeConfig extends SwipeMethods {
-  style?: any;
-  horizontal: boolean;
-}
-
-type SwipeableProps = SwipeConfig;
-
-const SwipeResponder = (config_ref: MutableRefObject<SwipeConfig>) => {
+const SwipeResponder = (config: SwipeConfig) => {
   const delta_low = 80;
   const delta_hi = useWindowDimensions().height / 3;
   const velocity_treshold = 0.3;
@@ -72,38 +67,42 @@ const SwipeResponder = (config_ref: MutableRefObject<SwipeConfig>) => {
     );
   };
 
+  const finishSwipe = (evt, gs) => {
+    let {dx, dy, vx, vy} = gs;
+    if (config.horizontal) {
+      let dir = dx < 0 ? Direction.Left : Direction.Right;
+      if (is_swipe(dx, vx)) {
+        config.onSwipe(evt, gs, dir);
+      } else {
+        config.onSwipeAborted(evt, gs, dir);
+      }
+    } else {
+      let dir = dy < 0 ? Direction.Up : Direction.Down;
+      if (is_swipe(dy, vy)) {
+        config.onSwipe(evt, gs, dir);
+      } else {
+        config.onSwipeAborted(evt, gs, dir);
+      }
+    }
+  };
+
   return PanResponder.create({
     onMoveShouldSetPanResponder: () => true,
-    onPanResponderGrant: config_ref.current.onMoveStart,
-    onPanResponderMove: config_ref.current.onMove,
-    onPanResponderRelease: (evt, gs) => {
-      let {dx, dy, vx, vy} = gs;
-      let config = config_ref.current;
-      if (config.horizontal) {
-        let dir = dx < 0 ? Direction.Left : Direction.Right;
-        if (is_swipe(dx, vx)) {
-          config.onSwipe(evt, gs, dir);
-        } else {
-          config.onSwipeAborted(evt, gs, dir);
-        }
-      } else {
-        let dir = dy < 0 ? Direction.Up : Direction.Down;
-        if (is_swipe(dy, vy)) {
-          config.onSwipe(evt, gs, dir);
-        } else {
-          config.onSwipeAborted(evt, gs, dir);
-        }
-      }
-    },
+    onPanResponderGrant: config.onMoveStart,
+    onPanResponderMove: config.onMove,
+    onPanResponderRelease: finishSwipe,
+    onPanResponderTerminate: finishSwipe,
   });
 };
 
-export const Swipeable: FunctionComponent<SwipeableProps> = (props) => {
-  let config = useRef(props as SwipeConfig);
-  let resp = useRef(SwipeResponder(config)).current;
+export const Swipeable: FunctionComponent<
+  {style?: ViewStyle; horizontal: boolean} & SwipeConfig
+> = (props) => {
+  const {style, ...methods} = props;
+  let resp = useRef(SwipeResponder(methods as SwipeConfig)).current;
 
   return (
-    <View style={props.style} {...resp.panHandlers}>
+    <View style={style} {...resp.panHandlers}>
       {props.children}
     </View>
   );
@@ -113,7 +112,7 @@ const PlayerSwipe = styled(Swipeable)`
   flex: 1 0;
 `;
 
-class PlayerSwipeMethods implements SwipeMethods {
+class PlayerSwipeConfig implements SwipeConfig {
   readonly pan: MutableRefObject<Animated.Value>;
   private pan_value?: number;
   private pan_listener: string;
@@ -191,7 +190,7 @@ class PlayerSwipeMethods implements SwipeMethods {
 export const PlayerComponent: FunctionComponent = () => {
   const height = useWindowDimensions().height;
   const miniOffset = -95;
-  const swipe = useRef(new PlayerSwipeMethods(miniOffset, height)).current;
+  const swipe = useRef(new PlayerSwipeConfig(miniOffset, height)).current;
   const pan = swipe.pan.current;
   let miniOpacity = pan.interpolate({
     inputRange: [miniOffset - 10, miniOffset],
@@ -213,7 +212,7 @@ export const PlayerComponent: FunctionComponent = () => {
   });
 
   let s = swipe;
-  let methods: SwipeMethods = {
+  let methods: SwipeConfig = {
     onMoveStart: s.onMoveStart.bind(s),
     onMove: s.onMove.bind(s),
     onSwipe: s.onSwipe.bind(s),
