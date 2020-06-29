@@ -17,13 +17,6 @@ const ShowView = styled.View`
   padding-bottom: 15px;
 `;
 
-const ShowImage = styled.Image`
-  flex: 1 0;
-  aspect-ratio: ${1200 / 627};
-  aspect-ratio: 1;
-  border-radius: 2px;
-`;
-
 const ShowTextView = styled.View`
   flex: 3 0;
   padding-left: 10px;
@@ -40,6 +33,20 @@ const ShowDescription = styled.Text.attrs(() => ({colors: Colors}))`
   ${w.light as any};
 `;
 
+const CoverWrapper = styled.View`
+  shadow-color: #000;
+  shadow-offset: 0px 2px;
+  shadow-opacity: 0.15;
+  shadow-radius: 2px;
+`;
+
+const Cover = styled.Image`
+  border-radius: 3px;
+  flex: 1 0;
+  aspect-ratio: 1;
+  resize-mode: cover;
+`;
+
 export const LiveShow: FunctionComponent<{
   show: Show;
   navigation: NavigationProp<'Show'>;
@@ -54,7 +61,9 @@ export const LiveShow: FunctionComponent<{
         });
       }}>
       <ShowView>
-        <ShowImage source={cover} />
+        <CoverWrapper>
+          <Cover source={cover} />
+        </CoverWrapper>
         <ShowTextView>
           <ShowTitle>{name}</ShowTitle>
           <ShowDescription numberOfLines={3}>{description}</ShowDescription>
