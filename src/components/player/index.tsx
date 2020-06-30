@@ -58,6 +58,7 @@ const SwipeResponder = (config: SwipeConfig) => {
   const delta_low = 80;
   const delta_hi = useWindowDimensions().height / 3;
   const velocity_treshold = 0.3;
+  const click_treshold = 4;
 
   const is_swipe = (delta: number, velocity: number) => {
     delta = Math.abs(delta);
@@ -86,8 +87,18 @@ const SwipeResponder = (config: SwipeConfig) => {
     }
   };
 
+  const shouldSetResponder = (evt, gs) => {
+    let {dx, dy} = gs;
+    const delta = Math.abs(config.horizontal ? dx : dy);
+    if (delta > click_treshold) {
+      return true;
+    }
+    return false;
+  };
+
   return PanResponder.create({
-    onMoveShouldSetPanResponder: () => true,
+    onStartShouldSetPanResponder: shouldSetResponder,
+    onMoveShouldSetPanResponder: shouldSetResponder,
     onPanResponderGrant: config.onMoveStart,
     onPanResponderMove: config.onMove,
     onPanResponderRelease: finishSwipe,
