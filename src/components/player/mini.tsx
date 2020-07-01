@@ -19,7 +19,6 @@ const MiniPlayerView = styled(Animated.View)`
   flex: 1 0;
   flex-direction: row;
   align-items: center;
-  border: 2px black;
 `;
 
 const CoverImage = styled.Image`
