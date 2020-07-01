@@ -16,10 +16,10 @@ const Touchable = styled(TouchableOpacity)`
 `;
 
 const MiniPlayerView = styled(Animated.View)`
-  flex: 0 0;
+  flex: 1 0;
   flex-direction: row;
-  min-height: 50px;
   align-items: center;
+  border: 2px black;
 `;
 
 const CoverImage = styled.Image`
