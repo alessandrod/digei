@@ -58,9 +58,8 @@ const CoverContainer = styled.View`
 `;
 
 const CoverImage = styled.Image`
-  aspect-ratio: 1;
-  max-height: 400px;
   width: 100%;
+  aspect-ratio: 1;
   border-radius: 4px;
 `;
 
