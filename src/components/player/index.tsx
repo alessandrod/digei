@@ -10,6 +10,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {BlurView} from '@react-native-community/blur';
+import {hasNotch} from 'react-native-device-info';
 
 import {MiniPlayer} from 'components/player/mini';
 import {ExpandedPlayer} from 'components/player/expanded';
@@ -200,7 +201,7 @@ class PlayerSwipeConfig implements SwipeConfig {
 
 export const PlayerComponent: FunctionComponent = () => {
   const height = useWindowDimensions().height;
-  const miniOffset = -95;
+  const miniOffset = hasNotch() ? -100 : -80;
   const swipe = useRef(new PlayerSwipeConfig(miniOffset, height)).current;
   const pan = swipe.pan.current;
   let miniOpacity = pan.interpolate({
@@ -217,7 +218,7 @@ export const PlayerComponent: FunctionComponent = () => {
   });
   let expMarginTop = pan.interpolate({
     inputRange: [miniOffset - 20, miniOffset],
-    outputRange: [-60, 0], // NOTE: 60px is the height of the MiniPlayer. Needs to be kept in sync.
+    outputRange: [0, 60], // NOTE: 60px is the height of the MiniPlayer. Needs to be kept in sync.
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });

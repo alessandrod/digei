@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Slider from '@react-native-community/slider';
 import {human} from 'react-native-typography';
 import {systemWeights as w} from 'react-native-typography';
+import {hasNotch} from 'react-native-device-info';
 
 import {Colors} from 'theme';
 import {PlayPause, SkipButton} from 'components/player/controls';
@@ -20,7 +21,10 @@ const ExpandedPlayerView = styled(Animated.View).attrs(() => ({
   colors: Colors,
 }))`
   flex: 1 0;
-  padding: 50px 0px;
+  position: absolute;
+  top: ${hasNotch() ? 25 : 0}px;
+  bottom: 0px;
+  width: 100%;
 `;
 
 const Header = styled.View`

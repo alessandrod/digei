@@ -12,7 +12,7 @@ import {episodeTitle} from 'components';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const Touchable = styled(TouchableOpacity)`
-  min-height: 50px;
+  min-height: 60px;
 `;
 
 const MiniPlayerView = styled(Animated.View)`
@@ -22,9 +22,8 @@ const MiniPlayerView = styled(Animated.View)`
 `;
 
 const CoverImage = styled.Image`
-  flex: 1 0;
-  aspect-ratio: 1;
-  max-width: 50px;
+  height: 60px;
+  width: 60px;
   border-radius: 2px;
 `;
 
