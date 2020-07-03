@@ -75,7 +75,7 @@ export const ShowsScreen: FunctionComponent<{
       <StatusBar barStyle="light-content" />
       <ShowList
         shows={shows}
-        liveShow={state.live_show}
+        liveShow={state.liveShow}
         navigation={navigation}
       />
     </>

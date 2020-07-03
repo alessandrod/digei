@@ -1,5 +1,5 @@
 import Icon from 'react-native-vector-icons/Ionicons';
-import styled from 'styled-components/native';
+import styled, {css} from 'styled-components/native';
 import React, {FunctionComponent, useContext} from 'react';
 
 import {Colors} from 'theme';
@@ -31,9 +31,22 @@ export const PlayPause: FunctionComponent<{
   );
 };
 
+const IconStyle = css`
+  width: 34px;
+  height: 40px;
+  padding-top: 2px;
+  margin-left: 10px;
+  color: rgb(245, 26, 0);
+  font-size: 34px;
+`;
+
+const LivePlayPauseView = styled(PlayPause)`
+  ${IconStyle};
+`;
+
 const LiveLoading = styled(ActivityIndicator)`
-  transform: scale(1.5);
-  margin-right: 10px;
+  ${IconStyle};
+  transform: scale(1.4);
 `;
 
 export const LivePlayPause: FunctionComponent<{style?: ViewStyle}> = ({
@@ -46,12 +59,12 @@ export const LivePlayPause: FunctionComponent<{style?: ViewStyle}> = ({
     dispatch,
   } = useContext(StateContext);
   const mediaIsLive = media?.url === LIVE_URL;
-  let indicator = mediaIsLive && loading && <LiveLoading />;
+  let indicator = mediaIsLive && loading && <LiveLoading style={style} />;
   return (
     <View>
       {indicator}
       {!indicator && (
-        <PlayPause
+        <LivePlayPauseView
           style={style}
           playState={mediaIsLive ? playerState : PlayState.STOPPED}
           onPress={() => {

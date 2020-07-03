@@ -63,14 +63,14 @@ export type Show = {
 
 export type State = {
   shows: Show[];
-  live_show?: Show;
+  liveShow?: Show;
   player: PlayerState;
   playbackDispatch: Dispatch<PlaybackAction>;
 };
 
 export const INITIAL_STATE: State = {
   shows: [],
-  live_show: undefined,
+  liveShow: undefined,
   player: {
     visible: false,
     state: PlayState.STOPPED,
@@ -110,9 +110,9 @@ const togglePlayPause = (state: State): State => {
 };
 
 const toggleLive = (state: State): State => {
-  const {player, live_show} = state;
+  const {player, liveShow} = state;
 
-  if (live_show === undefined) {
+  if (liveShow === undefined) {
     return state;
   }
 
@@ -120,7 +120,7 @@ const toggleLive = (state: State): State => {
     return togglePlayPause(state);
   }
 
-  return playMedia(state, new PlayMedia({url: LIVE_URL}, undefined, live_show));
+  return playMedia(state, new PlayMedia({url: LIVE_URL}, undefined, liveShow));
 };
 
 const playMedia = (state: State, action: PlayMedia): State => {
@@ -193,8 +193,8 @@ const updateLiveShow = (state: State, name: String): State => {
   const {media} = state.player;
 
   name = name.toLowerCase();
-  if (state.live_show !== undefined) {
-    if (state.live_show.name.toLowerCase() === name) {
+  if (state.liveShow !== undefined) {
+    if (state.liveShow.name.toLowerCase() === name) {
       return state;
     }
   }
@@ -204,7 +204,7 @@ const updateLiveShow = (state: State, name: String): State => {
       if (media?.url === LIVE_URL) {
         state = playMedia(state, new PlayMedia(media, undefined, show));
       }
-      return {...state, live_show: show};
+      return {...state, liveShow: show};
     }
   }
 

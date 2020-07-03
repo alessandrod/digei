@@ -30,16 +30,11 @@ const ShowContainerView = styled.View`
   padding-right: 2px;
 `;
 
-const LiveHeaderPlayPause = styled(LivePlayPause)`
-  font-size: 40px;
-  color: rgb(245, 26, 0);
-`;
-
 const LiveHeader: FunctionComponent = () => {
   return (
     <SectionHeaderView>
       <SectionHeaderText>Ora in onda</SectionHeaderText>
-      <LiveHeaderPlayPause />
+      <LivePlayPause />
     </SectionHeaderView>
   );
 };
