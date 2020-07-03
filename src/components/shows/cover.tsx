@@ -33,7 +33,7 @@ const Title = styled.Text`
 
 const CoverView = styled.TouchableOpacity`
   flex: 1 0;
-  max-width: 182px;
+  max-width: 49%;
 `;
 
 export const ShowCover: FunctionComponent<{
