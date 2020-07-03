@@ -1,15 +1,14 @@
-import React, {FunctionComponent, useContext, useMemo} from 'react';
+import React, {FunctionComponent, useMemo} from 'react';
 import styled from 'styled-components/native';
 import {NavigationProp} from 'navigation';
-import {SectionListData, SectionList, ActivityIndicator} from 'react-native';
+import {SectionListData, SectionList} from 'react-native';
 
 import {SectionHeaderView, SectionHeaderText} from 'components/section-list';
 import {ListSeparator} from 'components';
 import {LiveShow} from 'components/shows/live';
 import {ShowCover} from 'components/shows/cover';
-import {Show, StateContext, LIVE_URL, PlayState} from 'state';
-import {PlayPause} from 'components/player/controls';
-import {ToggleLive} from 'actions';
+import {Show} from 'state';
+import {LivePlayPause} from 'components/player/controls';
 
 interface ShowListData extends SectionListData<Show[]> {
   ListHeaderComponent: FunctionComponent;
@@ -31,35 +30,16 @@ const ShowContainerView = styled.View`
   padding-right: 2px;
 `;
 
-const LivePlayPause = styled(PlayPause)`
+const LiveHeaderPlayPause = styled(LivePlayPause)`
   font-size: 40px;
   color: rgb(245, 26, 0);
 `;
 
-const LiveLoading = styled(ActivityIndicator)`
-  transform: scale(1.5);
-  margin-right: 10px;
-`;
-
 const LiveHeader: FunctionComponent = () => {
-  const {
-    state: {
-      player: {state: playerState, loading, media},
-    },
-    dispatch,
-  } = useContext(StateContext);
   return (
     <SectionHeaderView>
       <SectionHeaderText>Ora in onda</SectionHeaderText>
-      {loading && <LiveLoading />}
-      {!loading && (
-        <LivePlayPause
-          playState={media?.url === LIVE_URL ? playerState : PlayState.STOPPED}
-          onPress={() => {
-            dispatch(new ToggleLive());
-          }}
-        />
-      )}
+      <LiveHeaderPlayPause />
     </SectionHeaderView>
   );
 };

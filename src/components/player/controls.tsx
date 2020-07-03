@@ -1,11 +1,12 @@
 import Icon from 'react-native-vector-icons/Ionicons';
 import styled from 'styled-components/native';
-import React, {FunctionComponent} from 'react';
+import React, {FunctionComponent, useContext} from 'react';
 
 import {Colors} from 'theme';
-import {PlayState} from 'state';
-import {ViewStyle} from 'react-native';
+import {PlayState, StateContext, LIVE_URL} from 'state';
+import {ViewStyle, ActivityIndicator, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {ToggleLive} from 'actions';
 
 const PlayIcon = styled(Icon).attrs(() => ({colors: Colors}))`
   color: ghostwhite;
@@ -27,6 +28,38 @@ export const PlayPause: FunctionComponent<{
         }
       />
     </TouchableOpacity>
+  );
+};
+
+const LiveLoading = styled(ActivityIndicator)`
+  transform: scale(1.5);
+  margin-right: 10px;
+`;
+
+export const LivePlayPause: FunctionComponent<{style?: ViewStyle}> = ({
+  style,
+}) => {
+  const {
+    state: {
+      player: {state: playerState, loading, media},
+    },
+    dispatch,
+  } = useContext(StateContext);
+  const mediaIsLive = media?.url === LIVE_URL;
+  let indicator = mediaIsLive && loading && <LiveLoading />;
+  return (
+    <View>
+      {indicator}
+      {!indicator && (
+        <PlayPause
+          style={style}
+          playState={mediaIsLive ? playerState : PlayState.STOPPED}
+          onPress={() => {
+            dispatch(new ToggleLive());
+          }}
+        />
+      )}
+    </View>
   );
 };
 
