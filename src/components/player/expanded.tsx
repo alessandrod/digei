@@ -22,7 +22,7 @@ const ExpandedPlayerView = styled(Animated.View).attrs(() => ({
 }))`
   flex: 1 0;
   position: absolute;
-  top: ${hasNotch() ? 25 : 0}px;
+  top: ${hasNotch() ? 35 : 10}px;
   bottom: 0px;
   width: 100%;
 `;
