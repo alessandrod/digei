@@ -1,39 +1,21 @@
 import React, {FunctionComponent, useContext} from 'react';
-import {TouchableOpacity} from 'react-native';
 import styled from 'styled-components/native';
 import {human} from 'react-native-typography';
 import {systemWeights as w} from 'react-native-typography';
 
-import {Colors} from 'theme';
 import {Show} from 'state';
 import {NavigationProp} from 'navigation';
 import {DatabaseContext} from 'db';
+import {hasNotch} from 'react-native-device-info';
 
-const ShowView = styled.View`
+const ShowView = styled.TouchableOpacity`
   flex: 1 0;
   flex-direction: row;
-  min-width: 100%;
-  justify-content: space-between;
   padding-bottom: 15px;
 `;
 
-const ShowTextView = styled.View`
-  flex: 3 0;
-  padding-left: 10px;
-`;
-
-const ShowTitle = styled.Text`
-  ${human.title3Object as any}
-`;
-
-const ShowDescription = styled.Text.attrs(() => ({colors: Colors}))`
-  color: ${(p) => p.colors.light};
-  margin-top: 5px;
-  ${human.subheadObject as any}
-  ${w.light as any};
-`;
-
 const CoverWrapper = styled.View`
+  flex: 3 0;
   shadow-color: #000;
   shadow-offset: 0px 2px;
   shadow-opacity: 0.15;
@@ -41,10 +23,26 @@ const CoverWrapper = styled.View`
 `;
 
 const Cover = styled.Image`
-  border-radius: 3px;
-  flex: 1 0;
   aspect-ratio: 1;
   resize-mode: cover;
+  border-radius: 3px;
+`;
+
+const ShowTextView = styled.View`
+  flex: 7 0;
+  flex-direction: column;
+  margin-left: 10px;
+`;
+
+const ShowTitle = styled.Text`
+  ${human.title3Object as any}
+`;
+
+const ShowDescription = styled.Text`
+  min-height: 60px;
+  margin-top: 5px;
+  ${human.subheadObject as any}
+  ${w.light as any};
 `;
 
 export const LiveShow: FunctionComponent<{
@@ -54,21 +52,21 @@ export const LiveShow: FunctionComponent<{
   let {name, cover, description} = show;
   const {db} = useContext(DatabaseContext);
   return (
-    <TouchableOpacity
+    <ShowView
       onPress={() => {
         db.fetchEpisodeMeta(show.url).then((meta) => {
           navigation.navigate('Show', {show, meta});
         });
       }}>
-      <ShowView>
-        <CoverWrapper>
-          <Cover source={cover} />
-        </CoverWrapper>
-        <ShowTextView>
-          <ShowTitle>{name}</ShowTitle>
-          <ShowDescription numberOfLines={3}>{description}</ShowDescription>
-        </ShowTextView>
-      </ShowView>
-    </TouchableOpacity>
+      <CoverWrapper>
+        <Cover source={cover} />
+      </CoverWrapper>
+      <ShowTextView>
+        <ShowTitle>{name}</ShowTitle>
+        <ShowDescription numberOfLines={hasNotch() ? 4 : 3}>
+          {description}
+        </ShowDescription>
+      </ShowTextView>
+    </ShowView>
   );
 };
