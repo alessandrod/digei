@@ -23,6 +23,7 @@ const ShowImage = styled.ImageBackground`
 `;
 
 const ShowTextView = styled.View`
+  border: none; /* this fixes a layout bug in BlurView in android. Without this, the title and the description overlap */
   padding: 15px;
 `;
 
@@ -97,6 +98,14 @@ const LiveCallOutText = styled.Text`
   color: rgb(245, 26, 0);
 `;
 
+const BlurWrapper = styled.View`
+  overflow: hidden;
+`;
+
+const Blur = styled(BlurView)`
+  border: 2px pink;
+`;
+
 const LiveCallOut: FunctionComponent = () => {
   return (
     <LiveCallOutView>
@@ -121,14 +130,16 @@ export const ShowHero: FunctionComponent<{show: Show}> = ({show}) => {
     <ShowView>
       <ShowImage source={cover}>
         {live && <LiveCallOut />}
-        <BlurView blurType="dark">
-          <ShowTextView>
-            <ShowTitle>{name}</ShowTitle>
-            {description.length > 0 && (
-              <ShowDescription text={description.join('\n\n')} />
-            )}
-          </ShowTextView>
-        </BlurView>
+        <BlurWrapper>
+          <Blur blurType="dark">
+            <ShowTextView>
+              <ShowTitle>{name}</ShowTitle>
+              {description.length > 0 && (
+                <ShowDescription text={description.join('\n\n')} />
+              )}
+            </ShowTextView>
+          </Blur>
+        </BlurWrapper>
       </ShowImage>
     </ShowView>
   );
