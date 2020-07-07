@@ -1,6 +1,6 @@
 import React, {FunctionComponent, useContext} from 'react';
 import styled from 'styled-components/native';
-import {Animated, ActivityIndicator} from 'react-native';
+import {Animated, ActivityIndicator, TouchableOpacity} from 'react-native';
 import {human} from 'react-native-typography';
 import {systemWeights as w} from 'react-native-typography';
 
@@ -9,7 +9,6 @@ import {PlayPause, SkipButton} from 'components/player/controls';
 import {StateContext} from 'state';
 import {TogglePlayPause, Seek} from 'actions';
 import {episodeTitle} from 'components';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const Touchable = styled(TouchableOpacity)`
   min-height: 60px;

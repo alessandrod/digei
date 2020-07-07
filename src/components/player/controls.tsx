@@ -4,8 +4,12 @@ import React, {FunctionComponent, useContext} from 'react';
 
 import {Colors} from 'theme';
 import {PlayState, StateContext, LIVE_URL} from 'state';
-import {ViewStyle, ActivityIndicator, View} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {
+  ViewStyle,
+  ActivityIndicator,
+  View,
+  TouchableOpacity,
+} from 'react-native';
 import {ToggleLive} from 'actions';
 
 const PlayIcon = styled(Icon).attrs(() => ({colors: Colors}))`

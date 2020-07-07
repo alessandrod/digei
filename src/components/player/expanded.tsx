@@ -1,6 +1,6 @@
 import React, {FunctionComponent, useContext, useState} from 'react';
 import styled from 'styled-components/native';
-import {Animated, ActivityIndicator} from 'react-native';
+import {Animated, ActivityIndicator, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Slider from '@react-native-community/slider';
 import {human} from 'react-native-typography';
@@ -13,7 +13,6 @@ import {StateContext, PlaybackStateContext} from 'state';
 import {TogglePlayPause, Seek} from 'actions';
 import {formatTimeMillis, formatDate} from 'utils';
 import {episodeTitle} from 'components';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {DatabaseContext} from 'db';
 import {setPlayDate} from 'components/show/episode';
 

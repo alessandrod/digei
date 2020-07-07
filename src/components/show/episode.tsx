@@ -1,5 +1,11 @@
 import React, {FunctionComponent, useContext, useState} from 'react';
-import {TouchableOpacity, View, ViewStyle} from 'react-native';
+import {
+  View,
+  ViewStyle,
+  TouchableOpacity,
+  TouchableNativeFeedback,
+  Text,
+} from 'react-native';
 import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {human} from 'react-native-typography';
