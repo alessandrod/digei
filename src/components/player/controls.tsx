@@ -81,7 +81,6 @@ export const LivePlayPause: FunctionComponent<{style?: ViewStyle}> = ({
 };
 
 const SkipView = styled(TouchableOpacity)`
-  flex: 1 0;
   justify-content: center;
   align-items: center;
 `;
@@ -92,7 +91,6 @@ const SkipIcon = styled(Icon)`
 `;
 
 const SkipLabel = styled.View`
-  flex: 1 0;
   position: absolute;
   width: 100%;
   height: 100%;

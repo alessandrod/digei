@@ -11,7 +11,7 @@ import {TogglePlayPause, Seek} from 'actions';
 import {episodeTitle} from 'components';
 
 const Touchable = styled(TouchableOpacity)`
-  min-height: 60px;
+  height: 60px;
 `;
 
 const MiniPlayerView = styled(Animated.View)`
@@ -21,8 +21,8 @@ const MiniPlayerView = styled(Animated.View)`
 `;
 
 const CoverImage = styled.Image`
-  height: 60px;
-  width: 60px;
+  height: 100%;
+  aspect-ratio: 1;
   border-radius: 2px;
 `;
 
@@ -50,7 +50,7 @@ const Title = styled.Text.attrs(() => ({
 
 const MiniPlayPause = styled(PlayPause)`
   font-size: 30px;
-  margin: 0px 25px;
+  margin: 0 25px;
 `;
 
 const MiniLoading = styled(ActivityIndicator)`
