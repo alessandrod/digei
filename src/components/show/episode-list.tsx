@@ -36,7 +36,7 @@ export const EpisodeList: FunctionComponent<{
 }> = ({show, episodes, episodeMetas, refreshing, onRefresh, onEndReached}) => {
   const sections = useMemo(() => {
     console.log('rebuilding sections', episodes.length);
-    const months: Section[] = [{data: [] as Episode[]}];
+    const months: Section[] = [];
     let monthEpisodes = [];
     let currentMonth = '';
     for (const episode of episodes) {
@@ -61,6 +61,7 @@ export const EpisodeList: FunctionComponent<{
     const currentYear = new Date().getFullYear();
     return (
       <List
+        ListHeaderComponent={() => <ShowHero show={show} />}
         renderSectionHeader={({section: {month}}) => {
           if (month === undefined) {
             return <ShowHero show={show} />;
