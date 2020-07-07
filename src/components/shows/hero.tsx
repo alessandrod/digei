@@ -78,10 +78,11 @@ const LiveCallOutView = styled.View`
 const LiveCallOutLeft = styled.View`
   flex: 1 0;
 `;
-const LiveCallOutRight = styled(VibrancyView)`
+const LiveCallOutRight = styled(Platform.OS === 'ios' ? VibrancyView : View)`
   flex-direction: row;
   align-items: center;
   margin: 15px 15px 10px 0;
+  background: white;
 `;
 
 const LiveCallOutRightInner = styled.View`
