@@ -180,12 +180,31 @@ const seekDone = (state: State, action: SeekDone): State => {
 const stopPlayer = (state: State, action: StopPlayer): State => {
   const {player, playbackDispatch} = state;
   const {hide} = action;
+  let {show, episode, media} = player;
+  let position;
 
   playbackDispatch(action);
 
+  if (hide) {
+    show = undefined;
+    episode = undefined;
+    media = undefined;
+    position = undefined;
+  } else {
+    position = 0;
+  }
+
   return {
     ...state,
-    player: {...player, state: PlayState.STOPPED, position: 0, visible: !hide},
+    player: {
+      ...player,
+      state: PlayState.STOPPED,
+      show,
+      episode,
+      media,
+      position,
+      visible: !hide,
+    },
   };
 };
 
@@ -316,9 +335,22 @@ const playbackStopPlayer = (
   action: StopPlayer,
 ): PlaybackState => {
   const {hide} = action;
-  const {player} = state;
+  let {player, show, episode, episodeMeta} = state;
+
   player.stop();
-  return {...state, position: undefined, replay: !hide};
+  if (hide) {
+    show = undefined;
+    episode = undefined;
+    episodeMeta = undefined;
+  }
+  return {
+    ...state,
+    show,
+    episode,
+    episodeMeta,
+    position: undefined,
+    replay: !hide,
+  };
 };
 
 const playbackSeek = (state: PlaybackState, action: Seek): PlaybackState => {
