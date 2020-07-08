@@ -3,6 +3,7 @@ import {
   createDownloadResumable,
   DownloadResult,
   deleteAsync,
+  FileSystemSessionType,
 } from 'expo-file-system';
 import {
   createContext,
@@ -45,13 +46,18 @@ const startDownload = (
 ): DownloadState => {
   const {url, dest, onProgress, onComplete} = action;
   const download = {progress: 0, onProgress, onComplete} as Download;
-  const handle = createDownloadResumable(url, dest, {}, (status) => {
-    download.progress =
-      status.totalBytesWritten / status.totalBytesExpectedToWrite;
-    if (download.onProgress !== undefined) {
-      download.onProgress(download);
-    }
-  });
+  const handle = createDownloadResumable(
+    url,
+    dest,
+    {sessionType: FileSystemSessionType.BACKGROUND},
+    (status) => {
+      download.progress =
+        status.totalBytesWritten / status.totalBytesExpectedToWrite;
+      if (download.onProgress !== undefined) {
+        download.onProgress(download);
+      }
+    },
+  );
   download.handle = handle;
 
   handle.downloadAsync().then((res) => {
