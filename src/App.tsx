@@ -62,7 +62,10 @@ function MainStackScreen() {
       <MainStack.Screen
         name="Shows"
         component={ShowsScreen}
-        options={{title: 'Radio Deejay'}}
+        options={{
+          title: 'Radio Deejay',
+          headerLargeTitle: true,
+        }}
       />
       <MainStack.Screen
         name="Show"
