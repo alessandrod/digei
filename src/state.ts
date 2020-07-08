@@ -202,7 +202,7 @@ const updateLiveShow = (state: State, name: String): State => {
   for (let show of state.shows) {
     if (show.name.toLowerCase() === name) {
       if (media?.url === LIVE_URL) {
-        state = playMedia(state, new PlayMedia(media, undefined, show));
+        state = {...state, player: {...state.player, show}};
       }
       return {...state, liveShow: show};
     }
