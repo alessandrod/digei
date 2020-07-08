@@ -41,6 +41,7 @@ import {
   downloadStateReducer,
   INITIAL_DOWNLOAD_STATE,
 } from 'download';
+import {Platform} from 'react-native';
 
 Icon.loadFont();
 
@@ -56,6 +57,7 @@ function MainStackScreen() {
           backgroundColor: 'rgb(245, 26, 0)',
         },
         headerTintColor: 'white',
+        stackAnimation: Platform.OS === 'ios' ? 'default' : 'none',
       }}>
       <MainStack.Screen
         name="Shows"
