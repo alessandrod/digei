@@ -236,7 +236,7 @@ export const PlayerComponent: FunctionComponent = () => {
 
   return (
     <PlayerView style={{transform: [{translateY: pan}]}}>
-      <PlayerViewContainer blurType="thickMaterialDark">
+      <PlayerViewContainer blurType="materialDark">
         <PlayerSwipe {...methods}>
           <MiniPlayer
             style={{opacity: miniOpacity}}
