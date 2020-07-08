@@ -1,5 +1,5 @@
 import React, {FunctionComponent, useContext} from 'react';
-import {Linking} from 'react-native';
+import {Linking, Platform, View} from 'react-native';
 import styled from 'styled-components/native';
 import {human} from 'react-native-typography';
 import {systemWeights as w} from 'react-native-typography';
@@ -79,31 +79,31 @@ const LiveCallOutView = styled.View`
 const LiveCallOutLeft = styled.View`
   flex: 1 0;
 `;
-const LiveCallOutRight = styled(Platform.OS === 'ios' ? VibrancyView : View)`
+const LiveCallOutRight = styled(Platform.OS === 'ios' ? View : View)`
   flex-direction: row;
   align-items: center;
-  margin: 15px 15px 10px 0;
-  background: white;
+  background: ${Platform.OS === 'ios' ? 'transparent' : 'white'};
+  background: rgb(245, 26, 0);
 `;
 
 const LiveCallOutRightInner = styled.View`
   flex-direction: row;
   align-items: center;
-  border: 2px rgb(245, 26, 0);
   padding: 0 15px;
 `;
 
 const LiveCallOutText = styled.Text`
   ${human.headlineObject as any};
   color: rgb(245, 26, 0);
+  color: white;
+`;
+
+const RedLivePlayPause = styled(LivePlayPause)`
+  color: white;
 `;
 
 const BlurWrapper = styled.View`
   overflow: hidden;
-`;
-
-const Blur = styled(BlurView)`
-  border: 2px pink;
 `;
 
 const LiveCallOut: FunctionComponent = () => {
@@ -113,7 +113,7 @@ const LiveCallOut: FunctionComponent = () => {
       <LiveCallOutRight blurType="xlight">
         <LiveCallOutRightInner>
           <LiveCallOutText>Ora in onda</LiveCallOutText>
-          <LivePlayPause />
+          <RedLivePlayPause />
         </LiveCallOutRightInner>
       </LiveCallOutRight>
     </LiveCallOutView>
@@ -131,14 +131,14 @@ export const ShowHero: FunctionComponent<{show: Show}> = ({show}) => {
       <ShowImage source={cover}>
         {live && <LiveCallOut />}
         <BlurWrapper>
-          <Blur blurType="dark">
+          <BlurView blurType="dark">
             <ShowTextView>
               <ShowTitle>{name}</ShowTitle>
               {description.length > 0 && (
                 <ShowDescription text={description.join('\n\n')} />
               )}
             </ShowTextView>
-          </Blur>
+          </BlurView>
         </BlurWrapper>
       </ShowImage>
     </ShowView>
