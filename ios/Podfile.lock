@@ -3,14 +3,14 @@ PODS:
   - CocoaAsyncSocket (7.6.4)
   - CocoaLibEvent (1.0.0)
   - DoubleConversion (1.1.6)
-  - EXAV (8.1.0):
+  - EXAV (8.2.1):
     - UMCore
     - UMFileSystemInterface
     - UMPermissionsInterface
   - EXConstants (9.0.0):
     - UMConstantsInterface
     - UMCore
-  - EXFileSystem (8.1.0):
+  - EXFileSystem (9.0.1):
     - UMCore
     - UMFileSystemInterface
   - EXImageLoader (1.0.1):
@@ -20,7 +20,7 @@ PODS:
   - EXPermissions (8.1.0):
     - UMCore
     - UMPermissionsInterface
-  - EXSQLite (8.1.0):
+  - EXSQLite (8.2.1):
     - UMCore
     - UMFileSystemInterface
   - FBLazyVector (0.62.2)
@@ -576,12 +576,12 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
   CocoaLibEvent: 2fab71b8bd46dd33ddb959f7928ec5909f838e3f
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
-  EXAV: ed8de7f07a76c540815fbb2cc4686b97f4b038b5
+  EXAV: d69c3ffbe091a5083d56cb950550015977fdf0af
   EXConstants: 9f18e9ef229706394f41735d9c7f309d479b36c0
-  EXFileSystem: b82693d78de152efe10a77d4aac781f782e10916
+  EXFileSystem: 8d1dc2924d62046275c84d70b88fa3aa7daeb116
   EXImageLoader: 5c9d1bf408443ac4d4f44463eaf3b0d03bc70425
   EXPermissions: d2cafee9c72578ecc9ca121481e6c4a04a798861
-  EXSQLite: 15268ec49f859e4594fe5b0a1c7a47913da0b67e
+  EXSQLite: b001ba35deb3001bd6e4b256581a558ae745ef2f
   FBLazyVector: 4aab18c93cd9546e4bfed752b4084585eca8b245
   FBReactNativeSpec: 5465d51ccfeecb7faa12f9ae0024f2044ce4044e
   Flipper: 6c1f484f9a88d30ab3e272800d53688439e50f69
