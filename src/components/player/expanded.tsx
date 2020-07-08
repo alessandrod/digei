@@ -27,9 +27,9 @@ const ExpandedPlayerView = styled(Animated.View).attrs(() => ({
 `;
 
 const Header = styled.View`
-  flex: 0 0;
+  flex: -1 0;
   flex-direction: column;
-  min-height: 30px;
+  min-height: 50px;
   justify-content: flex-start;
 `;
 
@@ -50,54 +50,75 @@ const Title1 = styled.Text.attrs(() => ({
   max-width: 80%;
 `;
 
-const CoverContainer = styled.View`
+const CoverShadow = styled.View`
   flex: 3 0;
+  max-height: 50%;
   justify-content: center;
   align-items: center;
-  shadow-color: #000;
+  shadow-color: 000;
   shadow-offset: 0px 3px;
   shadow-opacity: 0.15;
   shadow-radius: 2px;
+  border-radius: 4px;
+  overflow: hidden;
 `;
 
 const CoverImage = styled.Image`
   width: 100%;
   aspect-ratio: 1;
+  resize-mode: cover;
   border-radius: 4px;
+`;
+
+const Info = styled.View`
+  padding: 20px 0;
 `;
 
 const Controls = styled.View`
   flex: 2 0;
-  justify-content: flex-start;
+  justify-content: center;
 `;
 
-const Title2 = styled.Text.attrs(() => ({
-  colors: Colors,
-}))`
+const Title2 = styled.Text`
   ${human.title2Object as any};
   ${w.semibold as any};
   color: ghostwhite;
 `;
 
-const Subtitle = styled.Text.attrs(() => ({
-  colors: Colors,
-}))`
+const Subtitle = styled.Text`
   ${human.headlineObject as any};
   color: ghostwhite;
   padding-top: 5px;
+`;
+
+const SeekView = styled.View`
+  flex: 1 0;
+  justify-content: center;
 `;
 
 const SeekBar = styled(Slider)`
   width: 100%;
 `;
 
+const TimeInfo = styled.View`
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  color: ghostwhite;
+`;
+
+const SeekPosition = styled.Text`
+  font-size: 14px;
+  color: ghostwhite;
+`;
+
 const Buttons = styled.View`
-  flex: 1 0;
+  flex: 2 0;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
   min-width: 80%;
-  margin-bottom: 40px;
+  padding-bottom: 20px;
 `;
 
 const ExpandedPlayPause = styled(PlayPause)`
@@ -128,23 +149,6 @@ const SkipForwardText = styled.Text`
   font-size: 12px;
   margin-left: -5px;
   margin-top: -5px;
-  color: ghostwhite;
-`;
-
-const SeekView = styled.View`
-  flex: 1 0;
-  justify-content: center;
-`;
-
-const TimeInfo = styled.View`
-  width: 100%;
-  flex-direction: row;
-  justify-content: space-between;
-  color: ghostwhite;
-`;
-
-const SeekPosition = styled.Text`
-  font-size: 14px;
   color: ghostwhite;
 `;
 
@@ -209,12 +213,14 @@ export const ExpandedPlayer: FunctionComponent<{
         </TouchableOpacity>
         <Title1>{title1}</Title1>
       </Header>
-      <CoverContainer>
+      <CoverShadow>
         <CoverImage source={show?.cover} />
-      </CoverContainer>
+      </CoverShadow>
       <Controls>
-        <Title2>{title2}</Title2>
-        <Subtitle>{subtitle}</Subtitle>
+        <Info>
+          <Title2>{title2}</Title2>
+          <Subtitle>{subtitle}</Subtitle>
+        </Info>
         {duration !== undefined && (
           <SeekView>
             <SeekBar

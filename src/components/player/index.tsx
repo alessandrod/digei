@@ -8,6 +8,8 @@ import {
   GestureResponderEvent,
   PanResponderGestureState,
   ViewStyle,
+  Dimensions,
+  Platform,
 } from 'react-native';
 import {BlurView} from '@react-native-community/blur';
 import {hasNotch} from 'react-native-device-info';
@@ -18,15 +20,16 @@ import {MusicControls} from 'music-controls';
 
 const PlayerView = styled(Animated.View)`
   position: absolute;
-  bottom: -100%;
   width: 100%;
-  height: 100%;
+  bottom: ${() => -Dimensions.get('window').height};
+  height: ${() => Dimensions.get('window').height};
 `;
 
-const PlayerViewContainer = styled(BlurView)`
+const PlayerViewContainer = styled(Platform.OS === 'ios' ? BlurView : View)`
   flex: 1 0;
   flex-direction: row;
   padding: 10px 15px 0px;
+  background: ${Platform.OS === 'ios' ? 'transparent' : '#2d2a2e'};
 `;
 
 enum Direction {
