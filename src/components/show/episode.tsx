@@ -113,11 +113,11 @@ const DownloadIcon = styled(Icon)`
 
 const StopRect = styled(View)`
   position: absolute;
-  top: 9px;
-  left: 9px;
+  top: 10px;
+  left: 10px;
   background: rgb(245, 26, 0);
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 2px;
 `;
 
@@ -132,7 +132,7 @@ let DownloadProgress: FunctionComponent<{
         backgroundColor="lightgray"
         color="gray"
         fullColor="rgb(245, 26, 0)"
-        size={28}
+        size={32}
         width={3}
         progress={value}
       />
@@ -143,6 +143,7 @@ let DownloadProgress: FunctionComponent<{
 
 DownloadProgress = styled(DownloadProgress)`
   align-self: center;
+  transform: rotate(-90deg);
 `;
 
 export const EpisodeComponent: FunctionComponent<{
