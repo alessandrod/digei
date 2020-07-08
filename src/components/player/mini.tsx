@@ -49,22 +49,22 @@ const Title = styled.Text.attrs(() => ({
 `;
 
 const MiniPlayPause = styled(PlayPause)`
-  font-size: 30px;
+  font-size: 40px;
   margin: 0 25px;
 `;
 
 const MiniLoading = styled(ActivityIndicator)`
-  margin: 0px 30px;
-  transform: scale(1.5);
+  margin: 0px 36px;
+  transform: scale(1.6);
 `;
 
 const SkipBack = styled(SkipButton)`
   transform: rotateY(180deg);
-  font-size: 30px;
+  font-size: 40px;
 `;
 
 const SkipBackText = styled.Text`
-  font-size: 9px;
+  font-size: 12px;
   margin-left: 6px;
   margin-top: -4px;
   color: ghostwhite;
