@@ -1,11 +1,5 @@
 import React, {FunctionComponent, useContext, useState} from 'react';
-import {
-  View,
-  ViewStyle,
-  TouchableOpacity,
-  TouchableNativeFeedback,
-  Text,
-} from 'react-native';
+import {View, ViewStyle, TouchableOpacity} from 'react-native';
 import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {human} from 'react-native-typography';
@@ -21,12 +15,19 @@ import Clipboard from '@react-native-community/clipboard';
 
 import {episodeTitle} from 'components';
 import {Colors} from 'theme';
-import {Show, StateContext, Episode, PlaybackStateContext} from 'state';
+import {
+  Show,
+  StateContext,
+  Episode,
+  PlaybackStateContext,
+  PlayState,
+} from 'state';
 import {PlayMedia, StopPlayer} from 'actions';
 import {formatTimeInWords, formatDateInWords, formatDate} from 'utils';
 import {EpisodeMeta, DatabaseContext, Database} from 'db';
 import {useDownload} from 'download';
 import {EpisodeContextMenu} from 'components/show/episode-context-menu';
+import {LoadingBars, SmallLoadingBars} from 'components/loading-bars';
 
 const EpisodeView = styled.View`
   flex: 1 0;
@@ -38,9 +39,15 @@ const LeftView = styled.View`
   flex: 1 0;
 `;
 
+const TitleView = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
 const Title = styled.Text`
   font-size: 20px;
   line-height: 30px;
+  padding-right: 10px;
 `;
 
 const DetailsView = styled.View`
@@ -50,14 +57,9 @@ const DetailsView = styled.View`
   margin-right: 10px;
 `;
 
-const DetailsButton = styled.Text`
-  font-size: 14px;
-  line-height: 20px;
-  ${human.footnoteObject as any};
-`;
-
 const DurationView = styled.Text`
   ${human.footnoteObject as any};
+  margin-right: 10px;
 `;
 
 const PlayedIcon = styled(Icon).attrs(() => ({colors: Colors}))`
@@ -225,8 +227,7 @@ const Details: FunctionComponent<{
   playPosition?: number;
   playDate?: string;
 }> = ({isPlaying, playPosition, duration, playDate}) => {
-  let details = [<DetailsButton>Dettagli</DetailsButton>];
-  details = [];
+  const details = [];
 
   if (
     playDate &&
@@ -272,7 +273,12 @@ const EpisodeComponentImpl: FunctionComponent<{
   style?: ViewStyle;
 }> = ({show, episode, episodeMeta, playPosition, duration, style}) => {
   const {db} = useContext(DatabaseContext);
-  const {dispatch} = useContext(StateContext);
+  const {
+    dispatch,
+    state: {
+      player: {state: playState},
+    },
+  } = useContext(StateContext);
   const {media} = episode;
   if (duration === undefined) {
     duration = episode.duration;
@@ -367,7 +373,12 @@ const EpisodeComponentImpl: FunctionComponent<{
         }}>
         <EpisodeView style={style}>
           <LeftView>
-            <Title>{episodeTitle(episode)}</Title>
+            <TitleView>
+              <Title>{episodeTitle(episode)}</Title>
+              {playing && (
+                <SmallLoadingBars playing={playState === PlayState.PLAYING} />
+              )}
+            </TitleView>
             <Details
               isPlaying={playing}
               playPosition={playPosition}

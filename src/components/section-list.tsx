@@ -5,9 +5,8 @@ import {systemWeights as w} from 'react-native-typography';
 export const SectionHeaderView = styled.View`
   flex: 1 0;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
-  background-color: white;
+  justify-content: space-between;
 `;
 
 export const SectionHeaderText = styled.Text`

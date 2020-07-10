@@ -1,14 +1,19 @@
-import React, {FunctionComponent, useMemo} from 'react';
+import React, {FunctionComponent, useMemo, useContext} from 'react';
 import styled from 'styled-components/native';
 import {NavigationProp} from 'navigation';
-import {SectionListData, SectionList} from 'react-native';
+import {SectionListData, SectionList, Animated, ViewStyle} from 'react-native';
 
 import {SectionHeaderView, SectionHeaderText} from 'components/section-list';
 import {ListSeparator} from 'components';
 import {LiveShow} from 'components/shows/live';
 import {ShowCover} from 'components/shows/cover';
-import {Show} from 'state';
+import {Show, StateContext, PlayState, LIVE_URL} from 'state';
 import {LivePlayPause} from 'components/player/controls';
+import {
+  LoadingBars,
+  SmallLoadingBars,
+  AnimatedBar,
+} from 'components/loading-bars';
 
 interface ShowListData extends SectionListData<Show[]> {
   ListHeaderComponent: FunctionComponent;
@@ -39,10 +44,49 @@ const BigLivePlayPause = styled(LivePlayPause)`
   font-size: 54px;
 `;
 
+const LiveBar = styled(Animated.View)`
+  width: 5px;
+  margin-right: 1px;
+  height: 20px;
+  background: rgb(245, 26, 0);
+`;
+
+let LiveLoadingBars: FunctionComponent<{
+  playing: boolean;
+  style?: ViewStyle;
+}> = (props) => {
+  const animations: AnimatedBar[] = useMemo(
+    () => [
+      {from: 16, to: 10, duration: 550},
+      {from: 16, to: 2, duration: 500},
+      {from: 16, to: 0, duration: 350},
+      {from: 16, to: 6, duration: 450},
+    ],
+    [],
+  );
+
+  return (
+    <LoadingBars animations={animations} BarComponent={LiveBar} {...props} />
+  );
+};
+
+LiveLoadingBars = styled(LiveLoadingBars)`
+  flex: 1 0;
+  margin-left: 10px;
+`;
+
 const LiveHeader: FunctionComponent = () => {
+  const {
+    state: {
+      player: {media, state: playState},
+    },
+  } = useContext(StateContext);
   return (
     <SectionHeaderView>
       <SectionHeaderText>Ora in onda</SectionHeaderText>
+      {media?.url === LIVE_URL && (
+        <LiveLoadingBars playing={playState === PlayState.PLAYING} />
+      )}
       <BigLivePlayPause />
     </SectionHeaderView>
   );
