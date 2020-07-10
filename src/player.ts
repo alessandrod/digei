@@ -48,7 +48,7 @@ export class Player {
           this.disableUpdates = true;
         } else {
           const {positionMillis: position, durationMillis: duration} = status;
-          const loading = status.shouldPlay && status.isBuffering;
+          const loading = status.shouldPlay && !status.isPlaying;
           if (this.options) {
             this.options.onStatusUpdate({loading, position, duration});
           }
