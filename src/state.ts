@@ -148,8 +148,12 @@ const updatePlayerStatus = (
   action: UpdatePlayerStatus,
 ): State => {
   const {player, playbackDispatch} = state;
-  const {show, episode} = player;
-  const {loading, position, duration: duration} = action;
+  const {show, episode, media} = player;
+  let {loading, position, duration: duration} = action;
+
+  if (media?.url === LIVE_URL) {
+    duration = undefined;
+  }
 
   playbackDispatch(new UpdatePlaybackInfo(position, duration, show, episode));
 
