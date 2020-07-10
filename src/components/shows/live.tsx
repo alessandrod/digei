@@ -20,6 +20,7 @@ const CoverWrapper = styled.View`
   shadow-offset: 0px 2px;
   shadow-opacity: 0.15;
   shadow-radius: 2px;
+  background: white;
 `;
 
 const Cover = styled.Image`

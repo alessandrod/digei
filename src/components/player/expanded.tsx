@@ -61,6 +61,7 @@ const CoverShadow = styled.View`
   shadow-radius: 2px;
   border-radius: 4px;
   overflow: hidden;
+  background: transparent;
 `;
 
 const CoverImage = styled.Image`
