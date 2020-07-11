@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {ToggleLive} from 'actions';
+import {useStableLoading} from 'utils';
 
 const PlayIcon = styled(Icon).attrs(() => ({colors: Colors}))`
   color: ghostwhite;
@@ -56,12 +57,13 @@ const LiveLoading = styled(ActivityIndicator)`
 export const LivePlayPause: FunctionComponent<{style?: ViewStyle}> = ({
   style,
 }) => {
-  const {
+  let {
     state: {
       player: {state: playerState, loading, media},
     },
     dispatch,
   } = useContext(StateContext);
+  loading = useStableLoading(loading);
   const mediaIsLive = media?.url === LIVE_URL;
   let indicator = mediaIsLive && loading && <LiveLoading style={style} />;
   return (

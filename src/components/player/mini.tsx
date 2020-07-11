@@ -9,6 +9,7 @@ import {PlayPause, SkipButton} from 'components/player/controls';
 import {StateContext} from 'state';
 import {TogglePlayPause, Seek} from 'actions';
 import {episodeTitle} from 'components';
+import {useStableLoading} from 'utils';
 
 const Touchable = styled(TouchableOpacity)`
   height: 60px;
@@ -76,6 +77,8 @@ export const MiniPlayer: FunctionComponent<{
 }> = ({style, onMaximize}) => {
   const {state, dispatch} = useContext(StateContext);
   let {show, episode, state: playState, loading} = state.player;
+
+  loading = useStableLoading(loading);
 
   const isLive = episode === undefined;
   let title;

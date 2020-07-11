@@ -11,7 +11,7 @@ import {Colors} from 'theme';
 import {PlayPause, SkipButton} from 'components/player/controls';
 import {StateContext, PlaybackStateContext} from 'state';
 import {TogglePlayPause, Seek} from 'actions';
-import {formatTimeMillis, formatDate} from 'utils';
+import {formatTimeMillis, formatDate, useStableLoading} from 'utils';
 import {episodeTitle} from 'components';
 import {DatabaseContext} from 'db';
 import {setPlayDate} from 'components/show/episode';
@@ -161,10 +161,11 @@ export const ExpandedPlayer: FunctionComponent<{
 }> = ({style, onMinimize}) => {
   const {db} = useContext(DatabaseContext);
   let {state, dispatch} = useContext(StateContext);
-  const {state: playState, duration, loading} = state.player;
+  let {state: playState, duration, loading} = state.player;
   const {show, episode, episodeMeta, position, seekCookie} = useContext(
     PlaybackStateContext,
   );
+  loading = useStableLoading(loading);
 
   let [seekPosition, setSeekPosition] = useState<number | null>(null);
   const [lastSeekCookie, setLastSeekCookie] = useState(seekCookie);

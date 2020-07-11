@@ -1,5 +1,6 @@
 import {parse, format} from 'date-fns';
 import {it} from 'date-fns/locale';
+import {useState} from 'react';
 
 export type Time = {
   hours: number;
@@ -77,4 +78,30 @@ export const tokenizeDescription = (str: string): string[] => {
   ret.push(str.substring(pos + 11));
 
   return ret;
+};
+
+export const useStableLoading = (loading: boolean) => {
+  const [local, setLocal] = useState<{loading: boolean; timerId?: any}>({
+    loading,
+    timerId: undefined,
+  });
+  if (!loading) {
+    if (local.loading || local.timerId !== undefined) {
+      if (local.timerId) {
+        clearTimeout(local.timerId);
+      }
+      setLocal({loading: false, timerId: undefined});
+    }
+    return false;
+  }
+
+  if (!local.loading && local.timerId === undefined) {
+    const timerId = setTimeout(
+      () => setLocal({loading: true, timerId: undefined}),
+      1000,
+    );
+    setLocal((s) => ({...s, timerId}));
+  }
+
+  return local.loading;
 };
