@@ -122,6 +122,13 @@ const Buttons = styled.View`
   padding-bottom: 20px;
 `;
 
+const CenterButton = styled.View`
+  width: 80px;
+  height: 80px;
+  align-items: center;
+  justify-content: center;
+`;
+
 const ExpandedPlayPause = styled(PlayPause)`
   font-size: 70px;
 `;
@@ -266,13 +273,15 @@ export const ExpandedPlayer: FunctionComponent<{
             onPress={() => dispatch(new Seek(-15, true))}>
             <SkipBackText>15</SkipBackText>
           </SkipBack>
-          {loading && <ExpandedLoading />}
-          {!loading && (
-            <ExpandedPlayPause
-              playState={playState}
-              onPress={() => dispatch(new TogglePlayPause())}
-            />
-          )}
+          <CenterButton>
+            {(loading || loading) && <ExpandedLoading />}
+            {!loading && (
+              <ExpandedPlayPause
+                playState={playState}
+                onPress={() => dispatch(new TogglePlayPause())}
+              />
+            )}
+          </CenterButton>
           <SkipForward
             disabled={isLive || loading}
             icon="reload-outline"
