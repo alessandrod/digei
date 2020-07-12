@@ -202,9 +202,11 @@ class PlayerSwipeConfig implements SwipeConfig {
   }
 }
 
+const MINI_HEIGHT = hasNotch() ? 100 : 80;
+
 export const PlayerComponent: FunctionComponent = () => {
   const height = useWindowDimensions().height;
-  const miniOffset = hasNotch() ? -100 : -80;
+  const miniOffset = -MINI_HEIGHT;
   const swipe = useRef(new PlayerSwipeConfig(miniOffset, height)).current;
   const pan = swipe.pan.current;
   let miniOpacity = pan.interpolate({
@@ -255,3 +257,7 @@ export const PlayerComponent: FunctionComponent = () => {
     </PlayerView>
   );
 };
+
+export const PlayerPadding = styled.View`
+  height: ${MINI_HEIGHT};
+`;

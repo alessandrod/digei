@@ -9,6 +9,7 @@ import {Show, Episode} from 'state';
 import {ShowHero} from 'components/shows/hero';
 import {EpisodeMeta} from 'db';
 import {EpisodeComponent} from 'components/show/episode';
+import {PlayerPadding} from 'components/player';
 
 const MonthHeader = styled.Text`
   ${human.headlineObject as any};
@@ -62,6 +63,7 @@ export const EpisodeList: FunctionComponent<{
     return (
       <List
         ListHeaderComponent={() => <ShowHero show={show} />}
+        ListFooterComponent={() => <PlayerPadding />}
         renderSectionHeader={({section: {month}}) => {
           if (month === undefined) {
             return <ShowHero show={show} />;

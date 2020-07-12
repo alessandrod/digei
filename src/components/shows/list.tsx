@@ -14,6 +14,7 @@ import {
   SmallLoadingBars,
   AnimatedBar,
 } from 'components/loading-bars';
+import {PlayerPadding} from 'components/player';
 
 interface ShowListData extends SectionListData<Show[]> {
   ListHeaderComponent: FunctionComponent;
@@ -100,10 +101,6 @@ const ShowsHeader: FunctionComponent = () => {
   );
 };
 
-const Footer = styled.View`
-  height: 70px;
-`;
-
 export function group<T>(n: number, items: T[]): T[][] {
   return items.reduce(
     (accum, item) => {
@@ -175,7 +172,7 @@ export const ShowList: FunctionComponent<{
           </ShowContainerView>
         );
       }}
-      ListFooterComponent={() => <Footer />}
+      ListFooterComponent={() => <PlayerPadding />}
       stickySectionHeadersEnabled={false}
       keyExtractor={(item) => item[0].url}
       sections={sections}
