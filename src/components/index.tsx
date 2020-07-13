@@ -12,8 +12,8 @@ export const BaseView = styled.View.attrs(() => ({
   padding: 0 15px;
 `;
 
-export const ListSeparator = styled.View.attrs(() => ({colors: Colors}))`
-  border-bottom-color: ${(p) => p.colors.lighter};
+export const ListSeparator = styled.View`
+  border-bottom-color: gainsboro;
   border-bottom-width: ${StyleSheet.hairlineWidth}px;
 `;
 

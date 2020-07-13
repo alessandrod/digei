@@ -231,7 +231,7 @@ const updateLiveShow = (state: State, name: String): State => {
     }
   }
 
-  console.error('unknown live show', name);
+  console.warn('unknown live show', name);
   return state;
 };
 

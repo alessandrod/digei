@@ -11,7 +11,6 @@ import {
   useState,
   useContext,
   useCallback,
-  useEffect,
 } from 'react';
 
 export type Download = {

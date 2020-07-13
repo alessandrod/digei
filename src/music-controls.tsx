@@ -61,7 +61,7 @@ function nowPlaying(show: Show, episode?: Episode) {
     artwork: show.cover,
     artist: show.hosts,
     album: episode ? episodeTitle(episode) : 'Ora in onda',
-    duration: episode?.duration,
+    duration: episode?.duration ? parseInt(episode?.duration, 10) : undefined,
   });
 }
 
