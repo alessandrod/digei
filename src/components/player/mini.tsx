@@ -63,7 +63,7 @@ const MiniLoadingSpinner = styled(LoadingSpinner)`
 
 const MiniPlayPause = styled(PlayPause)`
   font-size: 34px;
-  margin-top: -4px;
+  margin-top: -2px;
   margin-left: -4px;
 `;
 
