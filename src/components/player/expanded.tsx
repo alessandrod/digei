@@ -238,7 +238,8 @@ export const ExpandedPlayer: FunctionComponent<{
               minimumValue={0}
               maximumValue={duration}
               value={pos}
-              minimumTrackTintColor={'rgb(245, 26, 0)'}
+              minimumTrackTintColor="rgb(245, 26, 0)"
+              maximumTrackTintColor="gainsboro"
               onValueChange={(value: number) => {
                 setSeekPosition(Math.floor(value));
               }}
