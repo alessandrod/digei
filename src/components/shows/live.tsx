@@ -1,13 +1,14 @@
 import React, {FunctionComponent, useContext} from 'react';
+import {Pressable} from 'react-native';
 import styled from 'styled-components/native';
 import {human} from 'react-native-typography';
 import {systemWeights as w} from 'react-native-typography';
-import {Pressable} from 'react-native';
+import {hasNotch} from 'react-native-device-info';
 
 import {Show} from 'state';
 import {NavigationProp} from 'navigation';
 import {DatabaseContext} from 'db';
-import {hasNotch} from 'react-native-device-info';
+import {Cover} from 'components/cover';
 
 const ShowView = styled(Pressable)`
   flex: 1 0;
@@ -15,19 +16,8 @@ const ShowView = styled(Pressable)`
   padding-bottom: 15px;
 `;
 
-const CoverWrapper = styled.View`
+const LiveCover = styled(Cover)`
   flex: 3 0;
-  shadow-color: #000;
-  shadow-offset: 0px 2px;
-  shadow-opacity: 0.15;
-  shadow-radius: 2px;
-  background: white;
-`;
-
-const Cover = styled.Image`
-  aspect-ratio: 1;
-  resize-mode: cover;
-  border-radius: 3px;
 `;
 
 const ShowTextView = styled.View`
@@ -64,9 +54,7 @@ export const LiveShow: FunctionComponent<{
           navigation.navigate('Show', {show, meta});
         });
       }}>
-      <CoverWrapper>
-        <Cover source={cover} />
-      </CoverWrapper>
+      <LiveCover source={cover} />
       <ShowTextView>
         <ShowTitle>{name}</ShowTitle>
         <ShowDescription numberOfLines={hasNotch() ? 4 : 3}>

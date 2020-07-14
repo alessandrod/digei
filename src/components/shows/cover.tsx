@@ -1,5 +1,5 @@
 import React, {FunctionComponent, useContext} from 'react';
-import {Pressable} from 'react-native';
+import {Pressable, ViewStyle} from 'react-native';
 import styled from 'styled-components/native';
 import {human} from 'react-native-typography';
 import {systemWeights as w} from 'react-native-typography';
@@ -7,25 +7,7 @@ import {systemWeights as w} from 'react-native-typography';
 import {Show} from 'state';
 import {NavigationProp} from 'navigation';
 import {DatabaseContext} from 'db';
-import {ViewStyle} from 'react-native';
-
-const CoverWrapper = styled.View`
-  shadow-color: #000;
-  shadow-offset: 0px 2px;
-  shadow-opacity: 0.15;
-  shadow-radius: 2px;
-  background: white;
-`;
-
-const Cover = styled.Image`
-  border-radius: 3px;
-  flex: 1 0;
-  aspect-ratio: 1;
-  min-width: 100%;
-  resize-mode: cover;
-  height: 0;
-  padding-bottom: 100%; /* % padding is relative to width, so this will fill up to 100% */
-`;
+import {Cover} from 'components/cover';
 
 const Title = styled.Text`
   ${human.calloutObject as any};
@@ -53,9 +35,7 @@ export const ShowCover: FunctionComponent<{
           navigation.navigate('Show', {show, meta});
         });
       }}>
-      <CoverWrapper>
-        <Cover source={cover} />
-      </CoverWrapper>
+      <Cover source={cover} />
       <Title>{name}</Title>
     </CoverView>
   );

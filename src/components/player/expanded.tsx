@@ -18,6 +18,7 @@ import {formatTimeMillis, formatDate, useStableLoading} from 'utils';
 import {episodeTitle, Spinner} from 'components';
 import {DatabaseContext} from 'db';
 import {setPlayDate} from 'components/show/episode';
+import {Cover} from 'components/cover';
 
 const ExpandedPlayerView = styled(Animated.View)`
   flex: 1 0;
@@ -40,7 +41,7 @@ const MinimizeIcon = styled(Icon)`
   height: 30px;
 `;
 
-const Title1 = styled.Text`
+const HeaderTitle = styled.Text`
   ${human.title2Object as any};
   ${!hasNotch() && (human.headlineObject as any)}
   color: ghostwhite;
@@ -50,25 +51,16 @@ const Title1 = styled.Text`
   max-width: 80%;
 `;
 
-const CoverShadow = styled.View`
+const ShowCover = styled(Cover)`
   flex: 3 0;
+  margin: auto;
+  max-width: 100%;
   max-height: 50%;
+  aspect-ratio: 1;
   justify-content: center;
   align-items: center;
-  shadow-color: 000;
-  shadow-offset: 0px 3px;
-  shadow-opacity: 0.15;
-  shadow-radius: 2px;
-  border-radius: 4px;
   overflow: hidden;
   background: transparent;
-`;
-
-const CoverImage = styled.Image`
-  width: 100%;
-  aspect-ratio: 1;
-  resize-mode: cover;
-  border-radius: 4px;
 `;
 
 const Info = styled.View`
@@ -218,11 +210,9 @@ export const ExpandedPlayer: FunctionComponent<{
         <Pressable onPress={onMinimize}>
           <MinimizeIcon name="chevron-down-outline" />
         </Pressable>
-        <Title1>{title1}</Title1>
+        <HeaderTitle>{title1}</HeaderTitle>
       </Header>
-      <CoverShadow>
-        <CoverImage source={show?.cover} />
-      </CoverShadow>
+      <ShowCover source={show?.cover} />
       <Controls>
         <Info>
           <Title2>{title2}</Title2>
