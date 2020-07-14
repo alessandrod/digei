@@ -23,6 +23,12 @@ const PlayerView = styled(Animated.View)`
   width: 100%;
   bottom: ${() => -Dimensions.get('window').height};
   height: ${() => Dimensions.get('window').height};
+  shadow-color: black;
+  shadow-radius: 4px;
+  shadow-offset: 0px 0px;
+  shadow-opacity: 0.5;
+  background: transparent;
+  elevation: 1;
 `;
 
 const PlayerViewContainer = styled(Platform.OS === 'ios' ? BlurView : View)`
