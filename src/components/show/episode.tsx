@@ -348,6 +348,7 @@ const EpisodeComponentImpl: FunctionComponent<{
         Clipboard.setString(episode.url);
       }}>
       <Pressable
+        onLongPress={() => {}} // workaround for ContextMenu not being integrated with the responder system
         onPress={() => {
           if (download !== undefined) {
             return;
