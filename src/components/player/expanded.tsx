@@ -7,7 +7,6 @@ import {human} from 'react-native-typography';
 import {systemWeights as w} from 'react-native-typography';
 import {hasNotch} from 'react-native-device-info';
 
-import {Colors} from 'theme';
 import {
   PlayPause,
   SkipButton,
@@ -20,9 +19,7 @@ import {episodeTitle, Spinner} from 'components';
 import {DatabaseContext} from 'db';
 import {setPlayDate} from 'components/show/episode';
 
-const ExpandedPlayerView = styled(Animated.View).attrs(() => ({
-  colors: Colors,
-}))`
+const ExpandedPlayerView = styled(Animated.View)`
   flex: 1 0;
   position: absolute;
   top: ${hasNotch() ? 35 : 10}px;
@@ -37,15 +34,13 @@ const Header = styled.View`
   justify-content: flex-start;
 `;
 
-const MinimizeIcon = styled(Icon).attrs(() => ({colors: Colors}))`
+const MinimizeIcon = styled(Icon)`
   color: ghostwhite;
   font-size: 30px;
   height: 30px;
 `;
 
-const Title1 = styled.Text.attrs(() => ({
-  colors: Colors,
-}))`
+const Title1 = styled.Text`
   ${human.title2Object as any};
   color: ghostwhite;
   font-weight: 600;

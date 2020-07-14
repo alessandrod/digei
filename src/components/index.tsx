@@ -3,12 +3,9 @@ import styled from 'styled-components/native';
 import {ActivityIndicator, StyleSheet, ViewStyle} from 'react-native';
 import {Episode} from 'state';
 
-import {Colors} from 'theme';
 import {formatDateInWords} from 'utils';
 
-export const BaseView = styled.View.attrs(() => ({
-  colors: Colors,
-}))`
+export const BaseView = styled.View`
   background-color: white;
   padding: 0 15px;
 `;

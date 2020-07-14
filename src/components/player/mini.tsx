@@ -4,7 +4,6 @@ import {Animated, Pressable} from 'react-native';
 import {human} from 'react-native-typography';
 import {systemWeights as w} from 'react-native-typography';
 
-import {Colors} from 'theme';
 import {
   PlayPause,
   SkipButton,
@@ -13,7 +12,7 @@ import {
 } from 'components/player/controls';
 import {StateContext} from 'state';
 import {TogglePlayPause, Seek} from 'actions';
-import {episodeTitle, Spinner, Centered} from 'components';
+import {episodeTitle} from 'components';
 import {useStableLoading} from 'utils';
 
 const Touchable = styled(Pressable)`
@@ -38,16 +37,12 @@ const PlayerText = styled.View`
   padding-left: 15px;
 `;
 
-const Subtitle = styled.Text.attrs(() => ({
-  colors: Colors,
-}))`
+const Subtitle = styled.Text`
   ${human.footnoteObject as any}
   color: ghostwhite;
 `;
 
-const Title = styled.Text.attrs(() => ({
-  colors: Colors,
-}))`
+const Title = styled.Text`
   ${human.subheadObject as any}
   ${w.semibold as any};
   color: ghostwhite;

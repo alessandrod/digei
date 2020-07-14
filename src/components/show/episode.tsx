@@ -14,7 +14,6 @@ import {URL} from 'react-native-url-polyfill';
 import Clipboard from '@react-native-community/clipboard';
 
 import {episodeTitle} from 'components';
-import {Colors} from 'theme';
 import {
   Show,
   StateContext,
@@ -62,14 +61,14 @@ const DurationView = styled.Text`
   margin-right: 10px;
 `;
 
-const PlayedIcon = styled(Icon).attrs(() => ({colors: Colors}))`
-  color: ${(p) => p.colors.gray};
+const PlayedIcon = styled(Icon)`
+  color: gray;
   font-size: 18px;
 `;
 
-const PlayedText = styled.Text.attrs(() => ({colors: Colors}))`
+const PlayedText = styled.Text`
   ${human.footnoteObject as any};
-  color: ${(p) => p.colors.gray};
+  color: gray;
   margin-right: 10px;
 `;
 
