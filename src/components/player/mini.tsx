@@ -14,6 +14,7 @@ import {StateContext} from 'state';
 import {TogglePlayPause, Seek} from 'actions';
 import {episodeTitle} from 'components';
 import {useStableLoading} from 'utils';
+import {hasNotch} from 'react-native-device-info';
 
 const Touchable = styled(Pressable)`
   height: 60px;
@@ -43,7 +44,8 @@ const Subtitle = styled.Text`
 `;
 
 const Title = styled.Text`
-  ${human.subheadObject as any}
+  ${human.title3Object as any}
+  ${!hasNotch() && (human.subheadObject as any)}
   ${w.semibold as any};
   color: ghostwhite;
   padding-top: 4px;
