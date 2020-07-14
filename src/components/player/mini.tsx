@@ -17,7 +17,7 @@ import {useStableLoading} from 'utils';
 import {hasNotch} from 'react-native-device-info';
 
 const Touchable = styled(Pressable)`
-  height: 60px;
+  height: 50px;
 `;
 
 const MiniPlayerView = styled(Animated.View)`
@@ -39,7 +39,7 @@ const PlayerText = styled.View`
 `;
 
 const Subtitle = styled.Text`
-  ${human.footnoteObject as any}
+  ${human.calloutObject as any}
   color: ghostwhite;
 `;
 
@@ -54,7 +54,7 @@ const Title = styled.Text`
 const PlayPauseContainer = styled(LoadingComponent)`
   width: 38px;
   height: 42px;
-  margin: 0 25px;
+  margin: 0 20px;
 `;
 
 const MiniLoadingSpinner = styled(LoadingSpinner)`
@@ -62,18 +62,18 @@ const MiniLoadingSpinner = styled(LoadingSpinner)`
 `;
 
 const MiniPlayPause = styled(PlayPause)`
-  font-size: 44px;
+  font-size: 34px;
   margin-top: -4px;
   margin-left: -4px;
 `;
 
 const SkipBack = styled(SkipButton)`
   transform: rotateY(180deg);
-  font-size: 40px;
+  font-size: 34px;
 `;
 
 const SkipBackText = styled.Text`
-  font-size: 12px;
+  font-size: 10px;
   margin-left: 6px;
   margin-top: -2px;
   color: ghostwhite;
@@ -103,8 +103,8 @@ export const MiniPlayer: FunctionComponent<{
       <MiniPlayerView style={style}>
         <CoverImage source={show?.cover} />
         <PlayerText>
-          <Subtitle>{subtitle}</Subtitle>
-          <Title>{title}</Title>
+          <Subtitle numberOfLines={1}>{subtitle}</Subtitle>
+          <Title numberOfLines={1}>{title}</Title>
         </PlayerText>
         <PlayPauseContainer loading={loading}>
           <MiniLoadingSpinner size="large" color="white" />

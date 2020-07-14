@@ -202,7 +202,7 @@ class PlayerSwipeConfig implements SwipeConfig {
   }
 }
 
-const MINI_HEIGHT = hasNotch() ? 100 : 80;
+const MINI_HEIGHT = hasNotch() ? 100 : 70;
 
 export const PlayerComponent: FunctionComponent = () => {
   const height = useWindowDimensions().height;
