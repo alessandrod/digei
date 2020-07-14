@@ -147,7 +147,10 @@ export class Player {
           } else if (replay) {
             return this.player?.replayAsync();
           } else {
-            return this.player?.playAsync();
+            return this.player?.setStatusAsync({
+              shouldPlay: true,
+              progressUpdateIntervalMillis: 1000,
+            });
           }
         })
         .then(this.maybeCancel())
