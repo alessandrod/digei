@@ -8,6 +8,7 @@ const Shadow = styled.View`
   shadow-offset: 0px 2px;
   shadow-opacity: 0.15;
   background: white;
+  elevation: 1;
 `;
 
 const Image = styled.Image`
