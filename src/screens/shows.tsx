@@ -65,6 +65,11 @@ export const ShowsScreen: FunctionComponent<{
   }
 
   const shows = data.shows as Show[];
+  const show = shows.find((s) => s?.name === 'Deejay Chiama Italia');
+  if (show && !show?.hosts) {
+    // HACK: omg what are you doing deejay.it people
+    show.hosts = 'Linus e Nicola Savino';
+  }
   shows.sort((s1, s2) => s1.sortNum - s2.sortNum);
   if (shows !== state.shows) {
     dispatch(new SetShows(shows));

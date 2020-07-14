@@ -1,12 +1,6 @@
 import Icon from 'react-native-vector-icons/Ionicons';
 import styled from 'styled-components/native';
-import React, {
-  FunctionComponent,
-  useContext,
-  ReactNodeArray,
-  useState,
-  useEffect,
-} from 'react';
+import React, {FunctionComponent, useContext, ReactNodeArray} from 'react';
 
 import {PlayState, StateContext, LIVE_URL} from 'state';
 import {ViewStyle, Pressable} from 'react-native';

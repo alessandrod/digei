@@ -194,6 +194,7 @@ export const ExpandedPlayer: FunctionComponent<{
     title1 = show?.name;
     title2 = episodeTitle(episode);
   }
+
   subtitle = show?.hosts;
 
   if (

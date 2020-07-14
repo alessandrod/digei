@@ -52,6 +52,10 @@ export const LiveShow: FunctionComponent<{
   navigation: NavigationProp<'Show'>;
 }> = ({show, navigation}) => {
   let {name, cover, description} = show;
+  if (name === 'Vic e Marisa' && description.length === 0) {
+    // HACK: fix description
+    description = ['Marisa Passera e Vic in onda dalle 8 alle 10 del mattino.'];
+  }
   const {db} = useContext(DatabaseContext);
   return (
     <ShowView

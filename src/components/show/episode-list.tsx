@@ -41,6 +41,10 @@ export const EpisodeList: FunctionComponent<{
     let monthEpisodes = [];
     let currentMonth = '';
     for (const episode of episodes) {
+      if (!episode.date) {
+        // HACK: fix actual dates
+        continue;
+      }
       const month = episodeMonth(episode);
       if (month !== currentMonth) {
         if (monthEpisodes.length > 0) {
@@ -112,7 +116,7 @@ export const EpisodeList: FunctionComponent<{
 };
 
 const episodeMonth = (episode: Episode): string => {
-  const date = episode.date || '1/1/2049';
+  const date = episode.date;
   const [, m, y] = date.split('/', 3);
   return m + y;
 };
