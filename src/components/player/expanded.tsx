@@ -8,7 +8,11 @@ import {systemWeights as w} from 'react-native-typography';
 import {hasNotch} from 'react-native-device-info';
 
 import {Colors} from 'theme';
-import {PlayPause, SkipButton} from 'components/player/controls';
+import {
+  PlayPause,
+  SkipButton,
+  LoadingComponent,
+} from 'components/player/controls';
 import {StateContext, PlaybackStateContext} from 'state';
 import {TogglePlayPause, Seek} from 'actions';
 import {formatTimeMillis, formatDate, useStableLoading} from 'utils';
@@ -122,41 +126,38 @@ const Buttons = styled.View`
   padding-bottom: 20px;
 `;
 
-const CenterButton = styled.View`
-  width: 80px;
-  height: 80px;
-  align-items: center;
-  justify-content: center;
+const CenterButton = styled(LoadingComponent)`
+  width: 70px;
 `;
 
 const ExpandedPlayPause = styled(PlayPause)`
-  font-size: 70px;
+  font-size: 60px;
 `;
 
 const ExpandedLoading = styled(Spinner)`
-  transform: scale(3.5);
+  transform: scale(
+    1.6
+  ); /* Large spinner is 36px, scale up to ExpandedPlayPause size */
 `;
 
 const SkipBack = styled(SkipButton)`
+  font-size: 56px;
   transform: rotateY(180deg);
-  font-size: 40px;
 `;
 
 const SkipBackText = styled.Text`
-  font-size: 12px;
+  font-size: 16px;
   margin-left: 6px;
-  margin-top: -5px;
   color: ghostwhite;
 `;
 
 const SkipForward = styled(SkipButton)`
-  font-size: 40px;
+  font-size: 56px;
 `;
 
 const SkipForwardText = styled.Text`
-  font-size: 12px;
+  font-size: 16px;
   margin-left: -5px;
-  margin-top: -5px;
   color: ghostwhite;
 `;
 
@@ -273,14 +274,12 @@ export const ExpandedPlayer: FunctionComponent<{
             onPress={() => dispatch(new Seek(-15, true))}>
             <SkipBackText>15</SkipBackText>
           </SkipBack>
-          <CenterButton>
-            {(loading || loading) && <ExpandedLoading />}
-            {!loading && (
-              <ExpandedPlayPause
-                playState={playState}
-                onPress={() => dispatch(new TogglePlayPause())}
-              />
-            )}
+          <CenterButton loading={loading}>
+            <ExpandedLoading size="large" color="white" />
+            <ExpandedPlayPause
+              playState={playState}
+              onPress={() => dispatch(new TogglePlayPause())}
+            />
           </CenterButton>
           <SkipForward
             disabled={isLive || loading}

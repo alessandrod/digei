@@ -8,14 +8,13 @@ import React, {
   useEffect,
 } from 'react';
 
-import {Colors} from 'theme';
 import {PlayState, StateContext, LIVE_URL} from 'state';
 import {ViewStyle, Pressable} from 'react-native';
 import {ToggleLive} from 'actions';
 import {useStableLoading} from 'utils';
 import {Spinner, Centered} from 'components';
 
-const PlayIcon = styled(Icon).attrs(() => ({colors: Colors}))`
+const PlayIcon = styled(Icon)`
   color: ghostwhite;
 `;
 

@@ -4,7 +4,7 @@ import {NavigationProp} from 'navigation';
 import {SectionListData, SectionList, Animated, ViewStyle} from 'react-native';
 
 import {SectionHeaderView, SectionHeaderText} from 'components/section-list';
-import {ListSeparator, Centered} from 'components';
+import {ListSeparator} from 'components';
 import {LiveShow} from 'components/shows/live';
 import {ShowCover} from 'components/shows/cover';
 import {Show, StateContext, PlayState, LIVE_URL} from 'state';

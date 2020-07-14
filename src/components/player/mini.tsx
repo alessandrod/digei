@@ -78,7 +78,7 @@ const SkipBack = styled(SkipButton)`
 const SkipBackText = styled.Text`
   font-size: 12px;
   margin-left: 6px;
-  margin-top: -4px;
+  margin-top: -2px;
   color: ghostwhite;
 `;
 
