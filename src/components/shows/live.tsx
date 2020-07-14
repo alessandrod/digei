@@ -2,13 +2,14 @@ import React, {FunctionComponent, useContext} from 'react';
 import styled from 'styled-components/native';
 import {human} from 'react-native-typography';
 import {systemWeights as w} from 'react-native-typography';
+import {Pressable} from 'react-native';
 
 import {Show} from 'state';
 import {NavigationProp} from 'navigation';
 import {DatabaseContext} from 'db';
 import {hasNotch} from 'react-native-device-info';
 
-const ShowView = styled.TouchableOpacity`
+const ShowView = styled(Pressable)`
   flex: 1 0;
   flex-direction: row;
   padding-bottom: 15px;

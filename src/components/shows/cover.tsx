@@ -1,4 +1,5 @@
 import React, {FunctionComponent, useContext} from 'react';
+import {Pressable} from 'react-native';
 import styled from 'styled-components/native';
 import {human} from 'react-native-typography';
 import {systemWeights as w} from 'react-native-typography';
@@ -32,7 +33,7 @@ const Title = styled.Text`
   padding-top: 5px;
 `;
 
-const CoverView = styled.TouchableOpacity`
+const CoverView = styled(Pressable)`
   flex: 1 0;
   max-width: 49%;
 `;

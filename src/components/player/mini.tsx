@@ -1,17 +1,22 @@
 import React, {FunctionComponent, useContext} from 'react';
 import styled from 'styled-components/native';
-import {Animated, ActivityIndicator, TouchableOpacity} from 'react-native';
+import {Animated, Pressable} from 'react-native';
 import {human} from 'react-native-typography';
 import {systemWeights as w} from 'react-native-typography';
 
 import {Colors} from 'theme';
-import {PlayPause, SkipButton} from 'components/player/controls';
+import {
+  PlayPause,
+  SkipButton,
+  LoadingComponent,
+  LoadingSpinner,
+} from 'components/player/controls';
 import {StateContext} from 'state';
 import {TogglePlayPause, Seek} from 'actions';
-import {episodeTitle} from 'components';
+import {episodeTitle, Spinner, Centered} from 'components';
 import {useStableLoading} from 'utils';
 
-const Touchable = styled(TouchableOpacity)`
+const Touchable = styled(Pressable)`
   height: 60px;
 `;
 
@@ -49,14 +54,20 @@ const Title = styled.Text.attrs(() => ({
   padding-top: 4px;
 `;
 
-const MiniPlayPause = styled(PlayPause)`
-  font-size: 40px;
+const PlayPauseContainer = styled(LoadingComponent)`
+  width: 38px;
+  height: 42px;
   margin: 0 25px;
 `;
 
-const MiniLoading = styled(ActivityIndicator)`
-  margin: 0px 36px;
-  transform: scale(1.6);
+const MiniLoadingSpinner = styled(LoadingSpinner)`
+  transform: scale(1);
+`;
+
+const MiniPlayPause = styled(PlayPause)`
+  font-size: 44px;
+  margin-top: -4px;
+  margin-left: -4px;
 `;
 
 const SkipBack = styled(SkipButton)`
@@ -98,13 +109,14 @@ export const MiniPlayer: FunctionComponent<{
           <Subtitle>{subtitle}</Subtitle>
           <Title>{title}</Title>
         </PlayerText>
-        {loading && <MiniLoading />}
-        {!loading && (
+        <PlayPauseContainer loading={loading}>
+          <MiniLoadingSpinner size="large" color="white" />
           <MiniPlayPause
+            spinnerSize="large"
             playState={playState}
             onPress={() => dispatch(new TogglePlayPause())}
           />
-        )}
+        </PlayPauseContainer>
         <SkipBack
           disabled={isLive || loading}
           icon="reload-outline"

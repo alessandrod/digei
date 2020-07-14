@@ -1,17 +1,19 @@
 import Icon from 'react-native-vector-icons/Ionicons';
-import styled, {css} from 'styled-components/native';
-import React, {FunctionComponent, useContext} from 'react';
+import styled from 'styled-components/native';
+import React, {
+  FunctionComponent,
+  useContext,
+  ReactNodeArray,
+  useState,
+  useEffect,
+} from 'react';
 
 import {Colors} from 'theme';
 import {PlayState, StateContext, LIVE_URL} from 'state';
-import {
-  ViewStyle,
-  ActivityIndicator,
-  View,
-  TouchableOpacity,
-} from 'react-native';
+import {ViewStyle, Pressable} from 'react-native';
 import {ToggleLive} from 'actions';
 import {useStableLoading} from 'utils';
+import {Spinner, Centered} from 'components';
 
 const PlayIcon = styled(Icon).attrs(() => ({colors: Colors}))`
   color: ghostwhite;
@@ -23,7 +25,7 @@ export const PlayPause: FunctionComponent<{
   playState: PlayState;
 }> = ({style, onPress, playState}) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <Pressable onPress={onPress}>
       <PlayIcon
         style={style}
         name={
@@ -32,31 +34,35 @@ export const PlayPause: FunctionComponent<{
             : 'pause-circle-outline'
         }
       />
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
-const IconStyle = css`
-  width: 34px;
-  height: 40px;
-  padding-top: 2px;
-  margin-left: 10px;
-  color: rgb(245, 26, 0);
-  font-size: 34px;
+const LoadingContainer = styled(Centered)``;
+
+export const LoadingComponent: FunctionComponent<{
+  style?: ViewStyle;
+  loading: boolean;
+  children: ReactNodeArray;
+}> = ({loading, style, children}) => {
+  return (
+    <LoadingContainer style={style}>
+      {loading && children[0]}
+      {!loading && children[1]}
+    </LoadingContainer>
+  );
+};
+
+export const LoadingSpinner = styled(Spinner)`
+  width: 100%;
+  height: 100%;
+  transform: scale(1.2);
 `;
 
-const LivePlayPauseView = styled(PlayPause)`
-  ${IconStyle};
-`;
-
-const LiveLoading = styled(ActivityIndicator)`
-  ${IconStyle};
-  transform: scale(1.4);
-`;
-
-export const LivePlayPause: FunctionComponent<{style?: ViewStyle}> = ({
-  style,
-}) => {
+export const LivePlayPause: FunctionComponent<{
+  spinnerSize?: 'small' | 'large';
+  style?: ViewStyle;
+}> = ({spinnerSize, style}) => {
   let {
     state: {
       player: {state: playerState, loading, media},
@@ -65,24 +71,21 @@ export const LivePlayPause: FunctionComponent<{style?: ViewStyle}> = ({
   } = useContext(StateContext);
   loading = useStableLoading(loading);
   const mediaIsLive = media?.url === LIVE_URL;
-  let indicator = mediaIsLive && loading && <LiveLoading style={style} />;
   return (
-    <View>
-      {indicator}
-      {!indicator && (
-        <LivePlayPauseView
-          style={style}
-          playState={mediaIsLive ? playerState : PlayState.STOPPED}
-          onPress={() => {
-            dispatch(new ToggleLive());
-          }}
-        />
-      )}
-    </View>
+    <LoadingComponent loading={mediaIsLive && loading}>
+      <LoadingSpinner size={spinnerSize} />
+      <PlayPause
+        style={style}
+        playState={mediaIsLive ? playerState : PlayState.STOPPED}
+        onPress={() => {
+          dispatch(new ToggleLive());
+        }}
+      />
+    </LoadingComponent>
   );
 };
 
-const SkipView = styled(TouchableOpacity)`
+const SkipView = styled(Pressable)`
   justify-content: center;
   align-items: center;
 `;

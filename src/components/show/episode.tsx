@@ -1,5 +1,5 @@
 import React, {FunctionComponent, useContext, useState} from 'react';
-import {View, ViewStyle, TouchableOpacity} from 'react-native';
+import {View, ViewStyle, Pressable} from 'react-native';
 import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {human} from 'react-native-typography';
@@ -27,7 +27,7 @@ import {formatTimeInWords, formatDateInWords, formatDate} from 'utils';
 import {EpisodeMeta, DatabaseContext, Database} from 'db';
 import {useDownload} from 'download';
 import {EpisodeContextMenu} from 'components/show/episode-context-menu';
-import {LoadingBars, SmallLoadingBars} from 'components/loading-bars';
+import {SmallLoadingBars} from 'components/loading-bars';
 
 const EpisodeView = styled.View`
   flex: 1 0;
@@ -129,7 +129,7 @@ let DownloadProgress: FunctionComponent<{
   onPress?: () => void;
 }> = ({value, style, onPress}) => {
   return (
-    <TouchableOpacity style={style} onPress={onPress}>
+    <Pressable style={style} onPress={onPress}>
       <AnimatedProgressWheel
         backgroundColor="lightgray"
         color="gray"
@@ -139,7 +139,7 @@ let DownloadProgress: FunctionComponent<{
         progress={value}
       />
       <StopRect />
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
@@ -347,7 +347,7 @@ const EpisodeComponentImpl: FunctionComponent<{
       onCopyLink={() => {
         Clipboard.setString(episode.url);
       }}>
-      <TouchableOpacity
+      <Pressable
         onPress={() => {
           if (download !== undefined) {
             return;
@@ -398,7 +398,7 @@ const EpisodeComponentImpl: FunctionComponent<{
             <DownloadIcon name="download-outline" />
           )}
         </EpisodeView>
-      </TouchableOpacity>
+      </Pressable>
     </EpisodeContextMenu>
   );
 };

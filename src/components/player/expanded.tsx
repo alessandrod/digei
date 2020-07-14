@@ -1,6 +1,6 @@
 import React, {FunctionComponent, useContext, useState} from 'react';
 import styled from 'styled-components/native';
-import {Animated, ActivityIndicator, TouchableOpacity} from 'react-native';
+import {Animated, Pressable} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Slider from '@react-native-community/slider';
 import {human} from 'react-native-typography';
@@ -12,7 +12,7 @@ import {PlayPause, SkipButton} from 'components/player/controls';
 import {StateContext, PlaybackStateContext} from 'state';
 import {TogglePlayPause, Seek} from 'actions';
 import {formatTimeMillis, formatDate, useStableLoading} from 'utils';
-import {episodeTitle} from 'components';
+import {episodeTitle, Spinner} from 'components';
 import {DatabaseContext} from 'db';
 import {setPlayDate} from 'components/show/episode';
 
@@ -133,7 +133,7 @@ const ExpandedPlayPause = styled(PlayPause)`
   font-size: 70px;
 `;
 
-const ExpandedLoading = styled(ActivityIndicator)`
+const ExpandedLoading = styled(Spinner)`
   transform: scale(3.5);
 `;
 
@@ -217,9 +217,9 @@ export const ExpandedPlayer: FunctionComponent<{
   return (
     <ExpandedPlayerView style={style}>
       <Header>
-        <TouchableOpacity onPress={onMinimize}>
+        <Pressable onPress={onMinimize}>
           <MinimizeIcon name="chevron-down-outline" />
-        </TouchableOpacity>
+        </Pressable>
         <Title1>{title1}</Title1>
       </Header>
       <CoverShadow>

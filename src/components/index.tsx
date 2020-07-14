@@ -1,5 +1,6 @@
+import React, {FunctionComponent} from 'react';
 import styled from 'styled-components/native';
-import {StyleSheet} from 'react-native';
+import {ActivityIndicator, StyleSheet, ViewStyle} from 'react-native';
 import {Episode} from 'state';
 
 import {Colors} from 'theme';
@@ -28,3 +29,22 @@ export const episodeTitle = (episode: Episode): String => {
 
   return titleText;
 };
+
+export const Spinner: FunctionComponent<{
+  size?: 'small' | 'large';
+  color?: string;
+  style?: ViewStyle;
+}> = ({size, color, style}) => {
+  return (
+    <ActivityIndicator
+      size={size ? size : 'small'}
+      color={color ? color : 'black'}
+      style={style}
+    />
+  );
+};
+
+export const Centered = styled.View`
+  justify-content: center;
+  align-items: center;
+`;

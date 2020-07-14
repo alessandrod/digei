@@ -4,10 +4,11 @@ import styled from 'styled-components/native';
 import {human} from 'react-native-typography';
 import {systemWeights as w} from 'react-native-typography';
 
-import {BlurView, VibrancyView} from '@react-native-community/blur';
+import {BlurView} from '@react-native-community/blur';
 import {Show, StateContext} from 'state';
 import {tokenizeDescription} from 'utils';
 import {LivePlayPause} from 'components/player/controls';
+import {Centered} from 'components';
 
 const ShowView = styled.View`
   flex: 1 0;
@@ -84,12 +85,13 @@ const LiveCallOutRight = styled(Platform.OS === 'ios' ? View : View)`
   align-items: center;
   background: ${Platform.OS === 'ios' ? 'transparent' : 'white'};
   background: rgb(245, 26, 0);
+  padding: 4px 0;
 `;
 
 const LiveCallOutRightInner = styled.View`
   flex-direction: row;
   align-items: center;
-  padding: 0 15px;
+  padding: 0 10px;
 `;
 
 const LiveCallOutText = styled.Text`
@@ -98,8 +100,15 @@ const LiveCallOutText = styled.Text`
   color: white;
 `;
 
+const PlayPauseContainer = styled(Centered)`
+  height: 40px;
+  width: 30px;
+  margin-left: 5px;
+`;
+
 const RedLivePlayPause = styled(LivePlayPause)`
   color: white;
+  font-size: 30px;
 `;
 
 const BlurWrapper = styled.View`
@@ -113,7 +122,9 @@ const LiveCallOut: FunctionComponent = () => {
       <LiveCallOutRight blurType="xlight">
         <LiveCallOutRightInner>
           <LiveCallOutText>Ora in onda</LiveCallOutText>
-          <RedLivePlayPause />
+          <PlayPauseContainer>
+            <RedLivePlayPause />
+          </PlayPauseContainer>
         </LiveCallOutRightInner>
       </LiveCallOutRight>
     </LiveCallOutView>

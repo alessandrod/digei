@@ -4,16 +4,12 @@ import {NavigationProp} from 'navigation';
 import {SectionListData, SectionList, Animated, ViewStyle} from 'react-native';
 
 import {SectionHeaderView, SectionHeaderText} from 'components/section-list';
-import {ListSeparator} from 'components';
+import {ListSeparator, Centered} from 'components';
 import {LiveShow} from 'components/shows/live';
 import {ShowCover} from 'components/shows/cover';
 import {Show, StateContext, PlayState, LIVE_URL} from 'state';
 import {LivePlayPause} from 'components/player/controls';
-import {
-  LoadingBars,
-  SmallLoadingBars,
-  AnimatedBar,
-} from 'components/loading-bars';
+import {LoadingBars, AnimatedBar} from 'components/loading-bars';
 import {PlayerPadding} from 'components/player';
 
 interface ShowListData extends SectionListData<Show[]> {
@@ -36,13 +32,15 @@ const ShowContainerView = styled.View`
   padding-right: 2px;
 `;
 
-const BigLivePlayPause = styled(LivePlayPause)`
-  width: 54px;
+const PlayPauseContainer = styled.View`
+  width: 60px;
   height: 60px;
-  padding-top: 2px;
-  margin-left: 10px;
+`;
+
+const LargeLivePlayPause = styled(LivePlayPause)`
   color: rgb(245, 26, 0);
   font-size: 54px;
+  padding-left: 2px;
 `;
 
 const LiveBar = styled(Animated.View)`
@@ -88,7 +86,9 @@ const LiveHeader: FunctionComponent = () => {
       {media?.url === LIVE_URL && (
         <LiveLoadingBars playing={playState === PlayState.PLAYING} />
       )}
-      <BigLivePlayPause />
+      <PlayPauseContainer>
+        <LargeLivePlayPause spinnerSize="large" />
+      </PlayPauseContainer>
     </SectionHeaderView>
   );
 };
