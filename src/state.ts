@@ -215,6 +215,10 @@ const stopPlayer = (state: State, action: StopPlayer): State => {
 const updateLiveShow = (state: State, name: String): State => {
   const {media} = state.player;
 
+  if (name === 'Deejay Chiama Estate') {
+    name = 'Deejay Chiama Italia';
+  }
+
   name = name.toLowerCase();
   if (state.liveShow !== undefined) {
     if (state.liveShow.name.toLowerCase() === name) {
