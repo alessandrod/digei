@@ -42,9 +42,10 @@ const MinimizeIcon = styled(Icon)`
 
 const Title1 = styled.Text`
   ${human.title2Object as any};
+  ${!hasNotch() && (human.headlineObject as any)}
   color: ghostwhite;
   font-weight: 600;
-  margin-top: -30px;
+  margin-top: -${hasNotch() ? 30 : 25}px;
   align-self: center;
   max-width: 80%;
 `;
