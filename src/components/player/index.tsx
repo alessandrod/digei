@@ -27,7 +27,6 @@ const PlayerView = styled(Animated.View)`
   shadow-radius: 4px;
   shadow-offset: 0px 0px;
   shadow-opacity: 0.5;
-  background: transparent;
   elevation: 2;
 `;
 
@@ -35,7 +34,9 @@ const PlayerViewContainer = styled(Platform.OS === 'ios' ? BlurView : View)`
   flex: 1 0;
   flex-direction: row;
   padding: 10px 15px 0px;
-  background: ${Platform.OS === 'ios' ? 'transparent' : '#2d2a2e'};
+  background: ${Platform.OS === 'ios'
+    ? 'transparent'
+    : 'rgba(45, 42, 46, 0.99)'};
 `;
 
 enum Direction {
