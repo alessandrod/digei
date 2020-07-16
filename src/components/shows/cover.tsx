@@ -10,9 +10,13 @@ import {DatabaseContext} from 'db';
 import {Cover} from 'components/cover';
 
 const Title = styled.Text`
-  ${human.calloutObject as any};
-  ${w.semibold as any};
+  ${human.bodyObject as any};
   padding-top: 5px;
+`;
+
+const Hosts = styled.Text`
+  ${human.calloutObject as any};
+  color: gray;
 `;
 
 const CoverView = styled(Pressable)`
@@ -25,7 +29,7 @@ export const ShowCover: FunctionComponent<{
   navigation: NavigationProp<'Show'>;
   style?: ViewStyle;
 }> = ({show, navigation, style}) => {
-  let {name, cover} = show;
+  let {name, cover, hosts} = show;
   const {db} = useContext(DatabaseContext);
   return (
     <CoverView
@@ -37,6 +41,7 @@ export const ShowCover: FunctionComponent<{
       }}>
       <Cover source={cover} />
       <Title>{name}</Title>
+      <Hosts>{hosts?.replace(/ ,/g, () => ',')}</Hosts>
     </CoverView>
   );
 };

@@ -18,6 +18,7 @@ const ShowView = styled(Pressable)`
 
 const LiveCover = styled(Cover)`
   flex: 3 0;
+  aspect-ratio: 1;
 `;
 
 const ShowTextView = styled.View`
@@ -28,13 +29,14 @@ const ShowTextView = styled.View`
 
 const ShowTitle = styled.Text`
   ${human.title3Object as any}
+  ${w.semibold as any}
 `;
 
 const ShowDescription = styled.Text`
   min-height: 60px;
   margin-top: 5px;
-  ${human.subheadObject as any}
-  ${w.light as any};
+  ${human.calloutObject as any}
+  ${w.light as any}
 `;
 
 export const LiveShow: FunctionComponent<{

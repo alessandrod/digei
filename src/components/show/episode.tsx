@@ -44,7 +44,7 @@ const TitleView = styled.View`
 `;
 
 const Title = styled.Text`
-  font-size: 20px;
+  ${human.title3Object as any}
   line-height: 30px;
   padding-right: 10px;
 `;
@@ -57,7 +57,7 @@ const DetailsView = styled.View`
 `;
 
 const DurationView = styled.Text`
-  ${human.footnoteObject as any};
+  ${human.subheadObject as any};
   margin-right: 10px;
 `;
 
@@ -67,7 +67,7 @@ const PlayedIcon = styled(Icon)`
 `;
 
 const PlayedText = styled.Text`
-  ${human.footnoteObject as any};
+  ${human.subheadObject as any};
   color: gray;
   margin-right: 10px;
 `;
@@ -90,23 +90,26 @@ const ProgressOuter = styled.View`
   margin-right: 10px;
 `;
 
-const ProgressInner = styled.View`
-  background: gray;
+const ProgressInner = styled.View<{playing: boolean}>`
+  background: ${(props) => (props.playing ? 'rgb(245, 26, 0)' : 'gray')};
   height: 5px;
   border-radius: 4px;
 `;
 
-const Progress: FunctionComponent<{value: number}> = ({value}) => {
+const Progress: FunctionComponent<{playing: boolean; value: number}> = ({
+  playing,
+  value,
+}) => {
   return (
     <ProgressOuter>
-      <ProgressInner style={{width: value * 100 + '%'}} />
+      <ProgressInner playing={playing} style={{width: value * 100 + '%'}} />
     </ProgressOuter>
   );
 };
 
 const DownloadIcon = styled(Icon)`
   color: gray;
-  font-size: 24px;
+  font-size: 30px;
   width: 28px;
   text-align: center;
   align-self: center;
@@ -236,7 +239,9 @@ const Details: FunctionComponent<{
   } else if (duration) {
     let durText;
     if (playPosition !== undefined && playPosition > 0) {
-      details.push(<Progress value={playPosition / duration} />);
+      details.push(
+        <Progress playing={isPlaying} value={playPosition / duration} />,
+      );
       durText = formatTimeInWords(duration - playPosition) + ' rimanenti';
     } else {
       durText = formatTimeInWords(duration);

@@ -53,9 +53,10 @@ export const LoadingSpinner = styled(Spinner)`
 `;
 
 export const LivePlayPause: FunctionComponent<{
+  spinnerColor?: string;
   spinnerSize?: 'small' | 'large';
   style?: ViewStyle;
-}> = ({spinnerSize, style}) => {
+}> = ({spinnerColor, spinnerSize, style}) => {
   let {
     state: {
       player: {state: playerState, loading, media},
@@ -66,7 +67,7 @@ export const LivePlayPause: FunctionComponent<{
   const mediaIsLive = media?.url === LIVE_URL;
   return (
     <LoadingComponent loading={mediaIsLive && loading}>
-      <LoadingSpinner size={spinnerSize} />
+      <LoadingSpinner color={spinnerColor || 'white'} size={spinnerSize} />
       <PlayPause
         style={style}
         playState={mediaIsLive ? playerState : PlayState.STOPPED}
@@ -104,7 +105,7 @@ export const SkipButton: FunctionComponent<{
 }> = ({style, disabled, onPress, children}) => {
   return (
     <SkipView disabled={disabled} onPress={onPress}>
-      <SkipIcon disabled={disabled} style={style} name="reload-outline" />
+      <SkipIcon disabled={disabled} style={style} name="reload-sharp" />
       <SkipLabel disabled={disabled}>{children}</SkipLabel>
     </SkipView>
   );

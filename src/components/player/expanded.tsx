@@ -38,25 +38,23 @@ const Header = styled.View`
 
 const MinimizeIcon = styled(Icon)`
   color: ghostwhite;
-  font-size: 30px;
-  height: 30px;
+  font-size: 34px;
 `;
 
 const HeaderTitle = styled.Text`
   ${human.title2Object as any};
   ${!hasNotch() && (human.headlineObject as any)}
   color: ghostwhite;
-  ${w.bold};
+  ${w.bold as any};
   margin-top: -${hasNotch() ? 30 : 25}px;
   align-self: center;
   max-width: 80%;
 `;
 
 const ShowCover = styled(Cover)`
-  flex: 3 0;
+  flex: 12 0;
   margin: auto;
   max-width: 100%;
-  max-height: 50%;
   aspect-ratio: 1;
   justify-content: center;
   align-items: center;
@@ -71,7 +69,7 @@ const Bottom = styled.View`
 
 const Info = styled.View`
   flex: 3 0;
-  padding-top: 20px;
+  padding-top: 10px;
 `;
 
 const Title2 = styled.Text`
@@ -81,13 +79,13 @@ const Title2 = styled.Text`
 `;
 
 const Subtitle = styled.Text`
-  ${human.headlineObject as any};
+  ${human.bodyObject as any};
   color: ghostwhite;
   padding-top: 5px;
 `;
 
 const LiveTrackContainer = styled.View`
-  flex: 3 0;
+  flex: 4 0;
 `;
 
 const LiveTrack = styled(CurrentTrack)`
@@ -95,12 +93,12 @@ const LiveTrack = styled(CurrentTrack)`
 `;
 
 const SeekView = styled.View`
-  flex: 3 0;
-  justify-content: center;
+  flex: 2 0;
 `;
 
 const SeekBar = styled(Slider)`
   width: 100%;
+  height: 14px;
 `;
 
 const TimeInfo = styled.View`
@@ -111,25 +109,33 @@ const TimeInfo = styled.View`
 `;
 
 const SeekPosition = styled.Text`
-  font-size: 14px;
+  ${human.caption2Object as any}
   color: ghostwhite;
 `;
 
 const Buttons = styled.View`
   flex: 4 0;
   flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
+  align-items: flex-start;
   min-width: 80%;
-  padding-bottom: 20px;
+`;
+
+const ButtonsInner = styled.View`
+  width: 100%;
+  height: 80px;
+  flex-direction: row;
+  justify-content: space-around;
 `;
 
 const CenterButton = styled(LoadingComponent)`
-  width: 70px;
+  /* give explicit sizes to contain both PlayPause and the Spinner */
+  width: 80px;
+  height: 80px;
 `;
 
 const ExpandedPlayPause = styled(PlayPause)`
-  font-size: 60px;
+  font-size: 80px;
+  line-height: 80px;
 `;
 
 const ExpandedLoading = styled(Spinner)`
@@ -139,6 +145,7 @@ const ExpandedLoading = styled(Spinner)`
 `;
 
 const SkipBack = styled(SkipButton)`
+  color: ghostwhite;
   font-size: 56px;
   transform: rotateY(180deg);
 `;
@@ -150,6 +157,7 @@ const SkipBackText = styled.Text`
 `;
 
 const SkipForward = styled(SkipButton)`
+  color: ghostwhite;
   font-size: 56px;
 `;
 
@@ -224,59 +232,59 @@ export const ExpandedPlayer: FunctionComponent<{
         <HeaderTitle>{title1}</HeaderTitle>
       </Header>
       <ShowCover source={show?.cover} />
-      <Bottom>
-        <Info>
-          <Title2>{title2}</Title2>
-          <Subtitle>{subtitle}</Subtitle>
-        </Info>
-        {!isLive && (
-          <SeekView>
-            <SeekBar
-              minimumValue={0}
-              maximumValue={duration}
-              disabled={duration === undefined}
-              value={pos}
-              minimumTrackTintColor="rgb(245, 26, 0)"
-              maximumTrackTintColor="gainsboro"
-              onValueChange={(value: number) => {
-                setSeekPosition(Math.floor(value));
-              }}
-              onSlidingComplete={(value: number) => {
-                if (show && episode && episodeMeta) {
-                  episodeMeta.playPosition = value / 1000;
-                  db.updateEpisodePlayPosition(
-                    episode.url,
-                    show.url,
-                    value / 1000,
-                  );
-                }
-                dispatch(new Seek(value / 1000));
-              }}
-              thumbImage={require('../../../img/circle.png')}
-            />
-            <TimeInfo>
-              {pos !== undefined && (
-                <SeekPosition>{formatTimeMillis(pos)}</SeekPosition>
-              )}
+      <Info>
+        <Title2>{title2}</Title2>
+        <Subtitle>{subtitle}</Subtitle>
+      </Info>
+      {!isLive && (
+        <SeekView>
+          <SeekBar
+            minimumValue={0}
+            maximumValue={duration}
+            disabled={duration === undefined}
+            value={pos}
+            minimumTrackTintColor="rgb(245, 26, 0)"
+            maximumTrackTintColor="gainsboro"
+            onValueChange={(value: number) => {
+              setSeekPosition(Math.floor(value));
+            }}
+            onSlidingComplete={(value: number) => {
+              if (show && episode && episodeMeta) {
+                episodeMeta.playPosition = value / 1000;
+                db.updateEpisodePlayPosition(
+                  episode.url,
+                  show.url,
+                  value / 1000,
+                );
+              }
+              dispatch(new Seek(value / 1000));
+            }}
+            thumbImage={require('../../../img/circle.png')}
+          />
+          <TimeInfo>
+            {pos !== undefined && (
+              <SeekPosition>{formatTimeMillis(pos)}</SeekPosition>
+            )}
 
-              {duration !== undefined && pos !== undefined && (
-                <SeekDuration>
-                  {'-' + formatTimeMillis(duration - pos)}
-                </SeekDuration>
-              )}
-            </TimeInfo>
-          </SeekView>
-        )}
-        {isLive && liveTrack !== undefined && (
-          <LiveTrackContainer>
-            <LiveTrack
-              cover={liveTrack.cover}
-              artist={liveTrack.artist}
-              title={liveTrack.title}
-            />
-          </LiveTrackContainer>
-        )}
-        <Buttons>
+            {duration !== undefined && pos !== undefined && (
+              <SeekDuration>
+                {'-' + formatTimeMillis(duration - pos)}
+              </SeekDuration>
+            )}
+          </TimeInfo>
+        </SeekView>
+      )}
+      {isLive && liveTrack !== undefined && (
+        <LiveTrackContainer>
+          <LiveTrack
+            cover={liveTrack.cover}
+            artist={liveTrack.artist}
+            title={liveTrack.title}
+          />
+        </LiveTrackContainer>
+      )}
+      <Buttons>
+        <ButtonsInner>
           <SkipBack
             disabled={isLive || loading}
             onPress={() => dispatch(new Seek(-15, true))}>
@@ -294,8 +302,8 @@ export const ExpandedPlayer: FunctionComponent<{
             onPress={() => dispatch(new Seek(30, true))}>
             <SkipForwardText>30</SkipForwardText>
           </SkipForward>
-        </Buttons>
-      </Bottom>
+        </ButtonsInner>
+      </Buttons>
     </ExpandedPlayerView>
   );
 };

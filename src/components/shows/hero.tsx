@@ -30,19 +30,20 @@ const ShowTextView = styled.View`
 
 const ShowTitle = styled.Text`
   ${human.title2Object as any}
-  color: white;
+  ${w.semibold as any}
+  color: ghostwhite;
 `;
 
 const DescriptionText = styled.Text`
   margin-top: 5px;
-  ${human.subheadObject as any}
-  ${w.light as any};
-  color: white;
+  ${human.calloutObject as any}
+  ${w.light as any}
+  color: ghostwhite;
 `;
 
 const Link = styled(DescriptionText)`
   color: rgb(245, 26, 0);
-  text-decoration-line: underline;
+  ${w.semibold as any}
 `;
 
 let ShowDescription: FunctionComponent<{text: string}> = ({text}) => {
@@ -102,13 +103,12 @@ const LiveCallOutText = styled.Text`
 
 const PlayPauseContainer = styled(Centered)`
   height: 40px;
-  width: 30px;
-  margin-left: 5px;
+  width: 36px;
+  margin-left: 6px;
 `;
 
-const RedLivePlayPause = styled(LivePlayPause)`
-  color: white;
-  font-size: 30px;
+const LivePlay = styled(LivePlayPause)`
+  font-size: 36px;
 `;
 
 const BlurWrapper = styled.View`
@@ -119,11 +119,11 @@ const LiveCallOut: FunctionComponent = () => {
   return (
     <LiveCallOutView>
       <LiveCallOutLeft />
-      <LiveCallOutRight blurType="xlight">
+      <LiveCallOutRight>
         <LiveCallOutRightInner>
           <LiveCallOutText>Ora in onda</LiveCallOutText>
           <PlayPauseContainer>
-            <RedLivePlayPause />
+            <LivePlay spinnerColor="white" />
           </PlayPauseContainer>
         </LiveCallOutRightInner>
       </LiveCallOutRight>

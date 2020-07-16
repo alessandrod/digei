@@ -12,8 +12,8 @@ import {EpisodeComponent} from 'components/show/episode';
 import {PlayerPadding} from 'components/player';
 
 const MonthHeader = styled.Text`
-  ${human.headlineObject as any};
-  ${w.bold as any};
+  ${human.title3Object as any};
+  ${w.semibold as any};
   background: ghostwhite;
 
   padding: 15px;

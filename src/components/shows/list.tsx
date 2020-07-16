@@ -2,14 +2,19 @@ import React, {FunctionComponent, useMemo, useContext} from 'react';
 import styled from 'styled-components/native';
 import {NavigationProp} from 'navigation';
 import {SectionListData, SectionList, Animated, ViewStyle} from 'react-native';
+import {human} from 'react-native-typography';
+import {systemWeights as w} from 'react-native-typography';
 
-import {SectionHeaderView, SectionHeaderText} from 'components/section-list';
 import {ListSeparator} from 'components';
 import {LiveShow} from 'components/shows/live';
 import {ShowCover} from 'components/shows/cover';
 import {Show, StateContext, PlayState, LIVE_URL} from 'state';
 import {LivePlayPause} from 'components/player/controls';
-import {LoadingBars, AnimatedBar} from 'components/loading-bars';
+import {
+  LoadingBars,
+  AnimatedBar,
+  SmallLoadingBars,
+} from 'components/loading-bars';
 import {PlayerPadding} from 'components/player';
 
 interface ShowListData extends SectionListData<Show[]> {
@@ -69,9 +74,24 @@ let LiveLoadingBars: FunctionComponent<{
   );
 };
 
-LiveLoadingBars = styled(LiveLoadingBars)`
+LiveLoadingBars = styled(SmallLoadingBars)`
   flex: 1 0;
   margin-left: 10px;
+`;
+
+const SectionHeaderView = styled.View`
+  flex: 1 0;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const SectionHeaderText = styled.Text`
+  ${human.title2Object as any};
+  ${w.bold as any};
+
+  padding-top: 10px;
+  padding-bottom: 10px;
 `;
 
 const LiveHeader: FunctionComponent = () => {
@@ -87,7 +107,10 @@ const LiveHeader: FunctionComponent = () => {
         <LiveLoadingBars playing={playState === PlayState.PLAYING} />
       )}
       <PlayPauseContainer>
-        <LargeLivePlayPause spinnerSize="large" />
+        <LargeLivePlayPause
+          spinnerColor="color: rgb(245, 26, 0)"
+          spinnerSize="large"
+        />
       </PlayPauseContainer>
     </SectionHeaderView>
   );

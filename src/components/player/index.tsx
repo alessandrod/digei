@@ -28,7 +28,7 @@ const PlayerView = styled(Animated.View)`
   shadow-offset: 0px 0px;
   shadow-opacity: 0.5;
   background: transparent;
-  elevation: 1;
+  elevation: 2;
 `;
 
 const PlayerViewContainer = styled(Platform.OS === 'ios' ? BlurView : View)`
@@ -229,7 +229,7 @@ export const PlayerComponent: FunctionComponent = () => {
   });
   let expMarginTop = pan.interpolate({
     inputRange: [miniOffset - 20, miniOffset],
-    outputRange: [0, 60], // NOTE: 60px is the height of the MiniPlayer. Needs to be kept in sync.
+    outputRange: [0, 50], // NOTE: 60px is the height of the MiniPlayer. Needs to be kept in sync.
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -244,7 +244,7 @@ export const PlayerComponent: FunctionComponent = () => {
 
   return (
     <PlayerView style={{transform: [{translateY: pan}]}}>
-      <PlayerViewContainer blurType="materialDark">
+      <PlayerViewContainer blurType="chromeMaterialDark">
         <PlayerSwipe {...methods}>
           <MiniPlayer
             style={{opacity: miniOpacity}}

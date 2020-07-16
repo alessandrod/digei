@@ -116,7 +116,6 @@ export const MiniPlayer: FunctionComponent<{
         </PlayPauseContainer>
         <SkipBack
           disabled={isLive || loading}
-          icon="reload-outline"
           onPress={() => dispatch(new Seek(-15, true))}>
           <SkipBackText>15</SkipBackText>
         </SkipBack>
