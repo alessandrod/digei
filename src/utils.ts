@@ -34,16 +34,16 @@ export const formatTimeMillis = (millis: number): string => {
 };
 
 export const formatTimeInWords = (secs: number): string => {
-  const {hours: h, minutes: m, seconds: s} = timeFromSeconds(secs);
+  const {hours: h, minutes: m, seconds: s} = timeFromSeconds(Math.round(secs));
   const dur = [];
   if (h > 0) {
-    dur.push(h + ' hr');
+    dur.push(h + (h === 1 ? ' ora' : ' ore'));
   }
   if (m > 0) {
-    dur.push(m + ' min');
+    dur.push(m + (m === 1 ? ' minuto' : ' minuti'));
   }
   if (dur.length === 0) {
-    dur.push(Math.round(s) + ' s');
+    dur.push(s + (s === 1 ? ' secondo' : ' secondi'));
   }
   return dur.join(' ');
 };
