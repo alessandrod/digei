@@ -61,9 +61,16 @@ export type Show = {
   episodes: Episode[];
 };
 
+export type Track = {
+  title: string;
+  artist: string;
+  cover: ImageSourcePropType;
+};
+
 export type State = {
   shows: Show[];
   liveShow?: Show;
+  liveTrack?: Track;
   player: PlayerState;
   playbackDispatch: Dispatch<PlaybackAction>;
 };
@@ -212,11 +219,16 @@ const stopPlayer = (state: State, action: StopPlayer): State => {
   };
 };
 
-const updateLiveShow = (state: State, name: String): State => {
+const updateLiveShow = (state: State, action: UpdateLiveShow): State => {
+  let {name, track} = action;
   const {media} = state.player;
 
   if (name === 'Deejay Chiama Estate') {
     name = 'Deejay Chiama Italia';
+  }
+
+  if (state.liveTrack?.title !== track?.title) {
+    state = {...state, liveTrack: track};
   }
 
   name = name.toLowerCase();
@@ -259,7 +271,7 @@ export function stateReducer(state: State, action: Action) {
   } else if (action instanceof StopPlayer) {
     state = stopPlayer(state, action);
   } else if (action instanceof UpdateLiveShow) {
-    state = updateLiveShow(state, action.name);
+    state = updateLiveShow(state, action);
   } else if (action instanceof SetShows) {
     state = setShows(state, action.shows);
   }

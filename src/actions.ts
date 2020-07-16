@@ -1,4 +1,4 @@
-import {Show, Media, Episode, PlayState} from 'state';
+import {Show, Media, Episode, PlayState, Track} from 'state';
 import {EpisodeMeta} from 'db';
 
 export class TogglePlayPause {}
@@ -39,7 +39,7 @@ export class StopPlayer {
 }
 
 export class UpdateLiveShow {
-  constructor(public readonly name: String) {}
+  constructor(public readonly name: string, public readonly track?: Track) {}
 }
 
 export class SetShows {

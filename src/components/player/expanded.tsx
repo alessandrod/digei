@@ -19,6 +19,7 @@ import {episodeTitle, Spinner} from 'components';
 import {DatabaseContext} from 'db';
 import {setPlayDate} from 'components/show/episode';
 import {Cover} from 'components/cover';
+import {CurrentTrack} from './current-track';
 
 const ExpandedPlayerView = styled(Animated.View)`
   flex: 1 0;
@@ -45,7 +46,7 @@ const HeaderTitle = styled.Text`
   ${human.title2Object as any};
   ${!hasNotch() && (human.headlineObject as any)}
   color: ghostwhite;
-  font-weight: 600;
+  ${w.bold};
   margin-top: -${hasNotch() ? 30 : 25}px;
   align-self: center;
   max-width: 80%;
@@ -63,18 +64,19 @@ const ShowCover = styled(Cover)`
   background: transparent;
 `;
 
-const Info = styled.View`
-  padding: 20px 0;
-`;
-
-const Controls = styled.View`
+const Bottom = styled.View`
   flex: 2 0;
   justify-content: center;
 `;
 
+const Info = styled.View`
+  flex: 3 0;
+  padding-top: 20px;
+`;
+
 const Title2 = styled.Text`
   ${human.title2Object as any};
-  ${w.semibold as any};
+  ${w.bold as any};
   color: ghostwhite;
 `;
 
@@ -84,8 +86,16 @@ const Subtitle = styled.Text`
   padding-top: 5px;
 `;
 
+const LiveTrackContainer = styled.View`
+  flex: 3 0;
+`;
+
+const LiveTrack = styled(CurrentTrack)`
+  max-height: 80px;
+`;
+
 const SeekView = styled.View`
-  flex: 1 0;
+  flex: 3 0;
   justify-content: center;
 `;
 
@@ -106,7 +116,7 @@ const SeekPosition = styled.Text`
 `;
 
 const Buttons = styled.View`
-  flex: 2 0;
+  flex: 4 0;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
@@ -157,6 +167,7 @@ export const ExpandedPlayer: FunctionComponent<{
 }> = ({style, onMinimize}) => {
   const {db} = useContext(DatabaseContext);
   let {state, dispatch} = useContext(StateContext);
+  const {liveTrack} = state;
   let {state: playState, duration, loading} = state.player;
   const {show, episode, episodeMeta, position, seekCookie} = useContext(
     PlaybackStateContext,
@@ -208,21 +219,22 @@ export const ExpandedPlayer: FunctionComponent<{
     <ExpandedPlayerView style={style}>
       <Header>
         <Pressable onPress={onMinimize}>
-          <MinimizeIcon name="chevron-down-outline" />
+          <MinimizeIcon name="chevron-down-sharp" />
         </Pressable>
         <HeaderTitle>{title1}</HeaderTitle>
       </Header>
       <ShowCover source={show?.cover} />
-      <Controls>
+      <Bottom>
         <Info>
           <Title2>{title2}</Title2>
           <Subtitle>{subtitle}</Subtitle>
         </Info>
-        {duration !== undefined && (
+        {!isLive && (
           <SeekView>
             <SeekBar
               minimumValue={0}
               maximumValue={duration}
+              disabled={duration === undefined}
               value={pos}
               minimumTrackTintColor="rgb(245, 26, 0)"
               maximumTrackTintColor="gainsboro"
@@ -255,10 +267,18 @@ export const ExpandedPlayer: FunctionComponent<{
             </TimeInfo>
           </SeekView>
         )}
+        {isLive && liveTrack !== undefined && (
+          <LiveTrackContainer>
+            <LiveTrack
+              cover={liveTrack.cover}
+              artist={liveTrack.artist}
+              title={liveTrack.title}
+            />
+          </LiveTrackContainer>
+        )}
         <Buttons>
           <SkipBack
             disabled={isLive || loading}
-            icon="reload-outline"
             onPress={() => dispatch(new Seek(-15, true))}>
             <SkipBackText>15</SkipBackText>
           </SkipBack>
@@ -271,12 +291,11 @@ export const ExpandedPlayer: FunctionComponent<{
           </CenterButton>
           <SkipForward
             disabled={isLive || loading}
-            icon="reload-outline"
             onPress={() => dispatch(new Seek(30, true))}>
             <SkipForwardText>30</SkipForwardText>
           </SkipForward>
         </Buttons>
-      </Controls>
+      </Bottom>
     </ExpandedPlayerView>
   );
 };

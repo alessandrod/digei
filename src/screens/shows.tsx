@@ -15,8 +15,10 @@ const refreshLiveShow = (dispatch: Dispatch<Action>) => {
       return resp.json();
     })
     .then((json) => {
-      const {programName} = json.result;
-      dispatch(new UpdateLiveShow(programName));
+      const {programName, coverUrl, title, artist} = json.result;
+      console.log(json);
+      let track = !title ? undefined : {artist, title, cover: {uri: coverUrl}};
+      dispatch(new UpdateLiveShow(programName, track));
     })
     .catch((err) => {
       console.error('error', err);
