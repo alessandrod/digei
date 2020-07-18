@@ -1,8 +1,9 @@
 import React, {FunctionComponent, useContext} from 'react';
-import {Linking, Platform, View} from 'react-native';
+import {Linking, Platform, View, Text} from 'react-native';
 import styled from 'styled-components/native';
 import {human} from 'react-native-typography';
 import {systemWeights as w} from 'react-native-typography';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import {BlurView} from '@react-native-community/blur';
 import {Show, StateContext} from 'state';
@@ -41,9 +42,14 @@ const DescriptionText = styled.Text`
   color: ghostwhite;
 `;
 
-const Link = styled(DescriptionText)`
-  color: rgb(245, 26, 0);
-  ${w.semibold as any}
+const Link = styled.Text`
+  color: #25d366;
+  ${w.regular as any}
+`;
+
+const WhatsAppLogo = styled(Icon)`
+  font-size: 20px;
+  color: #25d366;
 `;
 
 let ShowDescription: FunctionComponent<{text: string}> = ({text}) => {
@@ -53,13 +59,15 @@ let ShowDescription: FunctionComponent<{text: string}> = ({text}) => {
     const [prefix, number] = num.split('/', 2);
     if (prefix && number) {
       link = (
-        <Link
-          onPress={() =>
-            Linking.openURL('https://wa.me/+39' + prefix + number)
-          }>
-          {prefix + ' '}
-          {number}
-        </Link>
+        <Text>
+          <WhatsAppLogo name="logo-whatsapp" />
+          <Link
+            onPress={() =>
+              Linking.openURL('https://wa.me/+39' + prefix + number)
+            }>
+            {` ${prefix} ${number}`}
+          </Link>
+        </Text>
       );
     }
   }
