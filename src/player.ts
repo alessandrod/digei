@@ -1,18 +1,19 @@
 import {Audio} from 'expo-av';
 import {INTERRUPTION_MODE_IOS_DO_NOT_MIX} from 'expo-av/build/Audio';
 
-export interface PlayerOptions {
+export interface PlayerOptions<UserData> {
   onStatusUpdate(status: {
     loading: boolean;
     position: number;
     duration?: number;
+    userData?: UserData;
   }): void;
 
   onSeekDone(): void;
 
   onPlaybackEnded(): void;
 }
-export class Player {
+export class Player<UserData> {
   private player?: Audio.Sound;
   private cookie: number;
   private isLoading: boolean;
@@ -20,12 +21,14 @@ export class Player {
   private operations: Array<() => Promise<any> | undefined>;
   private currentOperation?: Promise<any>;
   private disableUpdates: boolean;
+  private userData?: UserData;
 
-  constructor(private options?: PlayerOptions) {
+  constructor(private options?: PlayerOptions<UserData>) {
     this.cookie = 0;
     this.isLoading = false;
     this.operations = [];
     this.disableUpdates = false;
+    this.userData = undefined;
   }
 
   async init(): Promise<void> {
@@ -50,14 +53,20 @@ export class Player {
           const {positionMillis: position, durationMillis: duration} = status;
           const loading = status.shouldPlay && !status.isPlaying;
           if (this.options) {
-            this.options.onStatusUpdate({loading, position, duration});
+            console.log('sending update', position);
+            this.options.onStatusUpdate({
+              loading,
+              position,
+              duration,
+              userData: this.userData,
+            });
           }
         }
       }
     });
   }
 
-  setOptions(opts: PlayerOptions): void {
+  setOptions(opts: PlayerOptions<UserData>): void {
     this.options = opts;
   }
 
@@ -102,7 +111,12 @@ export class Player {
     }
   }
 
-  playUrl(url: string, position?: number, replay?: boolean) {
+  playUrl(
+    url: string,
+    position?: number,
+    replay?: boolean,
+    userData?: UserData,
+  ) {
     this.queueOperation(() => {
       this.disableUpdates = true;
       return this.player
@@ -142,6 +156,7 @@ export class Player {
         .then(this.maybeCancel())
         .then(() => {
           console.log('playing');
+          this.userData = userData;
           if (position !== undefined) {
             return this.player?.playFromPositionAsync(position);
           } else if (replay) {
