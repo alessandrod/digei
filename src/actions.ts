@@ -20,6 +20,7 @@ export class UpdatePlayerStatus {
     public readonly loading: boolean,
     public readonly position: number,
     public readonly duration?: number,
+    public readonly episode?: Episode,
   ) {}
 }
 
@@ -65,8 +66,6 @@ export class UpdatePlaybackInfo {
   constructor(
     public readonly position: number,
     public readonly duration?: number,
-    public readonly show?: Show,
-    public readonly episode?: Episode,
   ) {}
 }
 

@@ -89,8 +89,8 @@ const AppInner: FunctionComponent<{
   const {player} = playbackState;
   useEffect(() => {
     player.setOptions({
-      onStatusUpdate: ({loading, position, duration}) => {
-        dispatch(new UpdatePlayerStatus(loading, position, duration));
+      onStatusUpdate: ({loading, position, duration, userData: episode}) => {
+        dispatch(new UpdatePlayerStatus(loading, position, duration, episode));
       },
       onSeekDone: () => {
         dispatch(new SeekDone());

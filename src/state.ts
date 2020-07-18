@@ -155,14 +155,21 @@ const updatePlayerStatus = (
   action: UpdatePlayerStatus,
 ): State => {
   const {player, playbackDispatch} = state;
-  const {show, episode, media} = player;
-  let {loading, position, duration: duration} = action;
+  const {episode, media} = player;
+  let {loading, position, duration, episode: ep} = action;
+
+  if (episode !== undefined && episode.url !== ep?.url) {
+    console.log(
+      `ignoring stale position update for ${ep?.url} now playing ${episode.url}`,
+    );
+    return state;
+  }
 
   if (media?.url === LIVE_URL) {
     duration = undefined;
   }
 
-  playbackDispatch(new UpdatePlaybackInfo(position, duration, show, episode));
+  playbackDispatch(new UpdatePlaybackInfo(position, duration));
 
   if (duration === player.duration && loading === player.loading) {
     return state;
@@ -281,7 +288,7 @@ export function stateReducer(state: State, action: Action) {
 
 export type PlaybackState = {
   replay: boolean;
-  player: Player;
+  player: Player<Episode>;
   seekCookie: number;
   show?: Show;
   episode?: Episode;
@@ -292,7 +299,7 @@ export type PlaybackState = {
 
 export const INITIAL_PLAYBACK_STATE = {
   replay: false,
-  player: new Player(),
+  player: new Player<Episode>(),
   seekCookie: 0,
 };
 
@@ -307,7 +314,7 @@ const playbackPlayMedia = (
   let {player, replay} = state;
   const {media, show, episode, episodeMeta, position} = action;
 
-  player?.playUrl(media.url, position && position * 1000, replay);
+  player?.playUrl(media.url, position && position * 1000, replay, episode);
 
   return {
     ...state,
