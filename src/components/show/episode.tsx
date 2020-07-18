@@ -198,18 +198,26 @@ const PlayingEpisodeComponent: FunctionComponent<{
   episodeMeta: EpisodeMeta;
 }> = ({show, episode, episodeMeta}) => {
   const {loading} = useContext(StateContext).state.player;
-  let {position, duration} = useContext(PlaybackStateContext);
+  let {position, duration, episode: playingEpisode} = useContext(
+    PlaybackStateContext,
+  );
 
-  if (position !== undefined) {
-    position = position / 1000;
-  } else if (!loading) {
-    // we were playing and now the position is undefined. This means the track ended.
-    position = 0;
-    // we let the player do the actual db update. We set this so the current
-    // render cycle renders the episode as played.
-    episodeMeta.playDate = formatDate(Date.now());
+  const playContextReady = playingEpisode?.url === episode?.url;
+  if (playContextReady) {
+    if (position !== undefined) {
+      position = position / 1000;
+    } else if (!loading) {
+      // we were playing and now the position is undefined. This means the track ended.
+      position = 0;
+      // we let the player do the actual db update. We set this so the current
+      // render cycle renders the episode as played.
+      episodeMeta.playDate = formatDate(Date.now());
+    } else {
+      position = episodeMeta.playPosition;
+    }
   } else {
     position = episodeMeta.playPosition;
+    duration = undefined;
   }
 
   return (
