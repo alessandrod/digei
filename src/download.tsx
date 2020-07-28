@@ -16,6 +16,7 @@ import {
 export type Download = {
   handle: DownloadResumable;
   progress: number;
+  stopped: boolean;
   onProgress?: (download: Download) => void;
   onComplete: (res?: DownloadResult) => void;
 };
@@ -44,7 +45,12 @@ const startDownload = (
   action: StartDownload,
 ): DownloadState => {
   const {url, dest, onProgress, onComplete} = action;
-  const download = {progress: 0, onProgress, onComplete} as Download;
+  const download = {
+    progress: 0,
+    stopped: false,
+    onProgress,
+    onComplete,
+  } as Download;
   const handle = createDownloadResumable(
     url,
     dest,
@@ -52,7 +58,7 @@ const startDownload = (
     (status) => {
       download.progress =
         status.totalBytesWritten / status.totalBytesExpectedToWrite;
-      if (download.onProgress !== undefined) {
+      if (!download.stopped && download.onProgress !== undefined) {
         download.onProgress(download);
       }
     },
@@ -82,6 +88,7 @@ const stopDownload = (
   if (download === undefined) {
     return state;
   }
+  download.stopped = true;
   download.handle.pauseAsync().then(() => {
     deleteAsync(dest);
   });
@@ -120,9 +127,10 @@ export const useDownload = (
   onComplete: (res?: DownloadResult) => void,
 ) => {
   const {state, dispatch} = useContext(DownloadContext);
+  const ctxDl = state.downloads.get(url);
   const [dl, setDownload] = useState<{
     download?: Download;
-  }>({download: state.downloads.get(url)});
+  }>({download: ctxDl});
 
   const onProgress = useCallback((d) => {
     setDownload({download: d});
@@ -141,7 +149,10 @@ export const useDownload = (
     dl.download.onComplete = onCompleteWrapper;
   }
 
-  const {download} = dl;
+  let {download} = dl;
+  if (download?.stopped) {
+    download = undefined;
+  }
 
   let doStartDownload: Function | undefined = useCallback(() => {
     dispatch(new StartDownload(url, dest, onProgress, onComplete));
