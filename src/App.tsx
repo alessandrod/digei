@@ -17,7 +17,7 @@ import {enableScreens} from 'react-native-screens';
 import {createNativeStackNavigator} from 'react-native-screens/native-stack';
 
 import {MainStackParamList} from 'navigation';
-import {ShowsScreen} from 'screens/shows';
+import {HomeScreen} from 'screens/home';
 import {ShowScreen} from 'screens/show';
 import {PlayerComponent} from 'components/player';
 import {
@@ -61,7 +61,7 @@ function MainStackScreen() {
       }}>
       <MainStack.Screen
         name="Shows"
-        component={ShowsScreen}
+        component={HomeScreen}
         options={{
           title: 'Radio Deejay',
           headerLargeTitle: true,

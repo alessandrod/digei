@@ -6,8 +6,8 @@ import {human} from 'react-native-typography';
 import {systemWeights as w} from 'react-native-typography';
 
 import {ListSeparator} from 'components';
-import {LiveShow} from 'components/shows/live';
-import {ShowCover} from 'components/shows/cover';
+import {LiveShow} from 'screens/home/live-show';
+import {ShowCover} from 'screens/home/show-cover';
 import {Show, StateContext, PlayState, LIVE_URL} from 'state';
 import {LivePlayPause} from 'components/player/controls';
 import {

@@ -17,7 +17,7 @@ import {TogglePlayPause, Seek} from 'actions';
 import {formatTimeMillis, formatDate, useStableLoading} from 'utils';
 import {episodeTitle, Spinner} from 'components';
 import {DatabaseContext} from 'db';
-import {setPlayDate} from 'components/show/episode';
+import {setPlayDate} from 'screens/show/episode';
 import {Cover} from 'components/cover';
 import {CurrentTrack} from './current-track';
 

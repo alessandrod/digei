@@ -25,7 +25,7 @@ import {PlayMedia, StopPlayer} from 'actions';
 import {formatTimeInWords, formatDateInWords, formatDate} from 'utils';
 import {EpisodeMeta, DatabaseContext, Database} from 'db';
 import {useDownload} from 'download';
-import {EpisodeContextMenu} from 'components/show/episode-context-menu';
+import {EpisodeContextMenu} from 'screens/show/episode-context-menu';
 import {SmallLoadingBars} from 'components/loading-bars';
 
 const EpisodeView = styled.View`
@@ -401,6 +401,7 @@ const EpisodeComponentImpl: FunctionComponent<{
           </LeftView>
           {download !== undefined && (
             <DownloadProgress
+              key="dl"
               value={download.progress * 100}
               onPress={() => {
                 stopDownload && stopDownload();

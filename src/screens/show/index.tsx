@@ -5,7 +5,7 @@ import {gql, NetworkStatus} from 'apollo-boost';
 
 import {RouteProp, NavigationProp} from 'navigation';
 import {Episode} from 'state';
-import {EpisodeList} from 'components/show/episode-list';
+import {EpisodeList} from 'screens/show/episode-list';
 
 const EPISODES_QUERY = gql`
   query Episodes($showName: String!, $nextToken: String) {

@@ -6,9 +6,9 @@ import {systemWeights as w} from 'react-native-typography';
 
 import {ListSeparator} from 'components';
 import {Show, Episode} from 'state';
-import {ShowHero} from 'components/shows/hero';
+import {ShowHero} from 'screens/show/hero';
 import {EpisodeMeta} from 'db';
-import {EpisodeComponent} from 'components/show/episode';
+import {EpisodeComponent} from 'screens/show/episode';
 import {PlayerPadding} from 'components/player';
 
 const MonthHeader = styled.Text`

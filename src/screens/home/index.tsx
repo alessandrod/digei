@@ -4,7 +4,7 @@ import {gql} from 'apollo-boost';
 import {useQuery} from '@apollo/react-hooks';
 import {Text} from 'react-native';
 
-import {ShowList} from 'components/shows/list';
+import {ShowList} from 'screens/home/show-list';
 import {StateContext, Show} from 'state';
 import {RouteProp, NavigationProp} from 'navigation';
 import {UpdateLiveShow, SetShows, Action} from 'actions';
@@ -40,7 +40,7 @@ const QUERY_SHOWS = gql`
   }
 `;
 
-export const ShowsScreen: FunctionComponent<{
+export const HomeScreen: FunctionComponent<{
   route: RouteProp<'Shows'>;
   navigation: NavigationProp<'Show'>;
 }> = ({navigation}) => {
