@@ -16,7 +16,7 @@ import {hasNotch} from 'react-native-device-info';
 
 import {MiniPlayer} from 'components/player/mini';
 import {ExpandedPlayer} from 'components/player/expanded';
-import {MusicControls} from 'music-controls';
+import {MusicControls} from 'components/music-controls';
 
 const PlayerView = styled(Animated.View)`
   position: absolute;
