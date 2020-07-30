@@ -1,5 +1,5 @@
 import React, {FunctionComponent, useContext} from 'react';
-import {Linking, Platform, View, Text} from 'react-native';
+import {Linking, Text} from 'react-native';
 import styled from 'styled-components/native';
 import {human} from 'react-native-typography';
 import {systemWeights as w} from 'react-native-typography';
@@ -52,7 +52,7 @@ const WhatsAppLogo = styled(Icon)`
   color: #25d366;
 `;
 
-let ShowDescription: FunctionComponent<{text: string}> = ({text}) => {
+const ShowDescription: FunctionComponent<{text: string}> = ({text}) => {
   const [pre, num, suff] = tokenizeDescription(text);
   let link = null;
   if (num.length > 0) {
@@ -81,31 +81,21 @@ let ShowDescription: FunctionComponent<{text: string}> = ({text}) => {
   );
 };
 
-const LiveCallOutView = styled.View`
+const LiveButtonView = styled.View`
   flex-direction: row;
   justify-content: flex-end;
 `;
 
-const LiveCallOutLeft = styled.View`
-  flex: 1 0;
-`;
-const LiveCallOutRight = styled(Platform.OS === 'ios' ? View : View)`
+const LiveButtonRight = styled.View`
   flex-direction: row;
+  justify-content: flex-end;
   align-items: center;
-  background: ${Platform.OS === 'ios' ? 'transparent' : 'white'};
   background: rgb(245, 26, 0);
-  padding: 4px 0;
+  padding: 4px 10px;
 `;
 
-const LiveCallOutRightInner = styled.View`
-  flex-direction: row;
-  align-items: center;
-  padding: 0 10px;
-`;
-
-const LiveCallOutText = styled.Text`
+const LiveButtonText = styled.Text`
   ${human.headlineObject as any};
-  color: rgb(245, 26, 0);
   color: white;
 `;
 
@@ -123,19 +113,16 @@ const BlurWrapper = styled.View`
   overflow: hidden;
 `;
 
-const LiveCallOut: FunctionComponent = () => {
+const LiveButton: FunctionComponent = () => {
   return (
-    <LiveCallOutView>
-      <LiveCallOutLeft />
-      <LiveCallOutRight>
-        <LiveCallOutRightInner>
-          <LiveCallOutText>Ora in onda</LiveCallOutText>
-          <PlayPauseContainer>
-            <LivePlay spinnerColor="white" />
-          </PlayPauseContainer>
-        </LiveCallOutRightInner>
-      </LiveCallOutRight>
-    </LiveCallOutView>
+    <LiveButtonView>
+      <LiveButtonRight>
+        <LiveButtonText>Ora in onda</LiveButtonText>
+        <PlayPauseContainer>
+          <LivePlay spinnerColor="white" />
+        </PlayPauseContainer>
+      </LiveButtonRight>
+    </LiveButtonView>
   );
 };
 
@@ -148,7 +135,7 @@ export const ShowHero: FunctionComponent<{show: Show}> = ({show}) => {
   return (
     <ShowView>
       <ShowImage source={cover}>
-        {live && <LiveCallOut />}
+        {live && <LiveButton />}
         <BlurWrapper>
           <BlurView blurType="dark">
             <ShowTextView>
