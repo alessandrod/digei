@@ -19,7 +19,7 @@ import {PlayerPadding} from 'components/player';
 
 interface ShowListData extends SectionListData<Show[]> {
   ListHeaderComponent: FunctionComponent;
-  ListFooterComponent?: FunctionComponent;
+  SectionFooterComponent?: FunctionComponent;
   ItemComponent: FunctionComponent<{
     show: Show;
     navigation: NavigationProp<'Show'>;
@@ -124,7 +124,7 @@ const ShowsHeader: FunctionComponent = () => {
   );
 };
 
-export function group<T>(n: number, items: T[]): T[][] {
+function group<T>(n: number, items: T[]): T[][] {
   return items.reduce(
     (accum, item) => {
       let inner: T[] = accum[accum.length - 1];
@@ -162,7 +162,7 @@ export const ShowList: FunctionComponent<{
     if (liveShow !== undefined) {
       secs.unshift({
         ListHeaderComponent: LiveHeader,
-        ListFooterComponent: ListSeparator,
+        SectionFooterComponent: ListSeparator,
         ItemComponent: LiveShow,
         data: [[liveShow]],
       });
@@ -172,16 +172,16 @@ export const ShowList: FunctionComponent<{
   }, [liveShow, shows]);
   return (
     <List
-      renderSectionHeader={({section}) => (
+      renderSectionHeader={({section}: {section: ShowListData}) => (
         <section.ListHeaderComponent {...section} />
       )}
-      renderSectionFooter={({section}) => {
-        if (section.ListFooterComponent) {
-          return <section.ListFooterComponent {...section} />;
+      renderSectionFooter={({section}: {section: ShowListData}) => {
+        if (section.SectionFooterComponent) {
+          return <section.SectionFooterComponent {...section} />;
         }
         return null;
       }}
-      renderItem={({item, section}) => {
+      renderItem={({item, section}: {item: Show[]; section: ShowListData}) => {
         if (item.length === 1) {
           return (
             <section.ItemComponent navigation={navigation} show={item[0]} />
@@ -197,7 +197,7 @@ export const ShowList: FunctionComponent<{
       }}
       ListFooterComponent={() => <PlayerPadding />}
       stickySectionHeadersEnabled={false}
-      keyExtractor={(item) => item[0].url}
+      keyExtractor={(item: Show[]) => item[0].url}
       sections={sections}
     />
   );
