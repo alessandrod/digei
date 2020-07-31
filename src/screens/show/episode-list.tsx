@@ -15,7 +15,6 @@ const MonthHeader = styled.Text`
   ${human.title3Object as any};
   ${w.semibold as any};
   background: ghostwhite;
-
   padding: 15px;
 `;
 
@@ -68,11 +67,7 @@ export const EpisodeList: FunctionComponent<{
       <List
         ListHeaderComponent={() => <ShowHero show={show} />}
         ListFooterComponent={() => <PlayerPadding />}
-        renderSectionHeader={({section: {month}}) => {
-          if (month === undefined) {
-            return <ShowHero show={show} />;
-          }
-
+        renderSectionHeader={({section: {month}}: Section) => {
           let year: number | string = parseInt(month.substring(2), 10);
           if (year === currentYear) {
             year = '';
@@ -88,7 +83,7 @@ export const EpisodeList: FunctionComponent<{
             </MonthHeader>
           );
         }}
-        renderItem={({item}) => {
+        renderItem={({item}: {item: Episode}) => {
           let meta = episodeMetas.get(item.url);
           if (meta === undefined) {
             meta = {
@@ -105,7 +100,7 @@ export const EpisodeList: FunctionComponent<{
         }}
         ItemSeparatorComponent={ListSeparator}
         stickySectionHeadersEnabled={true}
-        keyExtractor={(item) => item.url}
+        keyExtractor={(item: Episode) => item.url}
         onEndReached={() => onEndReached && onEndReached()}
         sections={sections}
         onRefresh={onRefresh}
