@@ -126,6 +126,7 @@ export class Player<UserData> {
           if ((this.isLoading || status.isLoaded) && this.url !== url) {
             console.log('unloading player', this.url);
             this.isLoading = false;
+            this.userData = undefined;
             replay = false;
             return this.player?.unloadAsync().then((res) => {
               console.log('unloaded', this.url);
@@ -140,6 +141,7 @@ export class Player<UserData> {
             this.isLoading = true;
             this.url = url;
             console.log('loading player', url);
+            this.userData = userData;
             return this.player
               ?.loadAsync({uri: url}, {shouldPlay: false})
               .then((res) => {
@@ -156,7 +158,6 @@ export class Player<UserData> {
         .then(this.maybeCancel())
         .then(() => {
           console.log('playing');
-          this.userData = userData;
           if (position !== undefined) {
             return this.player?.playFromPositionAsync(position);
           } else if (replay) {
