@@ -336,8 +336,8 @@ PODS:
     - React
   - RNReanimated (1.8.0):
     - React
-  - RNScreens (2.9.0):
-    - React
+  - RNScreens (2.16.1):
+    - React-Core
   - RNVectorIcons (6.6.0):
     - React
   - toolbar-android (0.1.0-rc.2):
@@ -630,7 +630,7 @@ SPEC CHECKSUMS:
   RNDeviceInfo: ab2ab4ca9e7f2bc4f35d62ab6ce2b66f2cbf1e7a
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
-  RNScreens: c526239bbe0e957b988dacc8d75ac94ec9cb19da
+  RNScreens: 45c457af3d2ee9e08fc01e70da87e653d46b1198
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   toolbar-android: 404f4450b203597e7b417f714ff417bed562a1be
   UMAppLoader: 515d02d30e29cf05bbe58f77c59f896840cc5895
